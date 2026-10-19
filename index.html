@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f5f0" />
+    <meta name="description" content="Ikuti perjalanan satu token melalui laboratorium Transformer interaktif. Pelajari tokenisasi, embedding, causal attention, sampling, dan KV cache dengan angka yang dapat ditelusuri." />
+    <meta property="og:title" content="NeuroLab — Ikuti perjalanan satu token" />
+    <meta property="og:description" content="Laboratorium interaktif untuk memahami cara kerja LLM. Delapan stasiun, tujuh eksperimen, satu perjalanan token." />
+    <title>NeuroLab — Ikuti perjalanan satu token</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript><main><h1>NeuroLab: Ikuti perjalanan satu token</h1><p>Teks dipisahkan menjadi token, lalu setiap ID mengambil baris embedding dan menambahkan posisi. Di setiap blok Transformer, LayerNorm diikuti proyeksi Query, Key, dan Value. Attention mencocokkan Q dengan K, menutup posisi masa depan, lalu memakai bobot softmax untuk mencampurkan V. Dua residual dan MLP dengan GELU memperbarui representasi. Final LayerNorm dan proyeksi vocabulary menghasilkan logits; greedy atau sampling memilih token berikutnya. KV cache menyimpan K/V prefix untuk langkah berikutnya.</p><p>Simulator edukasi dengan bobot mainan deterministik, bukan keluaran GPT-2 asli. Aktifkan JavaScript untuk eksperimen, angka, dan tur 3D.</p><a href="https://github.com/openai/gpt-2/blob/master/src/model.py">Implementasi GPT-2</a></main></noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

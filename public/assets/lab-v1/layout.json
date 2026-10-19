@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 1,
+  "room": {
+    "width": 36,
+    "depth": 24
+  },
+  "overview": {
+    "position": [
+      28,
+      25,
+      33
+    ],
+    "target": [
+      0,
+      1,
+      0
+    ]
+  },
+  "spawn": [
+    0,
+    1.65,
+    10.5
+  ],
+  "stations": [
+    {
+      "id": "tokenizer",
+      "number": "01",
+      "title": "Tokenizer",
+      "model": "tokenizer-bench",
+      "position": [
+        -12,
+        0,
+        -7
+      ],
+      "rotationY": 0,
+      "camera": {
+        "position": [
+          -12,
+          3.4,
+          -1.7999999999999998
+        ],
+        "target": [
+          -12,
+          1.8,
+          -7
+        ]
+      }
+    },
+    {
+      "id": "embedding",
+      "number": "02",
+      "title": "Embedding + position",
+      "model": "embedding-projector",
+      "position": [
+        -4,
+        0,
+        -7
+      ],
+      "rotationY": 0,
+      "camera": {
+        "position": [
+          -4,
+          3.4,
+          -1.7999999999999998
+        ],
+        "target": [
+          -4,
+          1.8,
+          -7
+        ]
+      }
+    },
+    {
+      "id": "qkv",
+      "number": "03",
+      "title": "Q / K / V",
+      "model": "qkv-projector",
+      "position": [
+        4,
+        0,
+        -7
+      ],
+      "rotationY": 0,
+      "camera": {
+        "position": [
+          4,
+          3.4,
+          -1.7999999999999998
+        ],
+        "target": [
+          4,
+          1.8,
+          -7
+        ]
+      }
+    },
+    {
+      "id": "attention",
+      "number": "04",
+      "title": "Causal attention",
+      "model": "attention-workbench",
+      "position": [
+        12,
+        0,
+        -7
+      ],
+      "rotationY": 0,
+      "camera": {
+        "position": [
+          12,
+          3.4,
+          -1.7999999999999998
+        ],
+        "target": [
+          12,
+          1.8,
+          -7
+        ]
+      }
+    },
+    {
+      "id": "transformer",
+      "number": "05",
+      "title": "Transformer blocks",
+      "model": "transformer-stack",
+      "position": [
+        12,
+        0,
+        7
+      ],
+      "rotationY": 3.141592653589793,
+      "camera": {
+        "position": [
+          12,
+          3.4,
+          1.7999999999999998
+        ],
+        "target": [
+          12,
+          1.8,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sampling",
+      "number": "06",
+      "title": "Next-token sampling",
+      "model": "logits-amphitheater",
+      "position": [
+        4,
+        0,
+        7
+      ],
+      "rotationY": 3.141592653589793,
+      "camera": {
+        "position": [
+          4,
+          3.4,
+          1.7999999999999998
+        ],
+        "target": [
+          4,
+          1.8,
+          7
+        ]
+      }
+    },
+    {
+      "id": "cache",
+      "number": "07",
+      "title": "Decode + KV cache",
+      "model": "kv-cache-rack",
+      "position": [
+        -4,
+        0,
+        7
+      ],
+      "rotationY": 3.141592653589793,
+      "camera": {
+        "position": [
+          -4,
+          3.4,
+          1.7999999999999998
+        ],
+        "target": [
+          -4,
+          1.8,
+          7
+        ]
+      }
+    },
+    {
+      "id": "analogy",
+      "number": "08",
+      "title": "Vector analogy annex",
+      "model": "embedding-projector",
+      "position": [
+        -12,
+        0,
+        7
+      ],
+      "rotationY": 3.141592653589793,
+      "camera": {
+        "position": [
+          -12,
+          3.4,
+          1.7999999999999998
+        ],
+        "target": [
+          -12,
+          1.8,
+          7
+        ]
+      }
+    }
+  ],
+  "navigation": {
+    "walkableAisle": {
+      "min": [
+        -16,
+        0,
+        -4
+      ],
+      "max": [
+        16,
+        0,
+        4
+      ]
+    },
+    "note": "Planning metadata, not a collision implementation."
+  }
+}

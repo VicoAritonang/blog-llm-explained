@@ -1,0 +1,2281 @@
+{
+  "schemaVersion": 1,
+  "kit": "NeuroLab Observatory",
+  "version": "1.0.0",
+  "units": "meter",
+  "upAxis": "+Y",
+  "frontAxis": "+Z",
+  "provenance": "Original procedural geometry; no third-party model/texture files.",
+  "license": "MIT; see LICENSE.txt",
+  "palette": {
+    "ceramic": "#cbd5dd",
+    "white": "#e5ebef",
+    "graphite": "#142331",
+    "steel": "#516676",
+    "screen": "#07131f",
+    "cyan": "#42d7ec",
+    "violet": "#aa8df5",
+    "amber": "#ffbe63",
+    "green": "#69d9b1",
+    "red": "#e77e82",
+    "blue": "#5b8ae0",
+    "floor": "#253746"
+  },
+  "assets": [
+    {
+      "id": "floor-tile",
+      "file": "floor-tile.glb",
+      "category": "architecture",
+      "description": "Lantai tileable 4 × 4 meter.",
+      "dynamicNodes": [],
+      "bytes": 3388,
+      "sha256": "280bdb8a5fb46892e8510ef995e43a80e95553efb5b1d12cdc91b89a8dc674e0",
+      "triangles": 36,
+      "meshNodes": 3,
+      "bounds": {
+        "min": [
+          -2,
+          -0.14000000029802323,
+          -2
+        ],
+        "max": [
+          2,
+          0.016000000052154066,
+          2
+        ]
+      },
+      "materials": [
+        "floor",
+        "steel"
+      ],
+      "sockets": []
+    },
+    {
+      "id": "wall-panel",
+      "file": "wall-panel.glb",
+      "category": "architecture",
+      "description": "Dinding inset dengan dua lampu linear.",
+      "dynamicNodes": [],
+      "bytes": 13704,
+      "sha256": "4acb06fc72b958e674e219e5055c33d3f23d92e40c79c9b493e619987dc00c48",
+      "triangles": 156,
+      "meshNodes": 5,
+      "bounds": {
+        "min": [
+          -2,
+          -2.3841857821338408e-8,
+          -0.10000000596046447
+        ],
+        "max": [
+          2,
+          3.200000023841858,
+          0.20000000596046447
+        ]
+      },
+      "materials": [
+        "ceramic",
+        "graphite",
+        "cyan",
+        "steel"
+      ],
+      "sockets": []
+    },
+    {
+      "id": "structural-arch",
+      "file": "structural-arch.glb",
+      "category": "architecture",
+      "description": "Portal setinggi 6 meter dengan bukaan 6 meter.",
+      "dynamicNodes": [],
+      "bytes": 18912,
+      "sha256": "0860586a1f77a12f98458d70454c6372e758626265df2399e4f99380f358d61c",
+      "triangles": 348,
+      "meshNodes": 5,
+      "bounds": {
+        "min": [
+          -3.375,
+          0,
+          -0.25
+        ],
+        "max": [
+          3.375,
+          6.1500000059604645,
+          0.2875000000745058
+        ]
+      },
+      "materials": [
+        "ceramic",
+        "cyan"
+      ],
+      "sockets": []
+    },
+    {
+      "id": "station-plinth",
+      "file": "station-plinth.glb",
+      "category": "architecture",
+      "description": "Alas modular instrumen.",
+      "dynamicNodes": [],
+      "bytes": 19100,
+      "sha256": "2d0523caae2d33d57d33a1f053470bc4a90f2699740476d101c959904889b351",
+      "triangles": 228,
+      "meshNodes": 3,
+      "bounds": {
+        "min": [
+          -2.4000000953674316,
+          5.960464483090178e-10,
+          -1.600000023841858
+        ],
+        "max": [
+          2.4000000953674316,
+          0.3175000000745058,
+          1.600000023841858
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan"
+      ],
+      "sockets": []
+    },
+    {
+      "id": "operator-console",
+      "file": "operator-console.glb",
+      "category": "architecture",
+      "description": "Konsol dengan permukaan label/layar runtime.",
+      "dynamicNodes": [
+        "socket_display"
+      ],
+      "bytes": 47564,
+      "sha256": "0c823e5ae1a2a96caa8b1081a46f87b3509d0cc8e624b75bb1f23d88ccebe731",
+      "triangles": 576,
+      "meshNodes": 8,
+      "bounds": {
+        "min": [
+          -0.75,
+          5.960464483090178e-10,
+          -0.5
+        ],
+        "max": [
+          0.75,
+          1.8877071680590345,
+          0.6000000029802323
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "ceramic",
+        "screen"
+      ],
+      "sockets": [
+        {
+          "name": "socket_display",
+          "localPosition": [
+            0,
+            0.35,
+            0.14
+          ],
+          "worldPosition": [
+            0,
+            1.473755901894359,
+            0.049056353300407265
+          ],
+          "role": "runtime-data-surface"
+        }
+      ]
+    },
+    {
+      "id": "wayfinding-pylon",
+      "file": "wayfinding-pylon.glb",
+      "category": "architecture",
+      "description": "Papan penunjuk stasiun dengan anchor teks.",
+      "dynamicNodes": [],
+      "bytes": 20684,
+      "sha256": "ce535a24b6eb0bab69efddeb23900905e252db754994db9c31dc4f83f24d1875",
+      "triangles": 240,
+      "meshNodes": 4,
+      "bounds": {
+        "min": [
+          -0.4000000059604645,
+          1.341104505225843e-9,
+          -0.32499998807907104
+        ],
+        "max": [
+          0.4000000059604645,
+          2.300000023841858,
+          0.32499998807907104
+        ]
+      },
+      "materials": [
+        "steel",
+        "ceramic",
+        "screen",
+        "amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            1.4,
+            0.18
+          ],
+          "worldPosition": [
+            0,
+            1.4,
+            0.18
+          ],
+          "role": "station-title"
+        }
+      ]
+    },
+    {
+      "id": "data-rail",
+      "file": "data-rail.glb",
+      "category": "architecture",
+      "description": "Rel aliran data sepanjang 4 meter.",
+      "dynamicNodes": [],
+      "bytes": 10696,
+      "sha256": "cabf344e72ed8df4300344b0bfe8727fedfc6650e48f50c3cc485bbe104494fc",
+      "triangles": 120,
+      "meshNodes": 2,
+      "bounds": {
+        "min": [
+          -2,
+          8.940696724635266e-10,
+          -0.14000000059604645
+        ],
+        "max": [
+          2,
+          0.10750000018626452,
+          0.14000000059604645
+        ]
+      },
+      "materials": [
+        "graphite",
+        "cyan"
+      ],
+      "sockets": [
+        {
+          "name": "socket_in",
+          "localPosition": [
+            -2,
+            0.1,
+            0
+          ],
+          "worldPosition": [
+            -2,
+            0.1,
+            0
+          ],
+          "role": "data-in"
+        },
+        {
+          "name": "socket_out",
+          "localPosition": [
+            2,
+            0.1,
+            0
+          ],
+          "worldPosition": [
+            2,
+            0.1,
+            0
+          ],
+          "role": "data-out"
+        }
+      ]
+    },
+    {
+      "id": "token-capsule",
+      "file": "token-capsule.glb",
+      "category": "primitive",
+      "description": "Kapsul token dengan label dan band posisi.",
+      "dynamicNodes": [
+        "position_band",
+        "socket_label"
+      ],
+      "bytes": 12212,
+      "sha256": "a333d5ba66323becd0f590e9419cd8cd541caaae549eab1bd8f6715939d83b32",
+      "triangles": 132,
+      "meshNodes": 3,
+      "bounds": {
+        "min": [
+          -0.3499999940395355,
+          0,
+          -0.17000000178813934
+        ],
+        "max": [
+          0.3499999940395355,
+          0.5,
+          0.2125000000745058
+        ]
+      },
+      "materials": [
+        "ceramic",
+        "screen",
+        "cyan"
+      ],
+      "sockets": [
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            0.26,
+            0.22
+          ],
+          "worldPosition": [
+            0,
+            0.26,
+            0.22
+          ],
+          "role": "token-label"
+        }
+      ]
+    },
+    {
+      "id": "vector-arrow",
+      "file": "vector-arrow.glb",
+      "category": "primitive",
+      "description": "Panah unit 1 meter sepanjang +Y, pivot pangkal.",
+      "dynamicNodes": [
+        "shaft",
+        "tip"
+      ],
+      "bytes": 5672,
+      "sha256": "d08288d2b2f1fed288ec86e7a28d1d8a210f756746c4f36ef61944d376924d8e",
+      "triangles": 72,
+      "meshNodes": 2,
+      "bounds": {
+        "min": [
+          -0.10999999940395355,
+          -4.768371586472142e-9,
+          -0.10999999940395355
+        ],
+        "max": [
+          0.10999999940395355,
+          0.9999999952316284,
+          0.10999999940395355
+        ]
+      },
+      "materials": [
+        "amber"
+      ],
+      "sockets": []
+    },
+    {
+      "id": "neuron-bead",
+      "file": "neuron-bead.glb",
+      "category": "primitive",
+      "description": "Node aktivasi untuk instancing.",
+      "dynamicNodes": [
+        "activation"
+      ],
+      "bytes": 6980,
+      "sha256": "c9e7038f240aa02717fb5eea0d35dfbad9632375c1e751f36f95316eb9dfa783",
+      "triangles": 80,
+      "meshNodes": 1,
+      "bounds": {
+        "min": [
+          -0.11999999731779099,
+          -0.11999999731779099,
+          -0.11999999731779099
+        ],
+        "max": [
+          0.11999999731779099,
+          0.11999999731779099,
+          0.11999999731779099
+        ]
+      },
+      "materials": [
+        "green"
+      ],
+      "sockets": []
+    },
+    {
+      "id": "signal-packet",
+      "file": "signal-packet.glb",
+      "category": "primitive",
+      "description": "Partikel paket tensor.",
+      "dynamicNodes": [
+        "packet"
+      ],
+      "bytes": 1892,
+      "sha256": "845efa846b1c3e833c07a40ada88ccba449b5046b6e6d54afbb2d1a789bfc777",
+      "triangles": 8,
+      "meshNodes": 1,
+      "bounds": {
+        "min": [
+          -0.11999999731779099,
+          -0.11999999731779099,
+          -0.11999999731779099
+        ],
+        "max": [
+          0.11999999731779099,
+          0.11999999731779099,
+          0.11999999731779099
+        ]
+      },
+      "materials": [
+        "cyan"
+      ],
+      "sockets": []
+    },
+    {
+      "id": "matrix-cell",
+      "file": "matrix-cell.glb",
+      "category": "primitive",
+      "description": "Sel heatmap tunggal, label dibuat runtime.",
+      "dynamicNodes": [
+        "cell"
+      ],
+      "bytes": 8992,
+      "sha256": "cf6b637ef35cfd446dccacb5fdbfcf6abe6f2f35d4fb162f00965ae071753626",
+      "triangles": 108,
+      "meshNodes": 1,
+      "bounds": {
+        "min": [
+          -0.1899999976158142,
+          -0.14000000059604645,
+          -0.017500000074505806
+        ],
+        "max": [
+          0.1899999976158142,
+          0.14000000059604645,
+          0.017500000074505806
+        ]
+      },
+      "materials": [
+        "cyan"
+      ],
+      "sockets": []
+    },
+    {
+      "id": "tokenizer-bench",
+      "file": "tokenizer-bench.glb",
+      "category": "instrument",
+      "description": "Scanner token, conveyor, dan socket input/output.",
+      "dynamicNodes": [
+        "demo_token_*",
+        "scanner_light"
+      ],
+      "bytes": 69152,
+      "sha256": "cb30f88c51b65562a3ea95eea8d4d29a6c0d32c95dcc169072e0b1247824fcc6",
+      "triangles": 1464,
+      "meshNodes": 34,
+      "bounds": {
+        "min": [
+          -2.700000047683716,
+          5.960464483090178e-10,
+          -1.5
+        ],
+        "max": [
+          2.700000047683716,
+          2.705000002980232,
+          1.5
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "ceramic",
+        "screen"
+      ],
+      "sockets": [
+        {
+          "name": "socket_input",
+          "localPosition": [
+            -2.1,
+            1.55,
+            0.2
+          ],
+          "worldPosition": [
+            -2.1,
+            1.55,
+            0.2
+          ],
+          "role": "token-input"
+        },
+        {
+          "name": "socket_output",
+          "localPosition": [
+            2.1,
+            1.55,
+            0.2
+          ],
+          "worldPosition": [
+            2.1,
+            1.55,
+            0.2
+          ],
+          "role": "token-output"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            0.26,
+            0.22
+          ],
+          "worldPosition": [
+            0.6,
+            1.469,
+            0.343
+          ],
+          "role": "token-label"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            0.26,
+            0.22
+          ],
+          "worldPosition": [
+            1.15,
+            1.469,
+            0.343
+          ],
+          "role": "token-label"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            0.26,
+            0.22
+          ],
+          "worldPosition": [
+            1.7000000000000002,
+            1.469,
+            0.343
+          ],
+          "role": "token-label"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            0.26,
+            0.22
+          ],
+          "worldPosition": [
+            2.25,
+            1.469,
+            0.343
+          ],
+          "role": "token-label"
+        }
+      ]
+    },
+    {
+      "id": "embedding-projector",
+      "file": "embedding-projector.glb",
+      "category": "instrument",
+      "description": "Meja proyeksi dengan sumbu abstrak dan titik ilustrasi.",
+      "dynamicNodes": [
+        "demo_point_*"
+      ],
+      "bytes": 83324,
+      "sha256": "9ebf6ff0403e29eb6cacdcea3e5e2d551596ad10748fef016cd92a04aba2fdb8",
+      "triangles": 3460,
+      "meshNodes": 22,
+      "bounds": {
+        "min": [
+          -2.4000000953674316,
+          5.960464483090178e-10,
+          -2.049999952316284
+        ],
+        "max": [
+          2.4000000953674316,
+          4.365999984741211,
+          2.049999952316284
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "ceramic",
+        "screen",
+        "green",
+        "violet",
+        "amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_space",
+          "localPosition": [
+            0,
+            2.1,
+            0
+          ],
+          "worldPosition": [
+            0,
+            2.1,
+            0
+          ],
+          "role": "vector-origin"
+        }
+      ]
+    },
+    {
+      "id": "matrix-board",
+      "file": "matrix-board.glb",
+      "category": "instrument",
+      "description": "Papan matriks 4 × 4, sel ilustrasi dapat disembunyikan.",
+      "dynamicNodes": [
+        "demo_cells",
+        "socket_display"
+      ],
+      "bytes": 36120,
+      "sha256": "8b6de57d997e298b94f26c083e5cf2ae4d5672388410cb1dc7ce0c7fe20eb944",
+      "triangles": 564,
+      "meshNodes": 23,
+      "bounds": {
+        "min": [
+          -1.600000023841858,
+          5.960464483090178e-10,
+          -0.6499999761581421
+        ],
+        "max": [
+          1.600000023841858,
+          3.290000057220459,
+          0.6499999761581421
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "ceramic",
+        "screen"
+      ],
+      "sockets": [
+        {
+          "name": "socket_display",
+          "localPosition": [
+            0,
+            1.1,
+            0.14
+          ],
+          "worldPosition": [
+            0,
+            2.1,
+            0.14
+          ],
+          "role": "runtime-data-surface"
+        }
+      ]
+    },
+    {
+      "id": "qkv-projector",
+      "file": "qkv-projector.glb",
+      "category": "instrument",
+      "description": "Tiga panel Q/K/V dengan bus proyeksi.",
+      "dynamicNodes": [
+        "demo_Q",
+        "demo_K",
+        "demo_V"
+      ],
+      "bytes": 42716,
+      "sha256": "bd669e640d3ec912eef5177502b8fa029a29b28583edbada87383afb5b18d828",
+      "triangles": 1104,
+      "meshNodes": 52,
+      "bounds": {
+        "min": [
+          -3,
+          5.960464483090178e-10,
+          -1.600000023841858
+        ],
+        "max": [
+          3,
+          3.2899999618530273,
+          1.600000023841858
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "ceramic",
+        "screen",
+        "violet",
+        "amber",
+        "green"
+      ],
+      "sockets": [
+        {
+          "name": "socket_display",
+          "localPosition": [
+            0,
+            1.075,
+            0.14
+          ],
+          "worldPosition": [
+            -1.82,
+            2.125,
+            0.14
+          ],
+          "role": "runtime-data-surface"
+        },
+        {
+          "name": "socket_Q",
+          "localPosition": [
+            -1.82,
+            1.1,
+            1
+          ],
+          "worldPosition": [
+            -1.82,
+            1.1,
+            1
+          ],
+          "role": "projected-tensor"
+        },
+        {
+          "name": "socket_display",
+          "localPosition": [
+            0,
+            1.075,
+            0.14
+          ],
+          "worldPosition": [
+            0,
+            2.125,
+            0.14
+          ],
+          "role": "runtime-data-surface"
+        },
+        {
+          "name": "socket_K",
+          "localPosition": [
+            0,
+            1.1,
+            1
+          ],
+          "worldPosition": [
+            0,
+            1.1,
+            1
+          ],
+          "role": "projected-tensor"
+        },
+        {
+          "name": "socket_display",
+          "localPosition": [
+            0,
+            1.075,
+            0.14
+          ],
+          "worldPosition": [
+            1.82,
+            2.125,
+            0.14
+          ],
+          "role": "runtime-data-surface"
+        },
+        {
+          "name": "socket_V",
+          "localPosition": [
+            1.82,
+            1.1,
+            1
+          ],
+          "worldPosition": [
+            1.82,
+            1.1,
+            1
+          ],
+          "role": "projected-tensor"
+        }
+      ]
+    },
+    {
+      "id": "attention-workbench",
+      "file": "attention-workbench.glb",
+      "category": "instrument",
+      "description": "Heatmap kausal 6 × 6 dan output collector.",
+      "dynamicNodes": [
+        "demo_attention",
+        "demo_output_*"
+      ],
+      "bytes": 72452,
+      "sha256": "28e6259545169f6e2cc75d5ec57c6ff362000d7dcfbdddcd5f9817ba60784610",
+      "triangles": 1380,
+      "meshNodes": 49,
+      "bounds": {
+        "min": [
+          -2.799999952316284,
+          5.960464483090178e-10,
+          -1.7000000476837158
+        ],
+        "max": [
+          2.799999952316284,
+          4.1400000095367435,
+          1.7000000476837158
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "ceramic",
+        "screen",
+        "violet",
+        "amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_display",
+          "localPosition": [
+            0,
+            1.4,
+            0.14
+          ],
+          "worldPosition": [
+            0,
+            2.65,
+            -0.31
+          ],
+          "role": "runtime-data-surface"
+        },
+        {
+          "name": "socket_query",
+          "localPosition": [
+            -2.3,
+            2.7,
+            0
+          ],
+          "worldPosition": [
+            -2.3,
+            2.7,
+            0
+          ],
+          "role": "query-in"
+        },
+        {
+          "name": "socket_context",
+          "localPosition": [
+            2.3,
+            1.7,
+            0
+          ],
+          "worldPosition": [
+            2.3,
+            1.7,
+            0
+          ],
+          "role": "context-out"
+        }
+      ]
+    },
+    {
+      "id": "causal-mask",
+      "file": "causal-mask.glb",
+      "category": "instrument",
+      "description": "Panel segitiga atas untuk menutup sel masa depan.",
+      "dynamicNodes": [
+        "mask_*"
+      ],
+      "bytes": 2696,
+      "sha256": "09da9c8b3a6336f56e8a135a6454c931c8f45d2351b6182725a9acedf2bb0a86",
+      "triangles": 180,
+      "meshNodes": 15,
+      "bounds": {
+        "min": [
+          -0.9650000035762787,
+          0.2349999934434891,
+          -0.04500000178813934
+        ],
+        "max": [
+          1.4650000035762787,
+          2.165000006556511,
+          0.04500000178813934
+        ]
+      },
+      "materials": [
+        "steel"
+      ],
+      "sockets": []
+    },
+    {
+      "id": "head-combiner",
+      "file": "head-combiner.glb",
+      "category": "instrument",
+      "description": "Dua jalur head menuju proyeksi output.",
+      "dynamicNodes": [],
+      "bytes": 49760,
+      "sha256": "4ca46b5314b2c35804baf087e26286c89195c3079f1983ac6c82e3513a0305ab",
+      "triangles": 1264,
+      "meshNodes": 8,
+      "bounds": {
+        "min": [
+          -1.899999976158142,
+          5.960464483090178e-10,
+          -1.2999999523162842
+        ],
+        "max": [
+          1.899999976158142,
+          3.3249999940395356,
+          1.2999999523162842
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "violet",
+        "ceramic"
+      ],
+      "sockets": [
+        {
+          "name": "socket_output",
+          "localPosition": [
+            0,
+            3.4,
+            0
+          ],
+          "worldPosition": [
+            0,
+            3.4,
+            0
+          ],
+          "role": "concat-projection-out"
+        }
+      ]
+    },
+    {
+      "id": "transformer-stack",
+      "file": "transformer-stack.glb",
+      "category": "instrument",
+      "description": "12 blok skematis; setiap blok memuat attention dan MLP.",
+      "dynamicNodes": [
+        "layer_*",
+        "residual_bypass"
+      ],
+      "bytes": 43544,
+      "sha256": "ab35e8e5bd54348e798d4b4d1e07ce5ef7febda0d192ca55ac2f9033c212d03c",
+      "triangles": 2220,
+      "meshNodes": 42,
+      "bounds": {
+        "min": [
+          -2.2106218338012695,
+          5.960464483090178e-10,
+          -1.649999976158142
+        ],
+        "max": [
+          2,
+          5.499999904632569,
+          1.649999976158142
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "ceramic",
+        "green",
+        "amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            0.54,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            0.95,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            1.3599999999999999,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            1.77,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            2.1799999999999997,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            2.59,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            3,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            3.4099999999999997,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            3.82,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            4.23,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            4.64,
+            1.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            0,
+            5.05,
+            1.5
+          ],
+          "role": "layer-detail"
+        }
+      ]
+    },
+    {
+      "id": "normalization-chamber",
+      "file": "normalization-chamber.glb",
+      "category": "instrument",
+      "description": "Instrumen before/after LayerNorm.",
+      "dynamicNodes": [],
+      "bytes": 31532,
+      "sha256": "7427d7d15bd593c4d0ce4ca29d1501c004cb379e60bfd264c7d0819e64a31ebf",
+      "triangles": 1680,
+      "meshNodes": 7,
+      "bounds": {
+        "min": [
+          -1.649999976158142,
+          5.960464483090178e-10,
+          -1.149999976158142
+        ],
+        "max": [
+          1.649999976158142,
+          2.3399999856948854,
+          1.149999976158142
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "ceramic"
+      ],
+      "sockets": [
+        {
+          "name": "socket_before",
+          "localPosition": [
+            0,
+            1.45,
+            0.8
+          ],
+          "worldPosition": [
+            0,
+            1.45,
+            0.8
+          ],
+          "role": "normalization-in"
+        },
+        {
+          "name": "socket_after",
+          "localPosition": [
+            0,
+            1.45,
+            -0.8
+          ],
+          "worldPosition": [
+            0,
+            1.45,
+            -0.8
+          ],
+          "role": "normalization-out"
+        }
+      ]
+    },
+    {
+      "id": "mlp-lattice",
+      "file": "mlp-lattice.glb",
+      "category": "instrument",
+      "description": "Siluet expansion/contraction 4 → 12 → 4; bukan dimensi tensor.",
+      "dynamicNodes": [
+        "activation_*",
+        "demo_connection_*"
+      ],
+      "bytes": 61940,
+      "sha256": "1dbcb70de299b21f79db63331dff613d4f9ebd8d309a79cec2fc1204318d815b",
+      "triangles": 3364,
+      "meshNodes": 27,
+      "bounds": {
+        "min": [
+          -2.299999952316284,
+          5.960464483090178e-10,
+          -1.5
+        ],
+        "max": [
+          2.299999952316284,
+          2.4700000035762786,
+          1.5
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "green"
+      ],
+      "sockets": [
+        {
+          "name": "socket_input",
+          "localPosition": [
+            -1.7,
+            1.5,
+            0
+          ],
+          "worldPosition": [
+            -1.7,
+            1.5,
+            0
+          ],
+          "role": "mlp-in"
+        },
+        {
+          "name": "socket_output",
+          "localPosition": [
+            1.7,
+            1.5,
+            0
+          ],
+          "worldPosition": [
+            1.7,
+            1.5,
+            0
+          ],
+          "role": "mlp-out"
+        }
+      ]
+    },
+    {
+      "id": "residual-conduit",
+      "file": "residual-conduit.glb",
+      "category": "instrument",
+      "description": "Jalur bypass residual dan titik penjumlahan.",
+      "dynamicNodes": [],
+      "bytes": 15812,
+      "sha256": "f1022adc4cb72c050883353bd1db15206fe5eab4d7667af0722bcc4b69a39d90",
+      "triangles": 464,
+      "meshNodes": 2,
+      "bounds": {
+        "min": [
+          -1.6531765460968018,
+          -0.18000000715255737,
+          -0.18000000715255737
+        ],
+        "max": [
+          1.6800000071525574,
+          1.7562916278839111,
+          0.18000000715255737
+        ]
+      },
+      "materials": [
+        "amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_in",
+          "localPosition": [
+            -1.5,
+            0,
+            0
+          ],
+          "worldPosition": [
+            -1.5,
+            0,
+            0
+          ],
+          "role": "residual-in"
+        },
+        {
+          "name": "socket_sum",
+          "localPosition": [
+            1.5,
+            0,
+            0
+          ],
+          "worldPosition": [
+            1.5,
+            0,
+            0
+          ],
+          "role": "residual-add"
+        }
+      ]
+    },
+    {
+      "id": "logits-amphitheater",
+      "file": "logits-amphitheater.glb",
+      "category": "instrument",
+      "description": "Lima podium kandidat dan anchor massa probabilitas lainnya.",
+      "dynamicNodes": [
+        "demo_probability_*"
+      ],
+      "bytes": 66080,
+      "sha256": "95a7d0f8dcd686f69196eeb461174923902b9bc84fcf2e69e18a86f21e3b85f8",
+      "triangles": 1168,
+      "meshNodes": 13,
+      "bounds": {
+        "min": [
+          -2.950000047683716,
+          5.960464483090178e-10,
+          -1.75
+        ],
+        "max": [
+          2.950000047683716,
+          3.109999976158142,
+          1.75
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_candidate_0",
+          "localPosition": [
+            -2,
+            0.55,
+            0.6
+          ],
+          "worldPosition": [
+            -2,
+            0.55,
+            0.6
+          ],
+          "role": "candidate-label"
+        },
+        {
+          "name": "socket_candidate_1",
+          "localPosition": [
+            -1,
+            0.55,
+            0.6
+          ],
+          "worldPosition": [
+            -1,
+            0.55,
+            0.6
+          ],
+          "role": "candidate-label"
+        },
+        {
+          "name": "socket_candidate_2",
+          "localPosition": [
+            0,
+            0.55,
+            0.6
+          ],
+          "worldPosition": [
+            0,
+            0.55,
+            0.6
+          ],
+          "role": "candidate-label"
+        },
+        {
+          "name": "socket_candidate_3",
+          "localPosition": [
+            1,
+            0.55,
+            0.6
+          ],
+          "worldPosition": [
+            1,
+            0.55,
+            0.6
+          ],
+          "role": "candidate-label"
+        },
+        {
+          "name": "socket_candidate_4",
+          "localPosition": [
+            2,
+            0.55,
+            0.6
+          ],
+          "worldPosition": [
+            2,
+            0.55,
+            0.6
+          ],
+          "role": "candidate-label"
+        },
+        {
+          "name": "socket_others",
+          "localPosition": [
+            0,
+            0.35,
+            1.45
+          ],
+          "worldPosition": [
+            0,
+            0.35,
+            1.45
+          ],
+          "role": "probability-other"
+        }
+      ]
+    },
+    {
+      "id": "kv-cache-rack",
+      "file": "kv-cache-rack.glb",
+      "category": "instrument",
+      "description": "Dua kolom laci K/V dengan slot layer dan posisi.",
+      "dynamicNodes": [
+        "slot_*",
+        "cache_*"
+      ],
+      "bytes": 44680,
+      "sha256": "19a0dbeabb0bb0f871ad5d3b6b04ca958a6418e6093daed3bbd9b4c93d42252f",
+      "triangles": 2328,
+      "meshNodes": 66,
+      "bounds": {
+        "min": [
+          -2.1500000953674316,
+          5.960464483090178e-10,
+          -1.25
+        ],
+        "max": [
+          2.1500000953674316,
+          3.799999952316284,
+          1.25
+        ]
+      },
+      "materials": [
+        "graphite",
+        "steel",
+        "cyan",
+        "ceramic",
+        "screen",
+        "violet",
+        "amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_append",
+          "localPosition": [
+            0,
+            3.9,
+            0
+          ],
+          "worldPosition": [
+            0,
+            3.9,
+            0
+          ],
+          "role": "new-kv-row"
+        }
+      ]
+    },
+    {
+      "id": "lab-assembled",
+      "file": "lab-assembled.glb",
+      "category": "assembly",
+      "description": "Susunan referensi lab; bukan scene produksi yang sudah dioptimasi.",
+      "dynamicNodes": [
+        "station_*",
+        "tour_data_spine"
+      ],
+      "bytes": 504536,
+      "sha256": "ac02b8ced7e6397b96a4c492e6c9ca304183ccc45461518ddc1bdabdc62bfdc2",
+      "triangles": 25260,
+      "meshNodes": 624,
+      "bounds": {
+        "min": [
+          -18.100000005960464,
+          -0.14000000029802323,
+          -12.100000005960464
+        ],
+        "max": [
+          18.100000005960464,
+          6.1500000059604645,
+          12
+        ]
+      },
+      "materials": [
+        "floor",
+        "steel",
+        "ceramic",
+        "graphite",
+        "cyan",
+        "screen",
+        "amber",
+        "green",
+        "violet"
+      ],
+      "sockets": [
+        {
+          "name": "socket_input",
+          "localPosition": [
+            -2.1,
+            1.55,
+            0.2
+          ],
+          "worldPosition": [
+            -14.1,
+            1.55,
+            -6.8
+          ],
+          "role": "token-input"
+        },
+        {
+          "name": "socket_output",
+          "localPosition": [
+            2.1,
+            1.55,
+            0.2
+          ],
+          "worldPosition": [
+            -9.9,
+            1.55,
+            -6.8
+          ],
+          "role": "token-output"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            0.26,
+            0.22
+          ],
+          "worldPosition": [
+            -11.4,
+            1.469,
+            -6.657
+          ],
+          "role": "token-label"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            0.26,
+            0.22
+          ],
+          "worldPosition": [
+            -10.85,
+            1.469,
+            -6.657
+          ],
+          "role": "token-label"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            0.26,
+            0.22
+          ],
+          "worldPosition": [
+            -10.3,
+            1.469,
+            -6.657
+          ],
+          "role": "token-label"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            0.26,
+            0.22
+          ],
+          "worldPosition": [
+            -9.75,
+            1.469,
+            -6.657
+          ],
+          "role": "token-label"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            1.4,
+            0.18
+          ],
+          "worldPosition": [
+            -15.1,
+            1.4,
+            -6.82
+          ],
+          "role": "station-title"
+        },
+        {
+          "name": "socket_label_tokenizer",
+          "localPosition": [
+            -12,
+            4.2,
+            -7
+          ],
+          "worldPosition": [
+            -12,
+            4.2,
+            -7
+          ],
+          "role": "station-label"
+        },
+        {
+          "name": "socket_space",
+          "localPosition": [
+            0,
+            2.1,
+            0
+          ],
+          "worldPosition": [
+            -4,
+            2.1,
+            -7
+          ],
+          "role": "vector-origin"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            1.4,
+            0.18
+          ],
+          "worldPosition": [
+            -7.1,
+            1.4,
+            -6.82
+          ],
+          "role": "station-title"
+        },
+        {
+          "name": "socket_label_embedding",
+          "localPosition": [
+            -4,
+            4.2,
+            -7
+          ],
+          "worldPosition": [
+            -4,
+            4.2,
+            -7
+          ],
+          "role": "station-label"
+        },
+        {
+          "name": "socket_display",
+          "localPosition": [
+            0,
+            1.075,
+            0.14
+          ],
+          "worldPosition": [
+            2.1799999999999997,
+            2.125,
+            -6.86
+          ],
+          "role": "runtime-data-surface"
+        },
+        {
+          "name": "socket_Q",
+          "localPosition": [
+            -1.82,
+            1.1,
+            1
+          ],
+          "worldPosition": [
+            2.1799999999999997,
+            1.1,
+            -6
+          ],
+          "role": "projected-tensor"
+        },
+        {
+          "name": "socket_display",
+          "localPosition": [
+            0,
+            1.075,
+            0.14
+          ],
+          "worldPosition": [
+            4,
+            2.125,
+            -6.86
+          ],
+          "role": "runtime-data-surface"
+        },
+        {
+          "name": "socket_K",
+          "localPosition": [
+            0,
+            1.1,
+            1
+          ],
+          "worldPosition": [
+            4,
+            1.1,
+            -6
+          ],
+          "role": "projected-tensor"
+        },
+        {
+          "name": "socket_display",
+          "localPosition": [
+            0,
+            1.075,
+            0.14
+          ],
+          "worldPosition": [
+            5.82,
+            2.125,
+            -6.86
+          ],
+          "role": "runtime-data-surface"
+        },
+        {
+          "name": "socket_V",
+          "localPosition": [
+            1.82,
+            1.1,
+            1
+          ],
+          "worldPosition": [
+            5.82,
+            1.1,
+            -6
+          ],
+          "role": "projected-tensor"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            1.4,
+            0.18
+          ],
+          "worldPosition": [
+            0.8999999999999999,
+            1.4,
+            -6.82
+          ],
+          "role": "station-title"
+        },
+        {
+          "name": "socket_label_qkv",
+          "localPosition": [
+            4,
+            4.2,
+            -7
+          ],
+          "worldPosition": [
+            4,
+            4.2,
+            -7
+          ],
+          "role": "station-label"
+        },
+        {
+          "name": "socket_display",
+          "localPosition": [
+            0,
+            1.4,
+            0.14
+          ],
+          "worldPosition": [
+            12,
+            2.65,
+            -7.3100000000000005
+          ],
+          "role": "runtime-data-surface"
+        },
+        {
+          "name": "socket_query",
+          "localPosition": [
+            -2.3,
+            2.7,
+            0
+          ],
+          "worldPosition": [
+            9.7,
+            2.7,
+            -7
+          ],
+          "role": "query-in"
+        },
+        {
+          "name": "socket_context",
+          "localPosition": [
+            2.3,
+            1.7,
+            0
+          ],
+          "worldPosition": [
+            14.3,
+            1.7,
+            -7
+          ],
+          "role": "context-out"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            1.4,
+            0.18
+          ],
+          "worldPosition": [
+            8.9,
+            1.4,
+            -6.82
+          ],
+          "role": "station-title"
+        },
+        {
+          "name": "socket_label_attention",
+          "localPosition": [
+            12,
+            4.2,
+            -7
+          ],
+          "worldPosition": [
+            12,
+            4.2,
+            -7
+          ],
+          "role": "station-label"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            0.54,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            0.95,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            1.3599999999999999,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            1.77,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            2.1799999999999997,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            2.59,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            3,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            3.4099999999999997,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            3.82,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            4.23,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            4.64,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_inspect",
+          "localPosition": [
+            0,
+            0,
+            1.5
+          ],
+          "worldPosition": [
+            12,
+            5.05,
+            5.5
+          ],
+          "role": "layer-detail"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            1.4,
+            0.18
+          ],
+          "worldPosition": [
+            8.9,
+            1.4,
+            6.82
+          ],
+          "role": "station-title"
+        },
+        {
+          "name": "socket_label_transformer",
+          "localPosition": [
+            12,
+            5.9,
+            7
+          ],
+          "worldPosition": [
+            12,
+            5.9,
+            7
+          ],
+          "role": "station-label"
+        },
+        {
+          "name": "socket_candidate_0",
+          "localPosition": [
+            -2,
+            0.55,
+            0.6
+          ],
+          "worldPosition": [
+            6,
+            0.55,
+            6.4
+          ],
+          "role": "candidate-label"
+        },
+        {
+          "name": "socket_candidate_1",
+          "localPosition": [
+            -1,
+            0.55,
+            0.6
+          ],
+          "worldPosition": [
+            5,
+            0.55,
+            6.4
+          ],
+          "role": "candidate-label"
+        },
+        {
+          "name": "socket_candidate_2",
+          "localPosition": [
+            0,
+            0.55,
+            0.6
+          ],
+          "worldPosition": [
+            4,
+            0.55,
+            6.4
+          ],
+          "role": "candidate-label"
+        },
+        {
+          "name": "socket_candidate_3",
+          "localPosition": [
+            1,
+            0.55,
+            0.6
+          ],
+          "worldPosition": [
+            3,
+            0.55,
+            6.4
+          ],
+          "role": "candidate-label"
+        },
+        {
+          "name": "socket_candidate_4",
+          "localPosition": [
+            2,
+            0.55,
+            0.6
+          ],
+          "worldPosition": [
+            2,
+            0.55,
+            6.3999999999999995
+          ],
+          "role": "candidate-label"
+        },
+        {
+          "name": "socket_others",
+          "localPosition": [
+            0,
+            0.35,
+            1.45
+          ],
+          "worldPosition": [
+            4,
+            0.35,
+            5.55
+          ],
+          "role": "probability-other"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            1.4,
+            0.18
+          ],
+          "worldPosition": [
+            0.8999999999999999,
+            1.4,
+            6.82
+          ],
+          "role": "station-title"
+        },
+        {
+          "name": "socket_label_sampling",
+          "localPosition": [
+            4,
+            4.2,
+            7
+          ],
+          "worldPosition": [
+            4,
+            4.2,
+            7
+          ],
+          "role": "station-label"
+        },
+        {
+          "name": "socket_append",
+          "localPosition": [
+            0,
+            3.9,
+            0
+          ],
+          "worldPosition": [
+            -4,
+            3.9,
+            7
+          ],
+          "role": "new-kv-row"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            1.4,
+            0.18
+          ],
+          "worldPosition": [
+            -7.1,
+            1.4,
+            6.82
+          ],
+          "role": "station-title"
+        },
+        {
+          "name": "socket_label_cache",
+          "localPosition": [
+            -4,
+            4.2,
+            7
+          ],
+          "worldPosition": [
+            -4,
+            4.2,
+            7
+          ],
+          "role": "station-label"
+        },
+        {
+          "name": "socket_space",
+          "localPosition": [
+            0,
+            2.1,
+            0
+          ],
+          "worldPosition": [
+            -12,
+            2.1,
+            7
+          ],
+          "role": "vector-origin"
+        },
+        {
+          "name": "socket_label",
+          "localPosition": [
+            0,
+            1.4,
+            0.18
+          ],
+          "worldPosition": [
+            -15.1,
+            1.4,
+            6.82
+          ],
+          "role": "station-title"
+        },
+        {
+          "name": "socket_label_analogy",
+          "localPosition": [
+            -12,
+            4.2,
+            7
+          ],
+          "worldPosition": [
+            -12,
+            4.2,
+            7
+          ],
+          "role": "station-label"
+        },
+        {
+          "name": "socket_spawn",
+          "localPosition": [
+            0,
+            1.65,
+            10.5
+          ],
+          "worldPosition": [
+            0,
+            1.65,
+            10.5
+          ],
+          "role": "pov-spawn"
+        }
+      ]
+    }
+  ]
+}

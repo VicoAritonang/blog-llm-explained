@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>NeuroLab — Asset Observatory</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+</head>
+<body>
+  <header><a class="brand" href="./"><span class="brand-icon">N</span> NEUROLAB <span class="muted">/ OBSERVATORY</span></a><span class="edition">DESIGN KIT <b>01</b></span></header>
+  <main>
+    <aside>
+      <div class="intro"><p class="eyebrow">ANATOMY OF A LANGUAGE MODEL</p><h1>A place to<br>see the invisible.</h1><p>Laboratorium modular untuk menelusuri perjalanan satu token.</p></div>
+      <div class="catalog-heading"><h2>Asset library</h2><span id="asset-count">26 OBJECTS</span></div>
+      <label class="search-label" for="search">Cari aset</label><input id="search" type="search" placeholder="Cari instrumen, matriks, ruangan…">
+      <nav id="asset-list" aria-label="Daftar aset 3D"></nav>
+      <div class="aside-note"><span class="dot"></span> Original procedural geometry<br><small>GLB 2.0 · meter · Y-up · MIT</small></div>
+    </aside>
+    <section class="workspace" aria-label="Inspeksi model">
+      <div class="view-top"><div><p class="eyebrow" id="category">ASSEMBLY / 001</p><h2 id="title">NeuroLab Observatory</h2></div><div class="badge">ASSET PREVIEW</div></div>
+      <div id="viewport"><div id="loading" role="status">Memuat laboratorium…</div><div id="labels" aria-hidden="true"></div></div>
+      <div class="toolbar"><div class="tools"><button id="reset">Reset view</button><button id="wire" aria-pressed="false">Wireframe</button><button id="labels-toggle" aria-pressed="true">Labels</button><button id="demo" aria-pressed="true">Demo geometry</button></div><span class="hint">Drag: orbit · Scroll: zoom · Right drag: pan</span></div>
+      <div class="details"><div class="description"><p class="eyebrow">OBJECT NOTES</p><p id="description">Susunan ruang referensi.</p><p class="disclosure">Katalog geometri statis. Angka, efek, dan tur pembelajaran akan dibuat pada tahap implementasi.</p></div><dl class="metrics"><div><dt>TRIANGLES</dt><dd id="triangles">—</dd></div><div><dt>FILE SIZE</dt><dd id="size">—</dd></div><div><dt>SOCKETS</dt><dd id="sockets">—</dd></div></dl><a id="download" class="download" download>Download GLB ↗</a></div>
+    </section>
+  </main>
+  <footer><span>NEUROLAB / SPATIAL LEARNING SYSTEM</span><span>Q <i class="q"></i> K <i class="k"></i> V <i class="v"></i><span class="footer-note"> Geometry is a metaphor. The math stays explicit.</span></span></footer>
+  <script type="module" src="./viewer.js"></script>
+</body></html>
