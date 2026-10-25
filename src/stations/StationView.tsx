@@ -1,3 +1,4 @@
+import { t } from "../i18n/core.mjs";
 import { useState } from "react";
 import {
   ArrowRight,
@@ -17,7 +18,7 @@ import {
   LOCAL_LOGITS,
   sample,
   analogyResult,
-  ANALOGY,
+  ANALOGY_CASES,
   decode,
   forward,
 } from "../simulation/engine.mjs";
@@ -35,14 +36,17 @@ export function TokenStrip({ snapshot }: { snapshot: Snapshot }) {
             className={Math.min(s.token, 2) === i ? "active" : ""}
             onClick={() => s.patch({ token: i, column: 0 })}
           >
-            <span>Posisi {i}</span>
+            <span>
+              {t("Posisi")}
+              {i}
+            </span>
             <small>VIGNETTE · Q/K/V</small>
           </button>
         ))}
       </div>
     );
   return (
-    <div className="token-strip" aria-label="Urutan token">
+    <div className="token-strip" aria-label={t("Urutan token")}>
       {snapshot.ids.map((id: number, i: number) => (
         <button
           key={i}
@@ -111,15 +115,15 @@ export function Sampler({ snapshot }: { snapshot: Snapshot }) {
       <div className="panel-heading">
         <span>
           {s.experiment === "F"
-            ? "CONTOH LOGITS LOKAL · TERKURASI"
-            : "PIPELINE · VOCABULARY MAINAN 16"}
+            ? t("CONTOH LOGITS LOKAL · TERKURASI")
+            : t("PIPELINE · VOCABULARY MAINAN 16")}
         </span>
         <div className="segmented">
           <button
             className={display === "probability" ? "active" : ""}
             onClick={() => setDisplay("probability")}
           >
-            Probabilitas
+            {t("Probabilitas")}
           </button>
           <button
             className={display === "logits" ? "active" : ""}
@@ -155,7 +159,7 @@ export function Sampler({ snapshot }: { snapshot: Snapshot }) {
         ))}
         {display === "probability" && (
           <div className="probability-row others">
-            <span>Lainnya (11)</span>
+            <span>{t("Lainnya (11)")}</span>
             <div>
               <i style={{ width: `${others * 100}%` }} />
             </div>
@@ -219,7 +223,7 @@ export function Sampler({ snapshot }: { snapshot: Snapshot }) {
             value={s.topK}
             onChange={(e) => s.patch({ topK: +e.target.value, selected: null })}
           >
-            <option value="0">Semua</option>
+            <option value="0">{t("Semua")}</option>
             {[1, 3, 5, 10].map((v) => (
               <option key={v} value={v}>
                 {v}
@@ -244,8 +248,8 @@ export function Sampler({ snapshot }: { snapshot: Snapshot }) {
         <button className="button primary" onClick={choose}>
           <Shuffle size={15} />
           {s.sampler === "greedy" || s.temperature === 0
-            ? "Pilih argmax"
-            : "Ambil satu sampel"}
+            ? t("Pilih argmax")
+            : t("Ambil satu sampel")}
         </button>
         <button
           className="button"
@@ -256,24 +260,28 @@ export function Sampler({ snapshot }: { snapshot: Snapshot }) {
         {s.selected !== null && (
           <>
             <span className="sample-result">
-              Terpilih: <strong>{tokenLabel(s.selected)}</strong>
+              {t("Terpilih:")}
+              <strong>{tokenLabel(s.selected)}</strong>
             </span>
             <button
               className="button"
               disabled={s.ids.length >= 12}
               onClick={s.append}
             >
-              Masukkan ke urutan <Plus size={14} />
+              {t("Masukkan ke urutan")}
+              <Plus size={14} />
             </button>
           </>
         )}
       </div>
       <p className="fine-print">
-        Lima kandidat + lainnya = 100%. Filter top-k/top-p dihitung ulang dan
-        dinormalisasi. Distribusi lebih datar memberi variasi; probabilitas
-        bukan jaminan kebenaran.
+        {t(
+          "Lima kandidat + lainnya = 100%. Filter top-k/top-p dihitung ulang dan dinormalisasi. Distribusi lebih datar memberi variasi; probabilitas bukan jaminan kebenaran.",
+        )}
         {s.sampler === "greedy" || s.temperature === 0
-          ? " Pada greedy/T=0, bar one-hot menandai argmax, bukan softmax pada temperature positif."
+          ? t(
+              " Pada greedy/T=0, bar one-hot menandai argmax, bukan softmax pada temperature positif.",
+            )
           : ""}
       </p>
     </div>
@@ -295,9 +303,9 @@ function Tokenizer() {
   return (
     <>
       <div className="panel-heading">
-        <span>TOKENIZER MAINAN · PRESET OFFLINE</span>
+        <span>{t("TOKENIZER MAINAN · PRESET OFFLINE")}</span>
         <select
-          aria-label="Preset tokenizer"
+          aria-label={t("Preset tokenizer")}
           value={s.preset}
           onChange={(e) => {
             const preset = +e.target.value;
@@ -326,7 +334,7 @@ function Tokenizer() {
       </div>
       <div className="flow-arrow">
         <ArrowRight size={22} />
-        <span>{s.step ? "potongan + lookup" : "siap dipisahkan"}</span>
+        <span>{s.step ? t("potongan + lookup") : t("siap dipisahkan")}</span>
       </div>
       <div className="token-capsules">
         {tokens.map((t, i) => (
@@ -342,7 +350,8 @@ function Tokenizer() {
       </div>
       <div className="token-details">
         <span>
-          POSISI <b>{selected.position}</b>
+          {t("POSISI")}
+          <b>{selected.position}</b>
         </span>
         <span>
           OFFSET{" "}
@@ -353,15 +362,18 @@ function Tokenizer() {
         <span>
           WHITESPACE{" "}
           <b>
-            {selected.text.startsWith(" ") ? "spasi awal" : "tanpa spasi awal"}
+            {selected.text.startsWith(" ")
+              ? t("spasi awal")
+              : t("tanpa spasi awal")}
           </b>
         </span>
       </div>
       <details className="bpe-demo">
-        <summary>Zoom merge BPE mainan</summary>
+        <summary>{t("Zoom merge BPE mainan")}</summary>
         <p>
-          Aturan yang sudah dipelajari: (c,a) → ca, lalu (ca,t) → cat. Ini
-          contoh merge; bukan vocabulary byte-level GPT-2.
+          {t(
+            "Aturan yang sudah dipelajari: (c,a) → ca, lalu (ca,t) → cat. Ini contoh merge; bukan vocabulary byte-level GPT-2.",
+          )}
         </p>
         <div className="bpe-pieces">
           {bpeTrace()[merge].map((p, i) => (
@@ -369,12 +381,13 @@ function Tokenizer() {
           ))}
         </div>
         <button className="button" onClick={() => setMerge((merge + 1) % 3)}>
-          {merge < 2 ? "Merge berikutnya" : "Ulangi merge"}
+          {merge < 2 ? t("Merge berikutnya") : t("Ulangi merge")}
         </button>
       </details>
       <p className="fine-print">
-        · menandai spasi asli. Menggabungkan semua potongan merekonstruksi input
-        persis; ID tidak diklaim sebagai ID GPT-2.
+        {t(
+          "· menandai spasi asli. Menggabungkan semua potongan merekonstruksi input persis; ID tidak diklaim sebagai ID GPT-2.",
+        )}
       </p>
     </>
   );
@@ -391,7 +404,7 @@ function Embedding({ snapshot }: { snapshot: Snapshot }) {
           onClick={() => s.patch({ swapped: !s.swapped, selected: null })}
         >
           <Shuffle size={14} />
-          {s.swapped ? "Pulihkan posisi" : "Tukar posisi 0 ↔ 1"}
+          {s.swapped ? t("Pulihkan posisi") : t("Tukar posisi 0 ↔ 1")}
         </button>
       </div>
       <TokenStrip snapshot={snapshot} />
@@ -406,8 +419,9 @@ function Embedding({ snapshot }: { snapshot: Snapshot }) {
         <Vector values={snapshot.result.X0[i]} label={`X[${i}]`} />
       </div>
       <p className="fine-print">
-        Embedding token tetap saat token dipindah. Position embedding mengikuti
-        posisi baru. Koordinat demo bukan sumbu makna universal.
+        {t(
+          "Embedding token tetap saat token dipindah. Position embedding mengikuti posisi baru. Koordinat demo bukan sumbu makna universal.",
+        )}
       </p>
     </>
   );
@@ -432,15 +446,15 @@ function Attention({ snapshot }: { snapshot: Snapshot }) {
       <div className="panel-heading">
         <span>
           {snapshot.local
-            ? "CONTOH LOKAL · q = [2,0,0,0]"
-            : `PIPELINE · HEAD ${s.head + 1} · BLOK ${s.layer + 1}`}
+            ? t("CONTOH LOKAL · q = [2,0,0,0]")
+            : t("PIPELINE · HEAD {0} · BLOK {1}", s.head + 1, s.layer + 1)}
         </span>
         {s.experiment === "C" && (
           <button
             className="button"
             onClick={() => s.patch({ local: !s.local, token: 2, column: 0 })}
           >
-            {s.local ? "Gunakan pipeline" : "Contoh [2,1,0]"}
+            {s.local ? t("Gunakan pipeline") : t("Contoh [2,1,0]")}
           </button>
         )}
       </div>
@@ -460,21 +474,21 @@ function Attention({ snapshot }: { snapshot: Snapshot }) {
             wide
           </button>
           <p>
-            Urutan mainan pendek; bukan token BPE GPT-2. Klik{" "}
+            {t("Urutan mainan pendek; bukan token BPE GPT-2. Klik")}{" "}
             <button
               className="text-button"
               onClick={() => s.patch({ token: 1 })}
             >
-              it (posisi 1)
+              {t("it (posisi 1)")}
             </button>{" "}
-            atau{" "}
+            {t("atau")}{" "}
             <button
               className="text-button"
               onClick={() => s.patch({ token: 3 })}
             >
-              kata akhir (posisi 3)
+              {t("kata akhir (posisi 3)")}
             </button>
-            . Prefix hingga it identik, sehingga barisnya tetap.
+            {t(". Prefix hingga it identik, sehingga barisnya tetap.")}
           </p>
         </div>
       )}
@@ -507,7 +521,7 @@ function Attention({ snapshot }: { snapshot: Snapshot }) {
                         traced: true,
                       })
                     }
-                    aria-label={`Attention query ${i}, key ${j}: ${j > i && masked ? "masa depan belum tersedia" : value}`}
+                    aria-label={`Attention query ${i}, key ${j}: ${j > i && masked ? t("masa depan belum tersedia") : value}`}
                   >
                     <span>
                       {masked && j > i ? (
@@ -526,9 +540,9 @@ function Attention({ snapshot }: { snapshot: Snapshot }) {
           </div>
           <div className="heatmap-legend">
             <i />
-            <span>Skor / bobot</span>
+            <span>{t("Skor / bobot")}</span>
             <i className="mask-swatch" />
-            <span>Belum tersedia</span>
+            <span>{t("Belum tersedia")}</span>
           </div>
         </div>
         <div className="attention-summary">
@@ -544,10 +558,11 @@ function Attention({ snapshot }: { snapshot: Snapshot }) {
             ÷ √4 = <b>{fmt(h.scaled[query][key], 6)}</b>
           </p>
           <p>
-            Bobot setelah mask = <b>{fmt(h.A[query][key], 6)}</b>
+            {t("Bobot setelah mask =")}
+            <b>{fmt(h.A[query][key], 6)}</b>
           </p>
           <div className="row-sum">
-            Σ bobot baris{" "}
+            {t("Σ bobot baris")}{" "}
             <b>
               {fmt(
                 h.A[query].reduce((a: number, v: number) => a + v, 0),
@@ -562,13 +577,15 @@ function Attention({ snapshot }: { snapshot: Snapshot }) {
               s.patch({ step: 5, column: 0, tab: "numbers", traced: true })
             }
           >
-            Telusuri weighted sum <ArrowUpRight size={14} />
+            {t("Telusuri weighted sum")}
+            <ArrowUpRight size={14} />
           </button>
         </div>
       </div>
       <p className="fine-print">
-        Query di baris, Key di kolom. Skor bukan probabilitas. Memilih sel
-        membuka derivasi dan kontribusi Value.
+        {t(
+          "Query di baris, Key di kolom. Skor bukan probabilitas. Memilih sel membuka derivasi dan kontribusi Value.",
+        )}
       </p>
     </>
   );
@@ -580,7 +597,7 @@ function Blocks({ snapshot }: { snapshot: Snapshot }) {
   return (
     <>
       <div className="panel-heading">
-        <span>12 BLOK REFERENSI · 2 BLOK DEMO NUMERIK</span>
+        <span>{t("12 PELAT ILUSTRATIF · 2 BLOK DEMO NUMERIK")}</span>
       </div>
       <div className="block-rack">
         {Array.from({ length: 12 }, (_, index) => (
@@ -591,8 +608,8 @@ function Blocks({ snapshot }: { snapshot: Snapshot }) {
             onClick={() => s.patch({ layer: index, column: 0 })}
             title={
               index >= 2
-                ? "Blok referensi; tidak ada angka fixture"
-                : "Buka blok numerik"
+                ? t("Blok referensi; tidak ada angka fixture")
+                : t("Buka blok numerik")
             }
           >
             {String(index + 1).padStart(2, "0")}
@@ -611,16 +628,18 @@ function Blocks({ snapshot }: { snapshot: Snapshot }) {
         <span>MLP</span>
         <span className="residual">+ R</span>
       </div>
-      <Vector label="X awal" values={b.input[i]} />
+      <Vector label={t("X awal")} values={b.input[i]} />
       <Vector label="Attention" values={b.out[i]} />
       <Vector label="R = X + attn" values={b.R[i]} />
       <Vector label="MLP" values={b.M[i]} />
-      <Vector label="X berikutnya" values={b.X[i]} />
+      <Vector label={t("X berikutnya")} values={b.X[i]} />
       <div className="gelu-chart">
         <svg
           viewBox="0 0 340 100"
           role="img"
-          aria-label="Kurva GELU: halus, nilai negatif tidak seluruhnya nol"
+          aria-label={t(
+            "Kurva GELU: halus, nilai negatif tidak seluruhnya nol",
+          )}
         >
           <path d="M20 70H320M170 15V90" stroke="#53666c" fill="none" />
           <path
@@ -651,8 +670,9 @@ function Blocks({ snapshot }: { snapshot: Snapshot }) {
           </text>
         </svg>
         <p>
-          Expansion 8 → 32 → 8. Aktivasi kontinu; satu neuron tidak mewakili
-          satu fakta.
+          {t(
+            "Expansion 8 → 32 → 8. Aktivasi kontinu; satu neuron tidak mewakili satu fakta.",
+          )}
         </p>
       </div>
     </>
@@ -685,7 +705,7 @@ function Cache({ snapshot }: { snapshot: Snapshot }) {
   return (
     <>
       <div className="panel-heading">
-        <span>AKTIVASI PER URUTAN · BUKAN WEIGHTS</span>
+        <span>{t("AKTIVASI PER URUTAN · BUKAN WEIGHTS")}</span>
         <label className="toggle">
           <input
             type="checkbox"
@@ -698,7 +718,10 @@ function Cache({ snapshot }: { snapshot: Snapshot }) {
       <div className="cache-racks">
         {[0, 1].map((layer) => (
           <div key={layer}>
-            <span>BLOK {layer + 1}</span>
+            <span>
+              {t("BLOK")}
+              {layer + 1}
+            </span>
             {["K", "V"].map((type) => (
               <div className="cache-row" key={type}>
                 <b>{type}</b>
@@ -706,7 +729,7 @@ function Cache({ snapshot }: { snapshot: Snapshot }) {
                   <span
                     key={i}
                     className={i === n - 1 ? "new" : ""}
-                    title={`${type} · posisi ${i} · ${VOCAB[id]}`}
+                    title={t("{0} · posisi {1} · {2}", type, i, VOCAB[id])}
                   >
                     {i}
                   </span>
@@ -718,25 +741,28 @@ function Cache({ snapshot }: { snapshot: Snapshot }) {
       </div>
       <div className="work-comparison">
         <div>
-          <span>Tanpa cache</span>
+          <span>{t("Tanpa cache")}</span>
           <strong>{(n + 1) * 2}</strong>
-          <small>baris diproyeksikan ulang / 2 blok</small>
+          <small>{t("baris diproyeksikan ulang / 2 blok")}</small>
         </div>
         <div className={s.cache ? "active" : ""}>
-          <span>Dengan cache</span>
+          <span>{t("Dengan cache")}</span>
           <strong>2</strong>
-          <small>baris baru / 2 blok</small>
+          <small>{t("baris baru / 2 blok")}</small>
         </div>
       </div>
       <p className="fine-print">
-        Penghitung pekerjaan ilustratif untuk langkah decode berikutnya, bukan
-        latency. Estimasi cache Float32 saat ini: {2 * n * 2 * 4 * 4}{" "}
-        byte/layer; {2 * 2 * n * 2 * 4 * 4} byte total.
+        {t(
+          "Penghitung pekerjaan ilustratif untuk langkah decode berikutnya, bukan latency. Estimasi cache Float32 saat ini:",
+        )}
+        {2 * n * 2 * 4 * 4} {t("byte/layer;")}
+        {2 * 2 * n * 2 * 4 * 4}
+        {t("byte total.")}
       </p>
       <div className="sampler-action">
         <button className="button primary" disabled={n >= 12} onClick={compare}>
           <Plus size={15} />
-          Decode satu token
+          {t("Decode satu token")}
         </button>
         <button
           className="button"
@@ -751,20 +777,26 @@ function Cache({ snapshot }: { snapshot: Snapshot }) {
       {last && (
         <div className="cache-proof">
           <b>
-            {last.rows} → {last.rows + 1} token · {last.label}
+            {last.rows} → {last.rows + 1}
+            {t("token ·")}
+            {last.label}
           </b>
           <p>
-            Decode incremental dan forward penuh dihitung terpisah. Selisih
-            logit maksimum: {last.delta.toExponential(3)}.{" "}
+            {t(
+              "Decode incremental dan forward penuh dihitung terpisah. Selisih logit maksimum:",
+            )}
+            {last.delta.toExponential(3)}.{" "}
             {s.cache
-              ? "K/V prefix dipakai ulang."
-              : "Mode tanpa cache memproyeksikan ulang prefix; hasil tetap sama."}
+              ? t("K/V prefix dipakai ulang.")
+              : t(
+                  "Mode tanpa cache memproyeksikan ulang prefix; hasil tetap sama.",
+                )}
           </p>
         </div>
       )}
       {n >= 12 && (
         <p role="status">
-          Batas 12 token demo tercapai. Reset prefix untuk mulai lagi.
+          {t("Batas 12 token demo tercapai. Reset prefix untuk mulai lagi.")}
         </p>
       )}
     </>
@@ -772,19 +804,49 @@ function Cache({ snapshot }: { snapshot: Snapshot }) {
 }
 function Analogy() {
   const s = useExperience(),
-    result = analogyResult(),
-    words = ["king", "man", "woman", "queen"] as const;
+    result = analogyResult(s.analogyCase);
+  const { words, vectors, points } = result;
+  const projected = [...points, vectors[result.target].slice(0, 2)];
+  const maxX = Math.max(...projected.map((p) => p[0]), 0.1),
+    maxY = Math.max(...projected.map((p) => p[1]), 0.1);
+  const toScreen = (p: number[]) => [
+    55 + (p[0] / maxX) * 350,
+    185 - (p[1] / maxY) * 145,
+  ];
+  const path = points.map(toScreen),
+    target = toScreen(vectors[result.target]);
   return (
     <>
       <div className="panel-heading">
-        <span>CONTOH LOKAL · WORD EMBEDDINGS STATIS</span>
+        <span>{t("CONTOH LOKAL · WORD EMBEDDINGS STATIS")}</span>
       </div>
-      <Formula text="v_{\\mathrm{king}}-v_{\\mathrm{man}}+v_{\\mathrm{woman}}" />
+      <label className="analogy-selector">
+        {t("Pilih contoh analogi")}
+        <select
+          value={s.analogyCase}
+          onChange={(e) =>
+            s.patch({ analogyCase: e.target.value, token: 0, column: 0 })
+          }
+        >
+          {ANALOGY_CASES.map((example) => (
+            <option key={example.id} value={example.id}>
+              {example.title}
+            </option>
+          ))}
+        </select>
+      </label>
+      <Formula text={result.formula} />
       <svg
         className="analogy-plot"
         viewBox="0 0 480 220"
         role="img"
-        aria-label="Panah vektor ujung-ke-pangkal pada proyeksi dimensi 1 dan 2"
+        aria-label={t(
+          "{0} dikurangi {1} ditambah {2}, mendekati {3}. Proyeksi dimensi 1 dan 2.",
+          words[0],
+          words[1],
+          words[2],
+          words[3],
+        )}
       >
         <defs>
           <marker
@@ -795,56 +857,52 @@ function Analogy() {
             refY="3"
             orient="auto"
           >
-            <path d="M0,0 L0,6 L6,3 z" fill="currentColor" />
+            <path d="M0,0 L0,6 L6,3 z" fill="context-stroke" />
           </marker>
         </defs>
-        <path d="M40 184H440M60 205V18" stroke="#647074" strokeWidth="1" />
+        <path d="M40 185H440M55 205V18" stroke="#647074" strokeWidth="1" />
         <g fill="#bccac6" fontSize="10">
-          <text x="398" y="200">
-            dimensi 1
+          <text x="398" y="207">
+            {t("dimensi 1")}
           </text>
-          <text x="70" y="20">
-            dimensi 2
-          </text>
-        </g>
-        <g fill="none" strokeWidth="3" markerEnd="url(#arrow-vector)">
-          <path
-            d="M60 184L302 88"
-            stroke="#49d0df"
-            style={{ color: "#49d0df" }}
-          />
-          <path
-            d="M302 88L126 100"
-            stroke="#ad91e9"
-            style={{ color: "#ad91e9" }}
-          />
-          <path
-            d="M126 100L148 28"
-            stroke="#e7bb6e"
-            style={{ color: "#e7bb6e" }}
-          />
-        </g>
-        <g fill="#edf2ef" fontSize="13">
-          <text x="200" y="114">
-            king
-          </text>
-          <text x="190" y="78">
-            − man
-          </text>
-          <text x="160" y="66">
-            + woman
-          </text>
-          <text x="157" y="28">
-            ≈ queen
+          <text x="63" y="20">
+            {t("dimensi 2")}
           </text>
         </g>
-        <circle cx="152" cy="30" r="5" fill="#88d9ab" />
+        {[0, 1, 2].map((i) => (
+          <g key={i}>
+            <path
+              d={`M${path[i].join(" ")}L${path[i + 1].join(" ")}`}
+              fill="none"
+              stroke={["#49d0df", "#ad91e9", "#e7bb6e"][i]}
+              strokeWidth="3"
+              markerEnd="url(#arrow-vector)"
+            />
+            <text
+              x={(path[i][0] + path[i + 1][0]) / 2}
+              y={
+                (path[i][1] + path[i + 1][1]) / 2 +
+                (i === 0 ? 22 : i === 1 ? -14 : -10)
+              }
+              textAnchor="middle"
+              fill="#edf2ef"
+              fontSize="13"
+            >
+              {i === 1 ? "− " : i === 2 ? "+ " : ""}
+              {words[i]}
+            </text>
+          </g>
+        ))}
+        <circle cx={target[0]} cy={target[1]} r="5" fill="#88d9ab" />
+        <text x={target[0] + 10} y={target[1] - 6} fill="#b5edca" fontSize="13">
+          ≈ {result.target}
+        </text>
       </svg>
       <div className="analogy-vectors">
         {words.map((w) => (
-          <Vector key={w} label={w} values={ANALOGY[w]} />
+          <Vector key={w} label={w} values={vectors[w]} />
         ))}
-        <Vector label="hasil" values={result.vector} />
+        <Vector label={t("hasil")} values={result.vector} />
       </div>
       <div className="cosine-rank">
         {result.ranking.map(
@@ -859,11 +917,13 @@ function Analogy() {
         )}
       </div>
       <p className="fine-print">
-        Mendekati queen pada fixture ini. Ranking cosine dihitung pada 4 dimensi
-        sumber; diagram hanya proyeksi dimensi 1/2.
+        {t("Mendekati")} {result.target}{" "}
+        {t(
+          "pada fixture ini. Vektor dirancang untuk ilustrasi, bukan diukur dari model terlatih. Ranking cosine memakai empat dimensi sumber; diagram dan lab hanya menampilkan proyeksi dua dimensi. Relasi ini tidak berlaku universal.",
+        )}
       </p>
       <button className="text-button" onClick={() => s.navigate("transformer")}>
-        Apa bedanya dengan representasi kontekstual GPT?{" "}
+        {t("Apa bedanya dengan representasi kontekstual GPT?")}{" "}
         <ArrowUpRight size={15} />
       </button>
     </>
@@ -900,9 +960,9 @@ export default function StationView({ snapshot }: { snapshot: Snapshot }) {
                 <p>
                   {
                     [
-                      "Query · pola dicocokkan",
-                      "Key · pola ditawarkan",
-                      "Value · informasi dibawa",
+                      t("Query · pola dicocokkan"),
+                      t("Key · pola ditawarkan"),
+                      t("Value · informasi dibawa"),
                     ][index]
                   }
                 </p>
@@ -924,15 +984,16 @@ export default function StationView({ snapshot }: { snapshot: Snapshot }) {
                     s.patch({ step: index + 1, tab: "numbers", traced: true })
                   }
                 >
-                  Telusuri proyeksi <ArrowUpRight size={14} />
+                  {t("Telusuri proyeksi")}
+                  <ArrowUpRight size={14} />
                 </button>
               </div>
             ))}
           </div>
           <p className="fine-print">
-            Q, K, V berasal dari LayerNorm input yang sama, memakai tiga matriks
-            bobot terlatih yang berbeda. Semua bobot demo dibuat deterministik,
-            bukan bobot GPT-2.
+            {t(
+              "Q, K, V berasal dari LayerNorm input yang sama, memakai tiga matriks bobot terlatih yang berbeda. Semua bobot demo dibuat deterministik, bukan bobot GPT-2.",
+            )}
           </p>
         </>
       )}

@@ -26,6 +26,7 @@ type State = LinkState & {
   reducedMotion: boolean;
   overview: boolean;
   tab: "meaning" | "numbers" | "code";
+  analogyCase: string;
   ids: number[];
   selected: number | null;
   cache: boolean;
@@ -56,6 +57,7 @@ export const useExperience = create<State>((set, get) => ({
   reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
   overview: false,
   tab: linked.tab,
+  analogyCase: "capitals",
   ids:
     linked.experiment === "D"
       ? [...PRESETS[linked.suffix === "wide" ? "causalWide" : "causalTired"]]

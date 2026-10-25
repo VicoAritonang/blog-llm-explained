@@ -1,0 +1,303 @@
+:root {
+  color-scheme: dark;
+  font-family: "Source Sans 3 Variable", "Segoe UI", sans-serif;
+  color: #e4ecec;
+  background: #10191e;
+  --paper: #142329;
+  --ink: #e4ecec;
+  --muted: #afc2c4;
+  --line: #3c5158;
+  --teal: #83d7c5;
+  --mint: #213d3e;
+  --dark: #10191e;
+}
+body {
+  background: #10191e;
+}
+.game-experience {
+  font-family: "Source Sans 3 Variable", "Segoe UI", sans-serif;
+  font-weight: 500;
+}
+.game-experience h1,
+.game-experience h2,
+.game-experience h3 {
+  font-weight: 750;
+}
+.game-experience button,
+.game-experience label,
+.game-experience summary {
+  font-weight: 600;
+}
+.game-experience small,
+.game-experience kbd {
+  font-weight: 600;
+}
+.game-brand h1 {
+  font-weight: 800;
+}
+.game-brand h1 span,
+.game-brand small,
+.world-status small,
+.field-guide header > span,
+.guide-location small,
+.equipped-caption > span,
+.world-location {
+  letter-spacing: 0.6px;
+}
+.game-brand h1 span {
+  font-size: 10px;
+}
+.game-brand small {
+  font-size: 9px;
+}
+.game-topbar nav button,
+.field-guide footer button {
+  font-size: 12px;
+}
+.guide-task {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.guide-start {
+  font-size: 12px;
+}
+.guide-operation b {
+  font-weight: 700;
+  font-size: 13px;
+}
+.guide-operation p,
+.field-guide details {
+  font-size: 12px;
+}
+.equipped-info p {
+  font-size: 12px;
+}
+.mission-picker button b,
+.mission-tracker > button {
+  font-size: 12px;
+}
+.game-panel {
+  color-scheme: dark;
+  background: #16262d;
+  color: #e4ecec;
+}
+.game-panel :is(select, input[type="number"]) {
+  color: #deebea;
+  background: #20353b;
+  border-color: #50666c;
+}
+.field-journal {
+  background: #16262d;
+  color: #e4ecec;
+}
+.field-journal .panel-title {
+  background: #1d3037;
+  border-color: #3c5158;
+}
+.field-journal .panel-title small {
+  color: #b6cecd;
+}
+.field-journal .panel-title > button {
+  background: #2c454c;
+  color: #e2eeee;
+}
+.field-journal .journal-toolbar,
+.field-journal .journal-controls,
+.field-journal .journal-reference {
+  border-color: #3c5158;
+}
+.field-journal .journal-toolbar button {
+  color: #b9cecf;
+  font-size: 13px;
+}
+.field-journal .journal-toolbar button.active {
+  color: #d8f4e7;
+  background: #31534d;
+}
+.field-journal .journal-shape {
+  color: #9fe1c9;
+  background: #102027;
+  font-size: 13px;
+}
+.field-journal .journal-shape span,
+.field-journal .journal-controls > span,
+.field-journal .journal-reference {
+  color: #b9cdcf;
+}
+.field-journal .journal-reference {
+  font-size: 12px;
+}
+.field-journal .inspector {
+  background: #16262d;
+  color: #e4ecec;
+}
+.field-journal .inspector-tabs button {
+  color: #b6cbce !important;
+  font-size: 13px;
+}
+.field-journal .inspector-tabs button.active {
+  color: #a9ebce !important;
+  border-color: #a9ebce;
+}
+.field-journal .inspector-content :is(p, summary),
+.field-journal .tensor-meta,
+.field-journal .tensor-meta > span:last-child {
+  color: #bdcfd1 !important;
+}
+.field-journal .inspector-content p {
+  font-size: 14px;
+  line-height: 1.7;
+}
+.field-journal :is(.tensor-meta, .provenance, .terms th, .terms td) {
+  border-color: #3c5158;
+}
+.field-journal .inspector .formula {
+  background: #102027;
+  border-color: #3c5158;
+  color: #e3f0ec;
+  font-size: 12px;
+}
+.field-journal .insight {
+  background: #233f3e;
+  border-color: #8dd3bb;
+}
+.field-journal .insight strong {
+  color: #b7e9cf;
+  font-size: 13px;
+  font-weight: 700;
+}
+.field-journal
+  :is(
+    .section-kicker,
+    .code-label,
+    .precision code,
+    .matrix-table caption,
+    .matrix-table th,
+    .provenance summary
+  ) {
+  color: #b8d5c7 !important;
+}
+.field-journal .small {
+  color: #afc6c5 !important;
+}
+.field-journal .matrix-table {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.field-journal .matrix-table button {
+  color: #e6efee;
+  font-size: 12px;
+}
+.field-journal .matrix-table button.selected {
+  border-color: #9bdfbd;
+}
+.field-journal .masked {
+  color: #bdcbd0 !important;
+}
+.field-journal .terms th {
+  background: #243a3f;
+  color: #bad8cd;
+}
+.field-journal .terms td {
+  color: #dce9e8;
+}
+.field-journal .code-list {
+  background: #102027;
+  border-color: #3c5158;
+  font-size: 12px;
+}
+.field-journal .code-list span {
+  color: #b9cfd2;
+}
+.field-journal .code-list span.active {
+  color: #c6f0d6;
+  background: #294b43;
+  border-color: #a1dab9;
+}
+.field-journal .code-list b {
+  color: #9ab4b4;
+}
+.field-journal :is(code, pre, .code-list) {
+  font-family: ui-monospace, Consolas, monospace;
+}
+.field-journal .button {
+  background: #2c454c;
+  color: #dfebe7;
+  border-color: #537076;
+}
+.field-journal .button.primary {
+  background: #aacaac;
+  color: #17362c;
+  border-color: #aacaac;
+}
+.field-journal .text-button {
+  color: #ade7c9;
+}
+.field-journal .station-view {
+  background: #16262d;
+  color: #cfdfdc;
+}
+.game-panel .fine-print {
+  color: #adc7bf;
+  font-size: 12px;
+}
+.game-panel .station-view .panel-heading > span {
+  color: #aed6c2;
+  font-size: 11px;
+}
+.game-panel .analogy-selector {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+.game-panel .analogy-selector select {
+  font-size: 14px;
+  padding: 10px;
+  width: 100%;
+}
+.game-panel .analogy-plot text {
+  font-family: "Source Sans 3 Variable", sans-serif;
+  font-weight: 600;
+}
+.game-panel .analogy-vectors {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.game-panel .cosine-rank {
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 760px) {
+  .game-brand h1 {
+    font-size: 19px;
+  }
+  .game-experience .game-brand small {
+    display: none;
+  }
+  .field-guide .guide-task {
+    font-size: 12px;
+  }
+  .field-guide .guide-start {
+    font-size: 11px;
+  }
+  .field-guide .guide-location h2 {
+    font-size: 20px;
+  }
+  .game-panel .analogy-vectors {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 360px) {
+  .game-experience .game-brand h1 {
+    font-size: 16px;
+  }
+}
+.game-topbar .language-toggle { display:flex; align-items:center; justify-content:center; min-width:38px; height:36px; padding:0 8px; border:1px solid #507378; border-radius:5px; color:#d5ecd9; font-size:12px; font-weight:750; text-decoration:none; }
+.game-topbar .language-toggle:hover { background:#31524e; }
+.language-settings { display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding-bottom:22px; margin-bottom:20px; border-bottom:1px solid #45636a; font-size:14px; }
+.language-settings a,.learning-guide-link { color:#b5e6cb; text-decoration:underline; text-underline-offset:4px; }
+.language-settings a[aria-current=page] { color:#f0f6e9; font-weight:750; }
+@media(max-width:760px) {
+  .game-experience .game-topbar .game-brand h1 { display:none; }
+  .game-experience .game-topbar .game-brand > span { display:grid; }
+  .game-topbar .language-toggle { min-width:30px; width:30px; height:32px; padding:0; }
+}

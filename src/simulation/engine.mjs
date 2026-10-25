@@ -1,3 +1,4 @@
+import { t } from "../i18n/core.mjs";
 /** Small, deterministic pre-norm decoder. No DOM, renderer, or network dependency. */
 export const PROFILE = Object.freeze({
   width: 8,
@@ -42,14 +43,14 @@ export function effectiveIds(state) {
 export const TOKENIZER_PRESETS = [
   {
     id: "journey",
-    title: "Kalimat sederhana",
+    title: t("Kalimat sederhana"),
     text: "The cat sat on the",
     pieces: ["The", " cat", " sat", " on", " the"],
     ids: ["toy:0", "toy:1", "toy:2", "toy:3", "toy:4"],
   },
   {
     id: "subword",
-    title: "Kata & subword",
+    title: t("Kata & subword"),
     text: "cat cats unhelpful",
     pieces: ["cat", " cat", "s", " un", "help", "ful"],
     ids: [
@@ -63,14 +64,14 @@ export const TOKENIZER_PRESETS = [
   },
   {
     id: "space",
-    title: "Spasi awal",
+    title: t("Spasi awal"),
     text: "cat cat",
     pieces: ["cat", " cat"],
     ids: ["toy-bpe:0", "toy-bpe:1"],
   },
   {
     id: "indonesia",
-    title: "Bahasa Indonesia",
+    title: t("Bahasa Indonesia"),
     text: "Saya belajar bahasa",
     pieces: ["Saya", " bel", "ajar", " bahasa"],
     ids: ["toy-id:0", "toy-id:1", "toy-id:2", "toy-id:3"],
@@ -188,7 +189,7 @@ export function forward(ids, weights = makeWeights()) {
     ids.length > 12 ||
     ids.some((id) => !Number.isInteger(id) || id < 0 || id >= 16)
   )
-    throw new Error("Urutan fixture tidak valid");
+    throw new Error(t("Urutan fixture tidak valid"));
   const embeddings = ids.map((id) => weights.E[id]);
   const positions = ids.map((_, i) => weights.P[i]);
   const X0 = add(embeddings, positions);
@@ -239,7 +240,7 @@ export function forward(ids, weights = makeWeights()) {
 export function decode(id, prefix, weights = makeWeights()) {
   const position = prefix.ids.length;
   if (position >= 12 || !Number.isInteger(id) || id < 0 || id >= 16)
-    throw new Error("Batas urutan demonstrasi tercapai");
+    throw new Error(t("Batas urutan demonstrasi tercapai"));
   let X = add([weights.E[id]], [weights.P[position]]);
   const cache = [];
   weights.blocks.forEach((w, layer) => {
@@ -283,7 +284,7 @@ export function distribution(logits, temperature = 1, topK = 0, topP = 1) {
     topP <= 0 ||
     topP > 1
   )
-    throw new Error("Parameter sampling tidak valid");
+    throw new Error(t("Parameter sampling tidak valid"));
   if (temperature === 0)
     return logits.map((_, i) =>
       i === logits.indexOf(Math.max(...logits)) ? 1 : 0,
@@ -332,22 +333,70 @@ export const LOCAL_ATTENTION = () => {
   ];
   return { Q: q, K: k, V: v, ...attention(q, k, v) };
 };
-export const ANALOGY = {
-  king: [1.1, 0.8, 0.3, 0.2],
-  man: [0.8, 0.1, 0.2, -0.1],
-  woman: [0.1, 0.6, 0.3, 0.1],
-  queen: [0.42, 1.28, 0.41, 0.39],
-  cat: [-0.6, 0.2, 0.8, 0.1],
-  street: [0.2, -0.7, 0.2, 0.8],
-};
+/** @type {{id: string, title: string, words: string[], vectors: Record<string, number[]>}[]} */
+export const ANALOGY_CASES = [
+  {
+    id: "capitals",
+    title: t("Ibu kota dan negara"),
+    words: ["Tokyo", "Jepang", "Prancis", "Paris"],
+    vectors: {
+      Tokyo: [1.1, 0.8, 0.3, 0.2],
+      Jepang: [0.8, 0.1, 0.2, -0.1],
+      Prancis: [0.1, 0.6, 0.3, 0.1],
+      Paris: [0.42, 1.28, 0.41, 0.39],
+      laut: [-0.6, 0.2, 0.8, 0.1],
+      buku: [0.2, -0.7, 0.2, 0.8],
+    },
+  },
+  {
+    id: "verbs",
+    title: t("Bentuk kata kerja bahasa Inggris"),
+    words: ["walking", "walk", "swim", "swimming"],
+    vectors: {
+      walking: [0.9, 0.9, 0.2, 0.1],
+      walk: [0.7, 0.2, 0.1, 0],
+      swim: [0.2, 0.35, 0.4, 0.3],
+      swimming: [0.42, 1.03, 0.51, 0.41],
+      book: [-0.5, 0.1, 0.7, 0.2],
+      road: [0.3, -0.6, 0.1, 0.9],
+    },
+  },
+  {
+    id: "workplaces",
+    title: t("Profesi dan tempat kerja"),
+    words: ["dokter", "rumah sakit", "sekolah", "guru"],
+    vectors: {
+      dokter: [1, 0.75, 0.5, 0.1],
+      "rumah sakit": [0.75, 0.25, 0.3, -0.1],
+      sekolah: [0.15, 0.7, 0.1, 0.25],
+      guru: [0.42, 1.18, 0.31, 0.44],
+      sepeda: [-0.6, 0.2, 0.8, 0.1],
+      taman: [0.2, -0.7, 0.2, 0.8],
+    },
+  },
+];
+export const getAnalogyCase = (id = "capitals") =>
+  ANALOGY_CASES.find((item) => item.id === id) ?? ANALOGY_CASES[0];
+export const ANALOGY = ANALOGY_CASES[0].vectors;
 export const cosine = (a, b) => dot(a, b) / Math.sqrt(dot(a, a) * dot(b, b));
-export function analogyResult() {
-  const vector = ANALOGY.king.map(
-    (x, i) => x - ANALOGY.man[i] + ANALOGY.woman[i],
-  );
+export function analogyResult(id = "capitals") {
+  const example = getAnalogyCase(id),
+    [a, b, c, target] = example.words,
+    vectors = example.vectors;
+  const difference = vectors[a].map((x, i) => x - vectors[b][i]);
+  const vector = difference.map((x, i) => x + vectors[c][i]);
   return {
+    ...example,
     vector,
-    ranking: Object.entries(ANALOGY)
+    target,
+    points: [
+      [0, 0],
+      vectors[a].slice(0, 2),
+      difference.slice(0, 2),
+      vector.slice(0, 2),
+    ],
+    formula: `v_{\\text{${a}}}-v_{\\text{${b}}}+v_{\\text{${c}}}\\approx v_{\\text{${target}}}`,
+    ranking: Object.entries(vectors)
       .map(([word, v]) => ({ word, cosine: cosine(vector, v) }))
       .sort((a, b) => b.cosine - a.cosine),
   };
@@ -472,8 +521,9 @@ export function fixture(ids = PRESETS.journey, seed = 42) {
     }));
   return {
     kind: "pipeline",
-    provenance:
+    provenance: t(
       "Bobot mainan deterministik; tidak berasal dari GPT-2. Tidak dilatih untuk bahasa.",
+    ),
     modelProfile: PROFILE,
     tokenizerProfile: "toy vocabulary lookup; bukan byte-level BPE GPT-2",
     seed,
@@ -492,18 +542,18 @@ export function validateFixture(data) {
     data.kind !== "pipeline" ||
     data.tensors.length < 70
   )
-    throw new Error("Schema fixture tidak valid");
+    throw new Error(t("Schema fixture tidak valid"));
   const ids = new Set([...data.tensors.map((t) => t.id), "ids"]);
   for (const t of data.tensors) {
     if (
       t.shape.reduce((a, b) => a * b, 1) !== t.values.length ||
       t.values.some((x) => !Number.isFinite(x))
     )
-      throw new Error(`Tensor ${t.id} tidak valid`);
+      throw new Error(t("Tensor {0} tidak valid", t.id));
     if (t.sourceTensorIds.some((id) => !ids.has(id)))
-      throw new Error(`Lineage ${t.id} tidak valid`);
+      throw new Error(t("Lineage {0} tidak valid", t.id));
     if (t.maskedIndices?.some((i) => i < 0 || i >= t.values.length))
-      throw new Error("Mask tidak valid");
+      throw new Error(t("Mask tidak valid"));
   }
   return data;
 }

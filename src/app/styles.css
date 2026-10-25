@@ -1,7 +1,7 @@
 @import url("../assets/fonts.css");
 :root {
   font-family:
-    "Inter",
+    "Source Sans 3 Variable",
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
@@ -18,6 +18,266 @@
   --dark: #14282d;
   --cyan: #42d7ec;
   --amber: #ffbe63;
+}
+.model-banner {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 19px 24px;
+  margin-bottom: 18px;
+  background: #e9ede5;
+  border: 1px solid #d2dcd0;
+  border-radius: 8px;
+}
+.model-name {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: #286358;
+}
+.model-name small {
+  display: block;
+  font:
+    9px "Source Sans 3 Variable",
+    sans-serif;
+  letter-spacing: 1.4px;
+  margin-bottom: 5px;
+}
+.model-name strong {
+  font-size: 18px;
+  font-weight: 550;
+  letter-spacing: -0.5px;
+}
+.model-stats {
+  display: flex;
+  gap: 26px;
+  margin-left: auto;
+}
+.model-stats span {
+  font-size: 10px;
+  color: #526457;
+}
+.model-stats b {
+  display: block;
+  font-size: 19px;
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: #314a41;
+}
+.model-banner > a {
+  font-size: 10px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.architecture-guide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 48px;
+  padding: 28px 30px 20px;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fafbf7;
+}
+.architecture-narrative .section-kicker {
+  color: #3c7b6b;
+  font-size: 9px;
+}
+.architecture-narrative h2 {
+  font-size: 21px;
+  line-height: 1.35;
+  letter-spacing: -0.6px;
+  margin: 11px 0;
+}
+.architecture-narrative p {
+  font-size: 12px;
+  color: #56665c;
+  margin-bottom: 0;
+}
+.architecture-shape {
+  display: inline-block;
+  font:
+    11px "Source Sans 3 Variable",
+    sans-serif;
+  color: #296b5d;
+  background: #e8f0e6;
+  padding: 9px 12px;
+  border-radius: 4px;
+}
+.architecture-reading > p {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 11px;
+  color: #56665c;
+  margin: 13px 0;
+}
+.architecture-reading > p svg {
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.operation-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.operation-chips > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.operation-chips b {
+  font:
+    9px "Source Sans 3 Variable",
+    sans-serif;
+  padding: 6px 8px;
+  border: 1px solid #d3ded2;
+  border-radius: 4px;
+}
+.architecture-footnote {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  padding-top: 13px;
+  font-size: 11px;
+  color: #56665c;
+}
+.architecture-footnote summary {
+  cursor: pointer;
+}
+.architecture-footnote p {
+  max-width: 1000px;
+  margin-top: 12px;
+}
+.signal-label {
+  color: #c4e7ee;
+  font:
+    10px "Source Sans 3 Variable",
+    sans-serif;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+  text-align: center;
+  pointer-events: none;
+  padding: 6px 9px;
+  border: 1px solid #35536180;
+  border-radius: 4px;
+  background: #0b1b28e8;
+}
+.signal-label.muted {
+  color: #91b1c0;
+  font-size: 8px;
+  background: #0b1b28d9;
+  border-color: transparent;
+}
+.signal-label.amber {
+  color: #ffd28e;
+  border-color: #ac885545;
+}
+.signal-label.overview-title {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #6e98a9;
+  background: transparent;
+  border: 0;
+}
+.scene-readout {
+  position: absolute;
+  top: 63px;
+  left: 20px;
+  z-index: 1;
+  pointer-events: none;
+  border-left: 2px solid #69c7cb;
+  padding: 1px 12px;
+  color: #b4d1df;
+  background: linear-gradient(90deg, #091621dd, transparent);
+}
+.scene-readout small {
+  display: block;
+  font:
+    8px "Source Sans 3 Variable",
+    sans-serif;
+  letter-spacing: 1.5px;
+  color: #81a3b4;
+}
+.scene-readout b {
+  display: block;
+  margin: 6px 0;
+  font-size: 12px;
+  font-weight: 450;
+}
+.scene-readout span {
+  font:
+    8px "Source Sans 3 Variable",
+    sans-serif;
+  color: #8eafbd;
+}
+.lab-stage .scene-region {
+  min-height: 460px;
+}
+.lab-stage .world-label {
+  color: #bad3de;
+  border-color: #304f60;
+  background: #0c2030ef;
+}
+.lab-stage .world-label.active {
+  color: #a7eff0;
+  border-color: #5fc5c980;
+  background: #143443ef;
+}
+@media (max-width: 900px) {
+  .model-banner {
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .model-stats {
+    gap: 20px;
+  }
+  .model-banner > a {
+    margin-left: auto;
+  }
+  .architecture-guide {
+    gap: 20px;
+    padding: 22px;
+  }
+}
+@media (max-width: 600px) {
+  .model-banner {
+    padding: 15px;
+    gap: 14px;
+  }
+  .model-name {
+    flex: 1;
+  }
+  .model-name strong {
+    font-size: 16px;
+  }
+  .model-stats {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .model-stats b {
+    font-size: 17px;
+  }
+  .model-stats span {
+    font-size: 9px;
+  }
+  .model-banner > a {
+    font-size: 9px;
+  }
+  .architecture-guide {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 20px;
+  }
+  .architecture-narrative h2 {
+    font-size: 19px;
+  }
+  .lab-stage .scene-region {
+    min-height: 390px;
+  }
+  .scene-readout {
+    display: none;
+  }
 }
 * {
   box-sizing: border-box;
@@ -78,7 +338,7 @@ h3 {
   font-weight: 500;
 }
 em {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Source Sans 3 Variable", "Segoe UI", sans-serif;
   font-weight: 400;
 }
 select {
@@ -152,7 +412,7 @@ input[type="radio"] {
 }
 .section-kicker,
 .eyebrow {
-  font-family: "JetBrains Mono", Consolas, monospace;
+  font-family: "JetBrains Mono", "Source Sans 3 Variable", sans-serif;
   font-size: 10px;
   line-height: 1.4;
   letter-spacing: 1.45px;
@@ -204,7 +464,7 @@ input[type="radio"] {
   margin-right: 10px;
 }
 .brand-version {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   color: #879086;
   font-size: 10px;
   letter-spacing: 0;
@@ -217,7 +477,7 @@ input[type="radio"] {
   gap: 35px;
 }
 .header-label {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
   letter-spacing: 1.8px;
   color: #7c857b;
@@ -281,7 +541,7 @@ input[type="radio"] {
   display: flex;
   align-items: center;
   gap: 13px;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
   letter-spacing: 1.2px;
   color: #7d857b;
@@ -325,7 +585,7 @@ input[type="radio"] {
   justify-content: space-between;
   align-items: center;
   padding: 19px 22px;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   letter-spacing: 1px;
   font-size: 9px;
   color: #a7c3ba;
@@ -346,10 +606,9 @@ input[type="radio"] {
 .hero-visual > img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
-  filter: brightness(0.88);
-  transform: scale(1.17);
+  filter: brightness(1);
 }
 .hero-visual:after {
   content: "";
@@ -414,7 +673,7 @@ input[type="radio"] {
   padding: 17px 22px;
   border-top: 1px solid #abc7bc25;
   color: #aec2b8;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   letter-spacing: 1px;
 }
@@ -469,7 +728,7 @@ input[type="radio"] {
 }
 .station-number {
   display: block;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
   color: #859180;
   margin-bottom: 17px;
@@ -553,7 +812,7 @@ input[type="radio"] {
   gap: 12px;
 }
 .experiment-letter {
-  font-family: Georgia, serif;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 25px;
   color: #51745e;
 }
@@ -614,7 +873,7 @@ input[type="radio"] {
   color: #8b9486;
 }
 .site-footer > span:last-child {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   letter-spacing: 1px;
 }
@@ -650,7 +909,7 @@ input[type="radio"] {
   color: #828a7d;
 }
 .lab-breadcrumb b {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   letter-spacing: 1.5px;
   font-size: 9px;
   font-weight: 400;
@@ -725,7 +984,7 @@ input[type="radio"] {
   margin: 0;
 }
 .stage-badge {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   color: #7db19d;
   font-size: 8px;
   letter-spacing: 1.1px;
@@ -817,7 +1076,7 @@ input[type="radio"] {
   background: #1e383af0;
 }
 .world-label b {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   color: #80aaa0;
 }
@@ -834,7 +1093,7 @@ input[type="radio"] {
   background: #172e34e8;
   padding: 7px 13px;
   border: 1px solid #567770;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 10px;
   color: #d0ece0;
   border-radius: 4px;
@@ -904,7 +1163,7 @@ input[type="radio"] {
   color: #8aac9e;
 }
 .scene-data > div:first-child > span:last-child {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   color: #7d9d92;
 }
@@ -928,13 +1187,13 @@ input[type="radio"] {
 }
 .token-strip button > span {
   display: block;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 12px;
   color: #d2e6db;
 }
 .token-strip small {
   display: block;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   color: #89a697;
   font-size: 7px;
   letter-spacing: 0.6px;
@@ -958,7 +1217,7 @@ input[type="radio"] {
   font-size: 11px;
 }
 .timeline-current > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   color: #81a798;
 }
@@ -996,7 +1255,7 @@ input[type="radio"] {
 }
 .timeline-controls select {
   border-color: #34504a;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
   color: #a0c0ae;
   padding: 6px 13px 6px 7px;
@@ -1016,7 +1275,7 @@ input[type="radio"] {
   border-radius: 4px;
 }
 .timeline-hint {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 7px;
   letter-spacing: 0.9px;
   color: #688d7e;
@@ -1046,7 +1305,7 @@ input[type="radio"] {
   margin-bottom: 11px;
 }
 .tensor-selectors label {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   letter-spacing: 0.7px;
   color: #7f8b77;
@@ -1055,7 +1314,7 @@ input[type="radio"] {
   gap: 6px;
 }
 .tensor-selectors select {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   color: #4e6350;
   font-size: 10px;
   padding: 7px 20px 7px 7px;
@@ -1124,7 +1383,7 @@ input[type="radio"] {
   border-bottom: 1px solid #e1e3d9;
   padding-bottom: 13px;
   margin-bottom: 24px;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 10px;
   color: #4a7258;
   overflow-wrap: anywhere;
@@ -1204,7 +1463,7 @@ input[type="radio"] {
 .inspector > footer {
   padding: 13px 20px;
   border-top: 1px solid var(--line);
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   color: #8b977e;
   letter-spacing: 0.55px;
   font-size: 7px;
@@ -1224,7 +1483,7 @@ input[type="radio"] {
 .matrix-table {
   border-collapse: separate;
   border-spacing: 3px;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
   width: max-content;
   min-width: 100%;
@@ -1245,7 +1504,7 @@ input[type="radio"] {
   padding: 0;
 }
 .matrix-table button {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
   border-radius: 3px;
   min-width: 43px;
@@ -1284,7 +1543,7 @@ input[type="radio"] {
 }
 .terms table {
   border-collapse: collapse;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   width: 100%;
   min-width: 290px;
@@ -1316,13 +1575,13 @@ input[type="radio"] {
   overflow-wrap: anywhere;
 }
 .code-label {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   color: #829274;
   margin-bottom: 10px;
 }
 .code-list {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
   background: #e9eee0;
   border: 1px solid #dde5d0;
@@ -1379,7 +1638,7 @@ input[type="radio"] {
   background: #f3f8ed;
 }
 .station-map > button > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   border: 1px solid #ccd6c0;
   background: #f5f6ec;
@@ -1418,7 +1677,7 @@ input[type="radio"] {
   gap: 20px;
 }
 .lab-bottomline > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   color: #a0a891;
   font-size: 7px;
   letter-spacing: 0.8px;
@@ -1482,7 +1741,7 @@ input[type="radio"] {
   margin-bottom: 23px;
 }
 .panel-heading > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   letter-spacing: 1px;
   color: #90b69c;
@@ -1500,13 +1759,13 @@ input[type="radio"] {
   padding: 17px 20px;
 }
 .prompt-card > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   color: #80aa89;
   letter-spacing: 1px;
 }
 .prompt-card p {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   color: #daead3;
   font-size: 24px;
   line-height: 1.5;
@@ -1534,7 +1793,7 @@ input[type="radio"] {
   justify-content: center;
 }
 .token-capsules button {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 17px;
   color: #d4e8cb;
   background: #304a3c;
@@ -1564,7 +1823,7 @@ input[type="radio"] {
   flex-wrap: wrap;
 }
 .token-details span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   color: #739c79;
 }
@@ -1589,7 +1848,7 @@ input[type="radio"] {
   margin: 15px 0;
 }
 .bpe-pieces span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   padding: 10px 20px;
   background: #3d5845;
   border-radius: 4px;
@@ -1602,7 +1861,7 @@ input[type="radio"] {
   min-width: 0;
 }
 .vector-row > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   min-width: 65px;
   font-size: 9px;
   color: #8eaf99;
@@ -1615,7 +1874,7 @@ input[type="radio"] {
   overflow: auto;
 }
 .vector-row > div > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   display: inline-flex;
   flex: 1;
   min-width: 36px;
@@ -1641,7 +1900,7 @@ input[type="radio"] {
 .vector-sign {
   padding-left: 90px;
   color: #88b6a1;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 18px;
   margin: 10px 0;
 }
@@ -1658,7 +1917,7 @@ input[type="radio"] {
   background: #203b3b;
 }
 .qkv-panels > div > b {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 23px;
 }
 .qkv-panels p {
@@ -1702,7 +1961,7 @@ input[type="radio"] {
   min-width: 0;
 }
 .axis-label {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   display: block;
   text-align: center;
   font-size: 8px;
@@ -1717,7 +1976,7 @@ input[type="radio"] {
 .axis-query {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   letter-spacing: 1px;
   color: #90aa9a;
@@ -1741,13 +2000,13 @@ input[type="radio"] {
   color: #daede6;
 }
 .heatmap-grid button > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 10px;
   display: flex;
   align-items: center;
 }
 .heatmap-grid small {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 6px;
   color: #bad6cc99;
 }
@@ -1790,7 +2049,7 @@ input[type="radio"] {
   margin-left: 6px;
 }
 .attention-summary > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   letter-spacing: 1px;
   color: #87b99d;
@@ -1804,7 +2063,7 @@ input[type="radio"] {
   padding: 8px 3px;
 }
 .attention-summary p {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
   color: #86ad95;
   margin: 9px 0;
@@ -1836,7 +2095,7 @@ input[type="radio"] {
   border-radius: 4px;
 }
 .causal-controls > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 13px;
   color: #c7decb;
 }
@@ -1865,7 +2124,7 @@ input[type="radio"] {
   margin: 10px 0 27px;
 }
 .block-rack button {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   padding: 12px 0;
   background: #33483f;
   border: 1px solid #57735b;
@@ -1916,7 +2175,7 @@ input[type="radio"] {
 }
 .gelu-chart svg text {
   fill: #9eb28e;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
 }
 .gelu-chart p {
@@ -1958,7 +2217,7 @@ input[type="radio"] {
   text-align: left;
 }
 .probability-row > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 11px;
   color: #aec8a1;
   min-width: 70px;
@@ -1977,7 +2236,7 @@ input[type="radio"] {
   min-width: 0;
 }
 .probability-row > b {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 10px;
   color: #c5dbb5;
   font-weight: 400;
@@ -2019,7 +2278,7 @@ input[type="radio"] {
 .sampler-controls b {
   position: absolute;
   right: 0;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-weight: 400;
 }
 .sampler-controls input[type="range"] {
@@ -2070,7 +2329,7 @@ input[type="radio"] {
   padding: 15px 12px;
 }
 .cache-racks > div > span {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   color: #8bb38a;
 }
@@ -2081,7 +2340,7 @@ input[type="radio"] {
   margin: 13px 0 0;
 }
 .cache-row > b {
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 10px;
   min-width: 14px;
   color: #a7ba8e;
@@ -2094,7 +2353,7 @@ input[type="radio"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 8px;
   color: #c4d8a8;
   min-width: 12px;
@@ -2121,7 +2380,7 @@ input[type="radio"] {
 }
 .work-comparison strong {
   display: block;
-  font-family: Georgia, serif;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 42px;
   font-weight: 400;
   margin: 8px 0;
@@ -2168,7 +2427,7 @@ input[type="radio"] {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
   border-bottom: 1px solid #3c5844;
   padding: 8px 0;
@@ -3301,7 +3560,7 @@ input[type="radio"] {
   border-radius: 3px;
   background: #17363ce8;
   color: #daece4;
-  font-family: Consolas, monospace;
+  font-family: "Source Sans 3 Variable", sans-serif;
   font-size: 9px;
 }
 .brand-version,
@@ -3401,7 +3660,7 @@ input[type="radio"] {
   }
   .mobile-inspector-toggle small {
     display: block;
-    font-family: Consolas, monospace;
+    font-family: "Source Sans 3 Variable", sans-serif;
     font-size: 9px;
     color: #607b56;
     margin-top: 4px;

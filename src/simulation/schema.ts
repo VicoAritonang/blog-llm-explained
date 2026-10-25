@@ -1,3 +1,4 @@
+import { t } from "../i18n/core.mjs";
 import { z } from "zod";
 export const TensorSchema = z
   .object({
@@ -10,7 +11,7 @@ export const TensorSchema = z
   })
   .refine(
     (t) => t.shape.reduce((a, x) => a * x, 1) === t.values.length,
-    "Shape tidak cocok dengan jumlah nilai",
+    t("Shape tidak cocok dengan jumlah nilai"),
   );
 export const FixtureSchema = z.object({
   kind: z.literal("pipeline"),

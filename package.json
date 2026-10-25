@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "description": "NeuroLab: interactive Indonesian LLM learning observatory with deterministic toy Transformer and original 3D assets",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build && node scripts/prerender-article.mjs",
-    "check": "tsc --noEmit && node --test tests/*.test.mjs && vite build --logLevel error && node scripts/prerender-article.mjs && node scripts/browser-check.mjs",
+    "build": "tsc --noEmit && vite build && node scripts/build-site.mjs",
+    "check": "tsc --noEmit && node --test tests/*.test.mjs && vite build --logLevel error && node scripts/build-site.mjs && node scripts/seo-check.mjs && node scripts/browser-check.mjs",
+    "test:seo": "node scripts/seo-check.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --test tests/*.test.mjs",
     "test:browser": "node scripts/browser-check.mjs",
@@ -15,6 +19,7 @@
     "assets:generate": "node scripts/generate-lab-assets.mjs",
     "assets:validate": "node scripts/validate-assets.mjs",
     "assets:preview": "node scripts/preview-server.mjs",
+    "poster:generate": "node scripts/export-overview.mjs",
     "format": "prettier --write src scripts tests vite.config.ts"
   },
   "devDependencies": {
@@ -30,14 +35,15 @@
     "vite": "7.3.1"
   },
   "dependencies": {
+    "@fontsource-variable/source-sans-3": "^5.3.1",
     "@react-three/drei": "10.7.6",
     "@react-three/fiber": "9.4.0",
     "katex": "0.16.45",
     "lucide-react": "0.577.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "three": "0.169.0",
     "zod": "4.1.13",
-    "zustand": "5.0.8",
-    "three": "0.169.0"
+    "zustand": "5.0.8"
   }
 }

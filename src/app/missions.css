@@ -1,0 +1,412 @@
+.missions-panel {
+  padding: 24px 28px;
+  color: #d8e8e2;
+}
+.mission-intro {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+.mission-intro > svg {
+  color: #ffc18b;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.mission-intro h3 {
+  margin: 0 0 8px;
+  font-size: 21px;
+  letter-spacing: -0.6px;
+}
+.mission-intro p,
+.mission-empty p {
+  color: #aec7be;
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 0;
+}
+.discovery-meter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+  padding: 14px;
+  border: 1px solid #719b8566;
+  border-radius: 7px;
+  background: #17383c;
+  font-size: 11px;
+  color: #d5e9bc;
+}
+.discovery-meter progress {
+  flex: 1;
+  min-width: 70px;
+  max-width: 160px;
+  height: 7px;
+  accent-color: #b7d5a3;
+}
+.discovery-meter > span {
+  font:
+    8px "Source Sans 3 Variable",
+    sans-serif;
+  letter-spacing: 1px;
+}
+.mission-picker {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.mission-picker button {
+  text-align: left;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 68px;
+  color: #c6dbd0;
+  background: #17333b;
+  border: 1px solid #50766a77;
+  border-radius: 5px;
+}
+.mission-picker button[aria-pressed="true"] {
+  border-color: #ffc18b;
+  background: #3d4037;
+}
+.mission-picker button > span {
+  font:
+    12px "Source Sans 3 Variable",
+    sans-serif;
+  color: #ffc18b;
+}
+.mission-picker button b {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.mission-console {
+  border-top: 1px solid #6f908366;
+  padding-top: 22px;
+}
+.mission-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.mission-heading small {
+  color: #ffc18b;
+  font:
+    9px "Source Sans 3 Variable",
+    sans-serif;
+}
+.mission-heading h3 {
+  font-size: 24px;
+  margin: 9px 0;
+  letter-spacing: -0.5px;
+}
+.mission-heading button,
+.experiment-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 11px;
+  padding: 10px;
+  border: 1px solid #728e8580;
+  border-radius: 5px;
+  color: #d5e5d3;
+}
+.mission-heading button {
+  flex-shrink: 0;
+}
+.mission-goal {
+  padding: 13px;
+  border-left: 2px solid #ffc18b;
+  background: #d5b38b12;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.mission-console fieldset {
+  border: 0;
+  padding: 0;
+  margin: 24px 0 17px;
+  min-width: 0;
+}
+.mission-console legend {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 0 12px;
+  color: #dbe9d7;
+}
+.experiment-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.experiment-options label,
+.prediction-options label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  padding: 12px;
+  border: 1px solid #668f7c77;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #12303a;
+}
+.experiment-options label:has(:checked),
+.prediction-options label:has(:checked) {
+  border-color: #bdd5aa;
+  background: #29493f;
+}
+.mission-console input {
+  accent-color: #bedba9;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin: 0;
+}
+.experiment-reading {
+  background: #091f29;
+  padding: 15px;
+  border-radius: 6px;
+  display: grid;
+  gap: 8px;
+}
+.experiment-reading span {
+  color: #8fcaba;
+  font:
+    8px "Source Sans 3 Variable",
+    sans-serif;
+  letter-spacing: 1px;
+}
+.experiment-reading b {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.7;
+}
+.prediction-options {
+  display: grid;
+  gap: 8px;
+}
+.experiment-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.experiment-actions .trial-run {
+  background: #c5dbb1;
+  color: #153332;
+  border-color: #c5dbb1;
+  font-weight: 600;
+  padding: 12px 18px;
+}
+.trial-result {
+  margin-top: 20px;
+  background: #3b3329;
+  border: 1px solid #eac18c77;
+  padding: 17px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.trial-result.passed {
+  background: #23493c;
+  border-color: #97d2ae;
+}
+.trial-result p {
+  margin: 8px 0;
+}
+.trial-result small {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #cae4b5;
+}
+.mission-empty {
+  text-align: center;
+  padding: 35px 20px;
+  border: 1px dashed #638476;
+  border-radius: 7px;
+}
+.mission-empty svg {
+  color: #ffc18b;
+}
+.mission-empty h3 {
+  font-size: 18px;
+}
+.sandbox-note {
+  font-size: 10px;
+  line-height: 1.8;
+  color: #a9c5b7;
+  margin: 24px 0 0;
+}
+.mission-tracker {
+  position: absolute;
+  top: 171px;
+  left: 28px;
+  width: 230px;
+  background: #102a31e8;
+  border: 1px solid #739c8a55;
+  border-radius: 6px;
+  padding: 12px;
+}
+.mission-tracker > button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  color: #d9e7c5;
+  font-size: 11px;
+}
+.mission-tracker > button svg {
+  flex-shrink: 0;
+  color: #ffc18b;
+}
+.mission-tracker > button b {
+  margin-left: auto;
+  color: #ffc18b;
+  white-space: nowrap;
+}
+.mission-tracker small {
+  display: block;
+  font-size: 9px;
+  line-height: 1.6;
+  color: #b6cfc1;
+  margin-top: 8px;
+}
+.mission-tracker p {
+  font-size: 9px;
+  color: #b6cfc1;
+  line-height: 1.7;
+  margin: 8px 0 0;
+}
+.mission-tracker p button {
+  color: #d2e8b9;
+  display: block;
+  margin-top: 5px;
+}
+@media (max-width: 760px) {
+  .missions-panel {
+    padding: 18px;
+  }
+  .mission-picker {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .mission-picker button {
+    padding: 9px;
+  }
+  .mission-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mission-heading h3 {
+    font-size: 21px;
+  }
+  .mission-heading button {
+    width: 100%;
+  }
+  .mission-intro h3 {
+    font-size: 18px;
+  }
+  .mission-tracker {
+    left: 16px;
+    top: 147px;
+    width: calc(100vw - 32px);
+    padding: 10px;
+  }
+  .mission-tracker.hint-open {
+    display: none;
+  }
+  .mission-tracker p {
+    display: none;
+  }
+  .game-brand small {
+    display: none;
+  }
+  .game-brand > span {
+    display: none;
+  }
+  .tool-hotbar button {
+    width: 48px;
+  }
+  .tool-hotbar {
+    gap: 4px;
+  }
+}
+@media (max-width: 360px) {
+  .game-brand h1 {
+    font-size: 14px;
+  }
+  .game-topbar {
+    gap: 5px;
+    padding-inline: 10px;
+  }
+  .tool-hotbar button {
+    width: 44px;
+  }
+}
+/* Keep mission actions reachable even in a long console on a small screen. */
+.mission-dialog > .panel-title {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #18343d;
+  padding-block: 15px;
+}
+.mission-dialog .trial-result {
+  scroll-margin-top: 100px;
+}
+@media (max-width: 760px) {
+  .game-experience .game-brand > span {
+    display: none;
+  }
+  .game-experience .game-brand small {
+    display: none;
+  }
+  .game-experience .game-topbar {
+    gap: 7px;
+    padding-inline: 12px;
+  }
+  .game-experience .tool-hotbar button {
+    width: 48px;
+  }
+  .game-experience .tool-hotbar {
+    gap: 4px;
+  }
+  .game-experience:has(.field-guide) .target-card {
+    visibility: hidden;
+  }
+  .mission-dialog > .panel-title {
+    padding: 12px 17px;
+  }
+  .mission-dialog .panel-title h2 {
+    font-size: 20px;
+  }
+}
+@media (max-width: 360px) {
+  .game-experience .game-brand h1 {
+    font-size: 14px;
+  }
+  .game-experience .tool-hotbar button {
+    width: 44px;
+  }
+}
+/* The central aiming readout must not cover a probability column or a wire. */
+.game-experience.sandbox-view .target-card {
+  top: auto;
+  bottom: 200px;
+}
+.game-experience.sandbox-view .capture-prompt {
+  display: none;
+}
+.game-experience.sandbox-view:has(.world-notice) .target-card {
+  visibility: hidden;
+}
+@media (max-width: 760px) {
+  .game-experience.sandbox-view .target-card {
+    display: none;
+  }
+}

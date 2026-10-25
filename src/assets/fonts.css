@@ -1,1 +1,2 @@
-/* Uses local system fonts: no external font request or CDN dependency. */
+@import "@fontsource-variable/source-sans-3/wght.css";
+/* Bundled locally with the application; no runtime font CDN. */

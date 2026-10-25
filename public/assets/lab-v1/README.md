@@ -1,4 +1,4 @@
-# NeuroLab Observatory — original asset kit
+# NeuroLab Observatory: original asset kit
 
 25 standalone modules + one assembled laboratory, glTF 2.0 binary (.glb).
 Original procedural geometry, no downloaded models, texture files, or fonts.

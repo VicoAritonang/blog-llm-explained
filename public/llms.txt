@@ -1,0 +1,37 @@
+# NeuroLab by Vicoworks
+
+> A free interactive 3D laboratory for learning how large language models work, available in Indonesian and English.
+
+Canonical origin: https://llm-explained.vicoworks.com. Publisher: [Vicoworks](https://vicoworks.com). All simulations run client-side. Five tools and six missions explore tokenization, embeddings, attention, residuals, sampling, and KV caching. Reference scale is GPT-3 175B; inspectable numbers use a deterministic two-block toy model, not GPT-3 weights. Full educational text is also available as HTML and Markdown.
+
+## Start here
+- [Indonesian interactive LLM lab](https://llm-explained.vicoworks.com/id/): Belajar LLM secara interaktif.
+- [English interactive LLM lab](https://llm-explained.vicoworks.com/en/): Learn LLMs interactively.
+- [Full bilingual text](https://llm-explained.vicoworks.com/llms-full.txt): Complete educational guide and topic explanations.
+
+## English lessons
+- [What Is LLM Tokenization? Learn with Interactive Visualizations](https://llm-explained.vicoworks.com/en/learn/tokenization/): Markdown at https://llm-explained.vicoworks.com/content/en/tokenizer.md
+- [Token Embeddings and Positions in LLMs](https://llm-explained.vicoworks.com/en/learn/embeddings-position/): Markdown at https://llm-explained.vicoworks.com/content/en/embedding.md
+- [Query, Key, Value: How LLM Attention Works](https://llm-explained.vicoworks.com/en/learn/query-key-value/): Markdown at https://llm-explained.vicoworks.com/content/en/qkv.md
+- [Causal Attention and Masking in Transformers](https://llm-explained.vicoworks.com/en/learn/causal-attention/): Markdown at https://llm-explained.vicoworks.com/content/en/attention.md
+- [Transformer Blocks: Residuals, LayerNorm, MLP, and GELU](https://llm-explained.vicoworks.com/en/learn/transformer-block/): Markdown at https://llm-explained.vicoworks.com/content/en/transformer.md
+- [LLM Sampling: Temperature, Top-k, and Top-p](https://llm-explained.vicoworks.com/en/learn/sampling-temperature/): Markdown at https://llm-explained.vicoworks.com/content/en/sampling.md
+- [What Is a KV Cache? Understanding LLM Prefill and Decoding](https://llm-explained.vicoworks.com/en/learn/kv-cache/): Markdown at https://llm-explained.vicoworks.com/content/en/cache.md
+- [Vector Analogies and Static Embeddings](https://llm-explained.vicoworks.com/en/learn/vector-analogies/): Markdown at https://llm-explained.vicoworks.com/content/en/analogy.md
+
+## Pelajaran Bahasa Indonesia
+- [Apa Itu Tokenisasi LLM? Belajar dengan Visualisasi Interaktif](https://llm-explained.vicoworks.com/id/belajar/tokenisasi/): Markdown at https://llm-explained.vicoworks.com/content/id/tokenizer.md
+- [Embedding dan Posisi Token dalam LLM](https://llm-explained.vicoworks.com/id/belajar/embedding-posisi/): Markdown at https://llm-explained.vicoworks.com/content/id/embedding.md
+- [Query, Key, Value: Cara Kerja Attention LLM](https://llm-explained.vicoworks.com/id/belajar/query-key-value/): Markdown at https://llm-explained.vicoworks.com/content/id/qkv.md
+- [Causal Attention dan Mask pada Transformer](https://llm-explained.vicoworks.com/id/belajar/causal-attention/): Markdown at https://llm-explained.vicoworks.com/content/id/attention.md
+- [Blok Transformer: Residual, LayerNorm, MLP, dan GELU](https://llm-explained.vicoworks.com/id/belajar/blok-transformer/): Markdown at https://llm-explained.vicoworks.com/content/id/transformer.md
+- [Sampling LLM: Temperature, Top-k, dan Top-p](https://llm-explained.vicoworks.com/id/belajar/sampling-temperature/): Markdown at https://llm-explained.vicoworks.com/content/id/sampling.md
+- [Apa Itu KV Cache? Memahami Prefill dan Decode LLM](https://llm-explained.vicoworks.com/id/belajar/kv-cache/): Markdown at https://llm-explained.vicoworks.com/content/id/cache.md
+- [Analogi Vektor dan Embedding Statis](https://llm-explained.vicoworks.com/id/belajar/analogi-vektor/): Markdown at https://llm-explained.vicoworks.com/content/id/analogy.md
+
+## Primary references
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · implementasi referensi](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)

@@ -1,3 +1,4 @@
+import { t } from "../i18n/core.mjs";
 import * as T from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
@@ -35,7 +36,11 @@ export function batchInstrument(scene, modelName) {
         if (node.isMesh) node.geometry.dispose();
       });
       throw new Error(
-        `Tidak dapat menggabungkan material ${material.name} pada ${modelName}`,
+        t(
+          "Tidak dapat menggabungkan material {0} pada {1}",
+          material.name,
+          modelName,
+        ),
       );
     }
     const mesh = new T.Mesh(merged, material);

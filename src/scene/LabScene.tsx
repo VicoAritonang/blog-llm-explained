@@ -1,554 +1,973 @@
-import {
-  Suspense,
-  useEffect,
-  useMemo,
-  useRef,
-  Component,
-  type ReactNode,
-} from "react";
+import { t } from "../i18n/core.mjs";
+import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Html, OrbitControls, useGLTF } from "@react-three/drei";
-import * as T from "three";
-import { batchInstrument } from "./batch-instrument.mjs";
+import { Html, OrbitControls } from "@react-three/drei";
 import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
-import { stations } from "../content/lessons";
+import * as T from "three";
+import { stations, type StationId } from "../content/lessons";
 import { useExperience } from "../store/experience";
 import type { Snapshot } from "../simulation/snapshot";
-import { VOCAB, ANALOGY, analogyResult } from "../simulation/engine.mjs";
-const assetBase =
-  import.meta.env.VITE_ASSET_BASE_URL ??
-  `${import.meta.env.BASE_URL}assets/lab-v1/`;
-class AssetBoundary extends Component<
-  { children: ReactNode; id: string },
-  { failed: boolean; retry: number }
-> {
-  state = { failed: false, retry: 0 };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  componentDidUpdate(previous: { id: string }) {
-    if (previous.id !== this.props.id && this.state.failed)
-      this.setState({ failed: false });
-  }
-  render() {
-    return this.state.failed ? (
-      <Html center position={[0, 2.5, 1]}>
-        <div className="asset-error">
-          Instrumen belum tersedia.
-          <button
-            onClick={() => {
-              useGLTF.clear(assetBase + this.props.id + ".glb");
-              this.setState({ failed: false, retry: this.state.retry + 1 });
-            }}
-          >
-            Coba lagi
-          </button>
-        </div>
-      </Html>
-    ) : (
-      <Suspense fallback={<Placeholder />} key={this.state.retry}>
-        {this.props.children}
-      </Suspense>
-    );
-  }
-}
-function Placeholder() {
+import {
+  VOCAB,
+  distribution,
+  LOCAL_LOGITS,
+  TOKENIZER_PRESETS,
+  analogyResult,
+} from "../simulation/engine.mjs";
+
+type Point = [number, number, number];
+const colors = ["#65e2e3", "#a79cff", "#ffc778", "#86e2b2", "#e7a2c5"];
+const positions: Record<StationId, Point> = {
+  tokenizer: [-13, 0, 0],
+  embedding: [-8, 0, 0],
+  qkv: [-3, 0, 0],
+  attention: [2, 0, 0],
+  transformer: [7, 0, 0],
+  sampling: [12, 0, 0],
+  cache: [7, 0, -6],
+  analogy: [-8, 0, -6],
+};
+const v = (point: Point) => new T.Vector3(...point);
+
+function Label({
+  at,
+  children,
+  className = "",
+  scale = 8,
+}: {
+  at: Point;
+  children: ReactNode;
+  className?: string;
+  scale?: number;
+}) {
   return (
-    <mesh position={[0, 1, 0]}>
-      <boxGeometry args={[2.8, 2, 1.6]} />
-      <meshStandardMaterial color="#30444a" wireframe />
+    <Html position={at} center distanceFactor={scale} zIndexRange={[20, 0]}>
+      <div className={`signal-label ${className}`}>{children}</div>
+    </Html>
+  );
+}
+function Solid({
+  at,
+  size,
+  color,
+  glass = false,
+}: {
+  at: Point;
+  size: Point;
+  color: string;
+  glass?: boolean;
+}) {
+  return (
+    <mesh position={at}>
+      <boxGeometry args={size} />
+      <meshStandardMaterial
+        color={color}
+        roughness={0.3}
+        metalness={0.35}
+        transparent={glass}
+        opacity={glass ? 0.16 : 1}
+        depthWrite={!glass}
+        emissive={color}
+        emissiveIntensity={0.13}
+      />
     </mesh>
   );
 }
-function Instrument({ name }: { name: string }) {
-  const { scene } = useGLTF(assetBase + name + ".glb");
-  const model = useMemo(() => batchInstrument(scene, name), [scene, name]);
-  useEffect(
-    () => () => {
-      model.traverse((o: T.Object3D) => {
-        if (o instanceof T.Mesh) o.geometry.dispose();
-      });
-    },
-    [model],
-  );
-  return <primitive object={model} dispose={null} />;
-}
-function Room() {
-  const tiles = useRef<T.InstancedMesh>(null),
-    arches = useRef<T.InstancedMesh>(null);
-  useEffect(() => {
-    const m = new T.Matrix4();
-    let i = 0;
-    for (let x = -16; x <= 16; x += 4)
-      for (let z = -10; z <= 10; z += 4) {
-        m.makeTranslation(x, -0.1, z);
-        tiles.current!.setMatrixAt(i++, m);
-      }
-    tiles.current!.instanceMatrix.needsUpdate = true;
-    i = 0;
-    for (const x of [-17, -8, 0, 8, 17]) {
-      m.makeTranslation(x, 4, -11.8);
-      arches.current!.setMatrixAt(i++, m);
-    }
-    arches.current!.instanceMatrix.needsUpdate = true;
-  }, []);
-  return (
-    <group>
-      <instancedMesh
-        ref={tiles}
-        args={[undefined, undefined, 54]}
-        receiveShadow
-      >
-        <boxGeometry args={[3.96, 0.18, 3.96]} />
-        <meshStandardMaterial color="#223638" roughness={0.84} />
-      </instancedMesh>
-      <instancedMesh ref={arches} args={[undefined, undefined, 5]}>
-        <boxGeometry args={[0.18, 8, 0.2]} />
-        <meshStandardMaterial color="#83938b" metalness={0.5} roughness={0.5} />
-      </instancedMesh>
-      <mesh position={[0, 2, -12]}>
-        <boxGeometry args={[36, 4, 0.18]} />
-        <meshStandardMaterial color="#253d3e" />
-      </mesh>
-      <mesh position={[0, 7.6, -11.8]}>
-        <boxGeometry args={[36, 0.12, 0.2]} />
-        <meshStandardMaterial color="#789d99" />
-      </mesh>
-      {[-7, 7].map((z) => (
-        <mesh key={z} position={[0, 0.012, z > 0 ? 4 : -4]}>
-          <boxGeometry args={[26, 0.025, 0.035]} />
-          <meshBasicMaterial color="#42d7ec" />
-        </mesh>
-      ))}
-      <mesh position={[15.2, 0.014, 0]}>
-        <boxGeometry args={[0.035, 0.025, 8]} />
-        <meshBasicMaterial color="#42d7ec" />
-      </mesh>
-      <gridHelper
-        args={[36, 36, "#354c4c", "#2c4546"]}
-        position={[0, 0.002, 0]}
-      />
-    </group>
-  );
-}
-function Cells({
-  snapshot: p,
-  matrix,
-  center = [0, 2.5, 0.9],
-  size = [2.5, 2.3],
-  accent,
+
+// One draw call for a tensor, with individual cell colors and picking.
+function Tensor({
+  at,
+  rows = 5,
+  cols = 8,
+  color = colors[0],
+  values,
+  masked = false,
+  size = [2.8, 2.1],
   onPick,
 }: {
-  snapshot: Snapshot;
-  matrix?: number[][];
-  center?: [number, number, number];
+  at: Point;
+  rows?: number;
+  cols?: number;
+  color?: string;
+  values?: number[][];
+  masked?: boolean;
   size?: [number, number];
-  accent?: string;
-  onPick?: (row: number, column: number) => void;
+  onPick?: (row: number, col: number) => void;
 }) {
-  const s = useExperience(),
-    ref = useRef<T.InstancedMesh>(null);
-  const values = (matrix ?? p.values)
-    .slice(0, 12)
-    .map((row) => row.slice(0, 8));
-  const rows = values.length,
-    cols = values[0].length;
+  const ref = useRef<T.InstancedMesh>(null),
+    selectedRow = useExperience((s) => s.token);
+  const reduced = useExperience((s) => s.reducedMotion),
+    { invalidate } = useThree();
+  const targets = useRef<
+    { position: T.Vector3; scale: T.Vector3; color: T.Color }[]
+  >([]);
+  const current = useRef<
+    { position: T.Vector3; scale: T.Vector3; color: T.Color }[]
+  >([]);
+  const transform = useMemo(() => new T.Object3D(), []);
   useEffect(() => {
+    if (!ref.current) return;
     const dummy = new T.Object3D(),
-      max = Math.max(...values.flat().map(Math.abs), 1e-6);
-    values.forEach((row, i) =>
-      row.forEach((v, j) => {
+      maximum = Math.max(1, ...(values?.flat().map(Math.abs) ?? [1]));
+    for (let row = 0; row < rows; row++)
+      for (let col = 0; col < cols; col++) {
+        const hidden = masked && col > row;
+        const value = values?.[row]?.[col] ?? Math.sin(row * 3.1 + col * 1.7);
         dummy.position.set(
-          center[0] + ((j - (cols - 1) / 2) * size[0]) / cols,
-          center[1] + (((rows - 1) / 2 - i) * size[1]) / rows,
-          center[2],
+          at[0] + ((col - (cols - 1) / 2) * size[0]) / cols,
+          at[1] + (((rows - 1) / 2 - row) * size[1]) / rows,
+          at[2],
         );
         dummy.scale.set(
-          (size[0] / cols) * 0.84,
-          Math.min((size[1] / rows) * 0.8, 0.4),
-          0.025,
+          (size[0] / cols) * 0.78,
+          (size[1] / rows) * 0.72,
+          hidden ? 0.018 : 0.06 + (Math.abs(value) / maximum) * 0.15,
         );
-        dummy.updateMatrix();
-        const index = i * cols + j;
-        ref.current!.setMatrixAt(index, dummy.matrix);
-        const masked =
-          p.mask?.[i]?.[j] ||
-          (s.station === "attention" &&
-            s.step >= 3 &&
-            j > i &&
-            ["A", "masked"].includes(p.op.tensor));
-        ref.current!.setColorAt(
-          index,
-          new T.Color(
-            masked
-              ? "#586565"
-              : i === p.row && j === (matrix ? p.column % cols : p.column)
-                ? "#ffffff"
-                : (accent ?? (v < 0 ? "#a88ee8" : "#42d7ec")),
-          ).multiplyScalar(masked ? 0.45 : 0.3 + (Math.abs(v) / max) * 0.7),
-        );
-      }),
-    );
-    ref.current!.instanceMatrix.needsUpdate = true;
-    if (ref.current!.instanceColor)
-      ref.current!.instanceColor.needsUpdate = true;
-  }, [p, values, rows, cols, matrix, center, size, accent]);
+        const index = row * cols + col;
+        targets.current[index] = {
+          position: dummy.position.clone(),
+          scale: dummy.scale.clone(),
+          color: new T.Color(
+            hidden ? "#1a303e" : value < 0 ? colors[1] : color,
+          ).multiplyScalar(
+            hidden
+              ? 1
+              : (row === selectedRow ? 0.8 : 0.35) +
+                  (Math.abs(value) / maximum) * 0.6,
+          ),
+        };
+        if (!current.current[index])
+          current.current[index] = {
+            position: dummy.position.clone().add(new T.Vector3(0, 0, 0.4)),
+            scale: dummy.scale.clone().multiplyScalar(0.1),
+            color: targets.current[index].color.clone(),
+          };
+      }
+    targets.current.length = rows * cols;
+    current.current.length = rows * cols;
+    invalidate();
+  }, [
+    rows,
+    cols,
+    color,
+    values,
+    masked,
+    at[0],
+    at[1],
+    at[2],
+    size[0],
+    size[1],
+    selectedRow,
+  ]);
+  useFrame((_, dt) => {
+    if (!ref.current) return;
+    let moving = false;
+    const ease = reduced ? 1 : 1 - Math.exp(-Math.min(dt, 0.05) * 8);
+    targets.current.forEach((target, i) => {
+      const cell = current.current[i];
+      cell.position.lerp(target.position, ease);
+      cell.scale.lerp(target.scale, ease);
+      cell.color.lerp(target.color, ease);
+      moving ||=
+        cell.position.distanceToSquared(target.position) +
+          cell.scale.distanceToSquared(target.scale) +
+          Math.abs(cell.color.r - target.color.r) +
+          Math.abs(cell.color.g - target.color.g) +
+          Math.abs(cell.color.b - target.color.b) >
+        0.000001;
+      transform.position.copy(cell.position);
+      transform.scale.copy(cell.scale);
+      transform.updateMatrix();
+      ref.current!.setMatrixAt(i, transform.matrix);
+      ref.current!.setColorAt(i, cell.color);
+    });
+    ref.current.instanceMatrix.needsUpdate = true;
+    if (ref.current.instanceColor) ref.current.instanceColor.needsUpdate = true;
+    if (moving) invalidate();
+  });
   return (
     <instancedMesh
       ref={ref}
       args={[undefined, undefined, rows * cols]}
-      onClick={(e) => {
-        e.stopPropagation();
-        const index = e.instanceId!;
-        if (onPick) onPick(Math.floor(index / cols), index % cols);
-        else
-          s.patch({
-            token: Math.floor(index / cols),
-            column: index % cols,
-            tab: "numbers",
-            traced: true,
-          });
-      }}
+      onClick={
+        onPick
+          ? (e) => {
+              e.stopPropagation();
+              if (e.instanceId !== undefined)
+                onPick(Math.floor(e.instanceId / cols), e.instanceId % cols);
+            }
+          : undefined
+      }
     >
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial roughness={0.45} metalness={0.12} />
+      <meshStandardMaterial
+        roughness={0.35}
+        metalness={0.25}
+        emissive="#33596b"
+        emissiveIntensity={0.25}
+      />
     </instancedMesh>
   );
 }
-function TokenCapsules({ snapshot: p }: { snapshot: Snapshot }) {
-  const s = useExperience();
-  if (s.step === 0)
-    return (
-      <Html position={[0, 1.65, 0.6]} center distanceFactor={9}>
-        <span className="world-tensor-label">
-          {p.ids.map((id: number) => VOCAB[id]).join("")}
-        </span>
-      </Html>
-    );
-  const spacing = Math.min(0.78, 4.4 / p.ids.length);
-  return (
-    <group>
-      {p.ids.map((id: number, i: number) => (
-        <group
-          key={i}
-          position={[(i - (p.ids.length - 1) / 2) * spacing, 1.43, 0.6]}
-          onClick={(e) => {
-            e.stopPropagation();
-            s.patch({ token: i, column: i, tab: "numbers" });
-          }}
-        >
-          <mesh>
-            <boxGeometry args={[spacing * 0.86, 0.34, 0.31]} />
-            <meshStandardMaterial
-              color={s.token === i ? "#ffffff" : "#94c4bf"}
-            />
-          </mesh>
-          <mesh position={[0, -0.11, 0.16]}>
-            <boxGeometry args={[spacing * 0.65, 0.025, 0.02]} />
-            <meshBasicMaterial color="#42d7ec" />
-          </mesh>
-          {i < (s.quality === "low" ? 6 : 12) && (
-            <Html position={[0, 0.4, 0]} center distanceFactor={9}>
-              <span className="world-token-label">
-                {VOCAB[id].replaceAll(" ", "·")}
-              </span>
-            </Html>
-          )}
-        </group>
-      ))}
-    </group>
-  );
-}
-function VectorArrow({
-  from,
-  to,
-  color,
+function Connections({
+  segments,
+  color = colors[0],
+  opacity = 0.3,
 }: {
-  from: T.Vector3;
-  to: T.Vector3;
-  color: string;
+  segments: Point[][];
+  color?: string;
+  opacity?: number;
 }) {
-  const delta = to.clone().sub(from),
-    length = delta.length(),
-    direction = delta.clone().normalize();
-  const rotation = new T.Quaternion().setFromUnitVectors(
-    new T.Vector3(0, 1, 0),
-    direction,
+  const geometry = useMemo(
+    () =>
+      new T.BufferGeometry().setAttribute(
+        "position",
+        new T.Float32BufferAttribute(
+          segments.flatMap((pair) => pair.flat()),
+          3,
+        ),
+      ),
+    [segments],
   );
-  const tip = to.clone().addScaledVector(direction, -0.075),
-    body = from.clone().lerp(to, 0.5);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  return (
+    <lineSegments geometry={geometry}>
+      <lineBasicMaterial color={color} transparent opacity={opacity} />
+    </lineSegments>
+  );
+}
+
+// A presentation clock moves packets; no model-sized tensors are allocated.
+export function Stream({
+  points,
+  color = colors[0],
+  count = 8,
+  radius = 0.025,
+}: {
+  points: Point[];
+  color?: string;
+  count?: number;
+  radius?: number;
+}) {
+  const curve = useMemo(
+    () => new T.CatmullRomCurve3(points.map(v)),
+    [JSON.stringify(points)],
+  );
+  const geometry = useMemo(
+    () => new T.TubeGeometry(curve, 48, radius, 5, false),
+    [curve, radius],
+  );
+  const particles = useRef<T.InstancedMesh>(null),
+    phase = useRef(0);
+  const dummy = useMemo(() => new T.Object3D(), []),
+    point = useMemo(() => new T.Vector3(), []);
+  const { invalidate } = useThree();
+  const playing = useExperience((s) => s.playing),
+    reduced = useExperience((s) => s.reducedMotion),
+    speed = useExperience((s) => s.speed);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  useFrame((_, dt) => {
+    if (playing && !reduced && !document.hidden)
+      phase.current += Math.min(dt, 0.05) * 0.16 * speed;
+    if (particles.current)
+      for (let i = 0; i < count; i++) {
+        curve.getPointAt((phase.current + i / count) % 1, point);
+        dummy.position.copy(point);
+        dummy.scale.setScalar(i % 3 === 0 ? 0.095 : 0.055);
+        dummy.updateMatrix();
+        particles.current.setMatrixAt(i, dummy.matrix);
+      }
+    if (particles.current) particles.current.instanceMatrix.needsUpdate = true;
+    if (playing && !reduced && !document.hidden) invalidate();
+  });
   return (
     <group>
-      <mesh position={body} quaternion={rotation}>
-        <cylinderGeometry
-          args={[0.017, 0.017, Math.max(0.01, length - 0.15), 8]}
-        />
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={0.2}
-        />
+      <mesh geometry={geometry}>
+        <meshBasicMaterial color={color} transparent opacity={0.25} />
       </mesh>
-      <mesh position={tip} quaternion={rotation}>
-        <coneGeometry args={[0.07, 0.15, 8]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
+      <instancedMesh ref={particles} args={[undefined, undefined, count]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshBasicMaterial color={color} toneMapped={false} />
+      </instancedMesh>
     </group>
   );
 }
-function AnalogySpace() {
-  const s = useExperience(),
-    origin = new T.Vector3(0, 1.4, 0);
-  const project = (v: number[]) =>
-    new T.Vector3(v[0], v[1], v[2]).multiplyScalar(1.3);
-  const king = origin.clone().add(project(ANALOGY.king));
-  const minus = king.clone().sub(project(ANALOGY.man));
-  const result = origin.clone().add(project(analogyResult().vector));
-  const queen = origin.clone().add(project(ANALOGY.queen));
-  return (
-    <group>
-      {s.step === 0 ? (
-        (["king", "man", "woman"] as const).map((word, i) => (
-          <group
-            key={word}
-            position={origin.clone().add(project(ANALOGY[word]))}
-          >
-            <mesh>
-              <sphereGeometry args={[0.06, 12, 8]} />
-              <meshStandardMaterial
-                color={["#42d7ec", "#aa8df5", "#ffbe63"][i]}
-              />
-            </mesh>
-            <Html position={[0, 0.18, 0]} center distanceFactor={9}>
-              <span className="world-token-label">{word}</span>
-            </Html>
-          </group>
-        ))
-      ) : (
-        <>
-          <VectorArrow from={origin} to={king} color="#42d7ec" />
-          <VectorArrow from={king} to={minus} color="#aa8df5" />
-          <VectorArrow from={minus} to={result} color="#ffbe63" />
-        </>
-      )}
-      {s.step === 2 && (
-        <>
-          <VectorArrow from={origin} to={result} color="#69d9b1" />
-          <mesh position={queen}>
-            <sphereGeometry args={[0.075, 12, 8]} />
-            <meshStandardMaterial color="#69d9b1" wireframe />
-          </mesh>
-          <Html
-            position={queen.clone().add(new T.Vector3(0, 0.3, 0))}
-            center
-            distanceFactor={9}
-          >
-            <span className="world-token-label">≈ queen · fixture</span>
-          </Html>
-        </>
-      )}
-      <Html position={[0, 1.1, 1.8]} center distanceFactor={9}>
-        <span className="world-token-label">
-          Komponen 1–3 · cosine pada 4 dimensi sumber
-        </span>
-      </Html>
-    </group>
-  );
-}
-function StationData({ snapshot: p }: { snapshot: Snapshot }) {
+
+function Token({
+  id,
+  index,
+  total,
+  split,
+  detail,
+  text,
+}: {
+  id: number;
+  index: number;
+  total: number;
+  split: boolean;
+  detail: boolean;
+  text?: string;
+}) {
+  const ref = useRef<T.Group>(null),
+    { invalidate } = useThree();
   const s = useExperience();
-  if (s.station === "analogy") return <AnalogySpace />;
-  if (s.station === "tokenizer") return <TokenCapsules snapshot={p} />;
-  if (s.station === "sampling" && p.op.tensor !== "H")
-    return <Bars snapshot={p} />;
-  if (s.station === "qkv")
-    return (
-      <>
-        {(["Q", "K", "V"] as const).map((name, i) => (
-          <Cells
-            key={name}
-            snapshot={p}
-            matrix={p.h[name]}
-            center={[(i - 1) * 1.82, 2.15, 0.17]}
-            size={[1.3, 1.85]}
-            accent={["#42d7ec", "#aa8df5", "#ffbe63"][i]}
-            onPick={(row, column) =>
-              s.patch({
-                step: i + 1,
-                token: row,
-                column: s.head * 4 + column,
-                tab: "numbers",
-                traced: true,
-              })
-            }
-          />
-        ))}
-      </>
-    );
-  if (s.station === "attention")
-    return <Cells snapshot={p} center={[0, 2.65, -0.285]} size={[3.95, 2.5]} />;
-  if (s.station === "cache")
-    return (
-      <>
-        {(["K", "V"] as const).map((name, i) => (
-          <Cells
-            key={name}
-            snapshot={p}
-            matrix={p.b[name]}
-            center={[i === 0 ? -0.94 : 0.94, 2.2, 0.93]}
-            size={[1.5, 3.25]}
-            accent={i === 0 ? "#aa8df5" : "#ffbe63"}
-            onPick={(row, column) =>
-              s.patch({
-                step: i,
-                token: row,
-                column,
-                tab: "numbers",
-                traced: true,
-              })
-            }
-          />
-        ))}
-      </>
-    );
-  if (s.station === "transformer")
-    return <Cells snapshot={p} center={[0, 2.8, 1.5]} size={[2.7, 3.4]} />;
-  return <Cells snapshot={p} center={[0, 2.2, 1.15]} size={[2.5, 2.0]} />;
-}
-function AttentionBeams({ snapshot: p }: { snapshot: Snapshot }) {
-  const row = Math.min(p.row, p.attention.A.length - 1),
-    a = p.attention.A[row];
-  return (
-    <group>
-      {a.map((weight: number, i: number) => {
-        if (!weight) return null;
-        const from = new T.Vector3(0, 3.7, 1),
-          to = new T.Vector3((i - (a.length - 1) / 2) * 0.45, 1.7, 1.8);
-        const direction = to.clone().sub(from),
-          mid = to.clone().add(from).multiplyScalar(0.5);
-        const quaternion = new T.Quaternion().setFromUnitVectors(
-          new T.Vector3(0, 1, 0),
-          direction.clone().normalize(),
-        );
-        return (
-          <mesh key={i} position={mid} quaternion={quaternion}>
-            <cylinderGeometry
-              args={[
-                0.008 + weight * 0.045,
-                0.008 + weight * 0.045,
-                direction.length(),
-                6,
-              ]}
-            />
-            <meshBasicMaterial
-              color="#ffbe63"
-              transparent
-              opacity={0.35 + weight * 0.6}
-            />
-          </mesh>
-        );
-      })}
-    </group>
-  );
-}
-function Bars({ snapshot: p }: { snapshot: Snapshot }) {
-  const values = p.values[0];
-  const max = Math.max(...values.map(Math.abs), 0.01);
-  return (
-    <group>
-      {values.slice(0, 16).map((v, i) => (
-        <mesh
-          key={i}
-          position={[(i - 7.5) * 0.2, 1.05 + (Math.abs(v) / max) * 1.4, 0.85]}
-        >
-          <boxGeometry
-            args={[0.13, Math.max(0.04, (Math.abs(v) / max) * 2.8), 0.14]}
-          />
-          <meshStandardMaterial
-            color={v < 0 ? "#a88ee8" : "#69d9b1"}
-            emissive={v < 0 ? "#a88ee8" : "#69d9b1"}
-            emissiveIntensity={0.16}
-          />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-function CameraController() {
-  const s = useExperience(),
-    { camera, gl, invalidate } = useThree();
-  const orbit = useRef<any>(null),
-    walk = useRef<PointerLockControls | null>(null),
-    keys = useRef(new Set<string>()),
-    transitioning = useRef(false);
-  const station = stations.find((x) => x.id === s.station)!;
   const target = useMemo(
     () =>
       new T.Vector3(
-        station.position[0],
-        station.id === "transformer" ? 2.7 : 2.1,
-        station.position[2],
+        (index - (total - 1) / 2) * (split ? 0.63 : 0.51),
+        1.8 + (split ? (index % 2) * 0.23 : 0),
+        0,
       ),
-    [station],
+    [index, total, split],
+  );
+  useFrame((_, dt) => {
+    if (!ref.current) return;
+    if (s.reducedMotion) ref.current.position.copy(target);
+    else ref.current.position.lerp(target, 1 - Math.exp(-dt * 5));
+    if (ref.current.position.distanceToSquared(target) > 0.00001) invalidate();
+  });
+  return (
+    <group
+      ref={ref}
+      position={target}
+      onClick={(e) => {
+        e.stopPropagation();
+        s.patch({ token: index, tab: "numbers" });
+      }}
+    >
+      <Solid
+        at={[0, 0, 0]}
+        size={[0.48, 0.55, 0.45]}
+        color={colors[index % colors.length]}
+      />
+      {detail && (
+        <>
+          <Label at={[0, 0.6, 0]} scale={7}>
+            {(text ?? VOCAB[id]).replaceAll(" ", "·")}
+          </Label>
+          <Label at={[0, -0.55, 0]} scale={6} className="muted">
+            {split ? `ID ${id}` : `pos ${index}`}
+          </Label>
+        </>
+      )}
+    </group>
+  );
+}
+function MLP({ detail }: { detail: boolean }) {
+  const graph = useMemo(() => {
+    const nodes = [4, 10, 4].map((count, layer) =>
+      Array.from(
+        { length: count },
+        (_, i): Point => [
+          (layer - 1) * 1.1,
+          1.5 + (i - (count - 1) / 2) * 0.18,
+          0.9,
+        ],
+      ),
+    );
+    return {
+      nodes: nodes.flat(),
+      segments: nodes
+        .slice(0, 2)
+        .flatMap((layer, i) =>
+          layer.flatMap((from) => nodes[i + 1].map((to) => [from, to])),
+        ),
+    };
+  }, []);
+  const dots = useRef<T.InstancedMesh>(null);
+  useEffect(() => {
+    const dummy = new T.Object3D();
+    graph.nodes.forEach((point, i) => {
+      dummy.position.set(...point);
+      dummy.scale.setScalar(0.065);
+      dummy.updateMatrix();
+      dots.current?.setMatrixAt(i, dummy.matrix);
+    });
+    if (dots.current) dots.current.instanceMatrix.needsUpdate = true;
+  }, [graph]);
+  return (
+    <group>
+      <Connections segments={graph.segments} color={colors[2]} />
+      <instancedMesh
+        ref={dots}
+        args={[undefined, undefined, graph.nodes.length]}
+      >
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshBasicMaterial color={colors[2]} />
+      </instancedMesh>
+      {detail && (
+        <Label at={[0, 0.25, 1]} className="amber">
+          MLP · EXPAND → GELU → PROJECT
+        </Label>
+      )}
+    </group>
+  );
+}
+function Transformer({ detail }: { detail: boolean }) {
+  const stack = useRef<T.InstancedMesh>(null),
+    s = useExperience();
+  useEffect(() => {
+    const dummy = new T.Object3D();
+    for (let i = 0; i < 96; i++) {
+      dummy.position.set(
+        detail ? 2.35 : 0,
+        0.5 + i * 0.047,
+        detail ? -1.7 : -0.65,
+      );
+      dummy.scale.set(detail ? 0.7 : 2.6, 0.022, detail ? 0.7 : 1.5);
+      dummy.updateMatrix();
+      stack.current?.setMatrixAt(i, dummy.matrix);
+      stack.current?.setColorAt(
+        i,
+        new T.Color(i < 48 ? colors[0] : colors[1]).multiplyScalar(
+          i % 8 === 0 ? 0.8 : 0.28,
+        ),
+      );
+    }
+    if (stack.current) {
+      stack.current.instanceMatrix.needsUpdate = true;
+      if (stack.current.instanceColor)
+        stack.current.instanceColor.needsUpdate = true;
+    }
+  }, [detail]);
+  return (
+    <group>
+      <instancedMesh ref={stack} args={[undefined, undefined, 96]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial metalness={0.6} roughness={0.3} />
+      </instancedMesh>
+      {detail ? (
+        <>
+          <Stream
+            points={[
+              [0, 0.4, 0.5],
+              [0, 2.3, 0.5],
+              [0, 5.8, 0.5],
+            ]}
+            count={14}
+          />
+          <Stream
+            points={[
+              [0, 0.5, 0.5],
+              [-1.6, 0.6, 0.5],
+              [-1.6, 2.8, 0.5],
+              [0, 2.95, 0.5],
+            ]}
+            color={colors[2]}
+            count={8}
+          />
+          <Stream
+            points={[
+              [0, 2.95, 0.5],
+              [1.65, 3.05, 0.5],
+              [1.65, 5.6, 0.5],
+              [0, 5.8, 0.5],
+            ]}
+            color={colors[2]}
+            count={8}
+          />
+          {[
+            { y: 1.1, text: "LayerNorm 1", active: false },
+            {
+              y: 1.95,
+              text: "Multi-head attention · WO",
+              active: s.step === 0,
+            },
+            { y: 3.5, text: "LayerNorm 2", active: s.step === 1 },
+          ].map((item) => (
+            <group key={item.text}>
+              <Solid
+                at={[0, item.y, 0.5]}
+                size={[2.3, 0.38, 0.38]}
+                color={item.active ? colors[0] : "#315765"}
+              />
+              <Label at={[0, item.y, 0.77]} scale={6}>
+                {item.text}
+              </Label>
+            </group>
+          ))}
+          <group position={[0, 3, -0.4]}>
+            <MLP detail={false} />
+          </group>
+          <Label at={[0, 4.8, 1]} scale={6} className="amber">
+            12.288 → GELU → 12.288
+          </Label>
+          <Label at={[0, 4.1, 1]} scale={6} className="muted">
+            {t("MLP · ekspansi 49.152 fitur")}
+          </Label>
+          {[2.95, 5.8].map((y) => (
+            <group key={y}>
+              <mesh position={[0, y, 0.5]}>
+                <sphereGeometry args={[0.2, 16, 12]} />
+                <meshBasicMaterial color={colors[2]} />
+              </mesh>
+              <Label at={[0, y, 0.74]} scale={6}>
+                +
+              </Label>
+            </group>
+          ))}
+          <Label at={[-1.8, 2, 0.5]} className="amber" scale={5}>
+            RESIDUAL 1
+          </Label>
+          <Label at={[1.9, 4.7, 0.5]} className="amber" scale={5}>
+            RESIDUAL 2
+          </Label>
+          <Label at={[2.4, 5.35, -1.7]} scale={6}>
+            × 96
+          </Label>
+          <Label at={[0, -0.15, 1]} className="muted">
+            {t("Aliran ke atas · workbench blok")}
+            {s.layer + 1} / 2
+          </Label>
+        </>
+      ) : (
+        <>
+          <Solid at={[0, 3.15, 0.8]} size={[2.8, 0.5, 0.35]} color="#47747e" />
+          <MLP detail={false} />
+          <Stream
+            points={[
+              [-1.75, 0.45, 0.8],
+              [-2, 2.5, 0.8],
+              [-1.75, 4.7, 0.8],
+              [0, 4.9, 0.2],
+              [1.75, 4.7, 0.8],
+              [2, 2.5, 0.8],
+              [1.75, 0.45, 0.8],
+            ]}
+            color={colors[2]}
+            count={12}
+          />
+        </>
+      )}
+    </group>
+  );
+}
+function Distribution({ p, detail }: { p: Snapshot; detail: boolean }) {
+  const bars = useRef<T.InstancedMesh>(null),
+    heights = useRef(new Float32Array(16));
+  const { invalidate } = useThree(),
+    s = useExperience(),
+    dummy = useMemo(() => new T.Object3D(), []);
+  const probs: number[] = useMemo(
+    () =>
+      distribution(
+        s.experiment === "F" ? LOCAL_LOGITS : p.result.logits,
+        s.sampler === "greedy" ? 0 : s.temperature,
+        s.topK,
+        s.topP,
+      ),
+    [p.result.logits, s.experiment, s.sampler, s.temperature, s.topK, s.topP],
+  );
+  const max = Math.max(...probs),
+    winner = probs.indexOf(max);
+  useFrame((_, dt) => {
+    if (!bars.current) return;
+    let moving = false;
+    probs.forEach((value, i) => {
+      const target = 0.05 + (value / max) * 2.65;
+      heights.current[i] = s.reducedMotion
+        ? target
+        : T.MathUtils.lerp(heights.current[i], target, 1 - Math.exp(-dt * 5));
+      moving ||= Math.abs(heights.current[i] - target) > 0.001;
+      dummy.position.set((i - 7.5) * 0.22, 0.65 + heights.current[i] / 2, 0);
+      dummy.scale.set(0.15, heights.current[i], 0.3);
+      dummy.updateMatrix();
+      bars.current!.setMatrixAt(i, dummy.matrix);
+      bars.current!.setColorAt(
+        i,
+        new T.Color(
+          i === s.selected ? "#ffffff" : i === winner ? colors[2] : colors[3],
+        ),
+      );
+    });
+    bars.current.instanceMatrix.needsUpdate = true;
+    if (bars.current.instanceColor)
+      bars.current.instanceColor.needsUpdate = true;
+    if (moving) invalidate();
+  });
+  return (
+    <group>
+      <instancedMesh ref={bars} args={[undefined, undefined, 16]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial
+          emissive="#2e715e"
+          emissiveIntensity={0.35}
+          roughness={0.3}
+        />
+      </instancedMesh>
+      {detail && (
+        <>
+          <Label at={[0, 4.15, 0]}>FINAL LN → LM HEAD → SOFTMAX</Label>
+          <Label at={[0, 0.15, 0]} className="muted">
+            {t("16 kandidat workbench · probabilitas")}
+          </Label>
+          <Label at={[0, 3.55, 0.6]} className="amber">
+            {s.selected === null
+              ? t("Kandidat: {0}", VOCAB[winner])
+              : t("Terpilih: {0}", VOCAB[s.selected])}
+          </Label>
+        </>
+      )}
+    </group>
+  );
+}
+export function Instrument({
+  id,
+  p,
+  detail,
+}: {
+  id: StationId;
+  p: Snapshot;
+  detail: boolean;
+}) {
+  const s = useExperience(),
+    n = Math.min(p.attention.A.length, 8),
+    row = Math.min(p.row, n - 1);
+  const preset = s.experiment === "B" ? TOKENIZER_PRESETS[s.preset] : null;
+  const tokenPoint = (i: number): Point => [(i - (n - 1) / 2) * 0.48, 0.9, 1];
+  if (id === "tokenizer")
+    return (
+      <group>
+        <Solid
+          at={[0, 1.9, -0.5]}
+          size={[3.7, 2.3, 0.12]}
+          color="#234254"
+          glass
+        />
+        {(preset ? preset.ids.map((id: string) => +id.split(":")[1]) : p.ids)
+          .slice(0, 8)
+          .map((token: number, i: number) => (
+            <Token
+              key={i}
+              id={token}
+              text={preset?.pieces[i]}
+              index={i}
+              total={Math.min(preset?.ids.length ?? p.ids.length, 8)}
+              split={s.step > 0}
+              detail={detail}
+            />
+          ))}
+        {detail && (
+          <>
+            <Label at={[0, 3.35, 0]}>TEXT → BPE → IDs</Label>
+            <Label at={[0, 0.65, 0]} className="muted">
+              {t("Potongan teks, bukan selalu satu kata")}
+            </Label>
+          </>
+        )}
+      </group>
+    );
+  if (id === "embedding")
+    return (
+      <group>
+        <Tensor
+          at={[-0.55, 2, -0.35]}
+          values={p.result.embeddings}
+          size={[2.5, 2.4]}
+        />
+        <Tensor
+          at={[0.55, 2, 0.45]}
+          values={p.result.positions}
+          color={colors[2]}
+          size={[2.5, 2.4]}
+        />
+        <Stream
+          points={[
+            [-1.6, 0.5, 0],
+            [0, 0.7, 1],
+            [1.6, 1, 0],
+          ]}
+          color={colors[2]}
+          count={5}
+        />
+        {detail && (
+          <>
+            <Label at={[-0.8, 3.65, -0.4]}>TOKEN EMBEDDING</Label>
+            <Label at={[0.7, 0.45, 1.1]} className="amber">
+              + LEARNED POSITION
+            </Label>
+            <Label at={[0, 4.2, 0]} className="muted">
+              {t("N × 12.288 · skala referensi")}
+            </Label>
+          </>
+        )}
+      </group>
+    );
+  if (id === "qkv")
+    return (
+      <group>
+        {(["Q", "K", "V"] as const).map((name, i) => (
+          <group key={name}>
+            <Tensor
+              at={[(i - 1) * 1.25, 2.1, 0]}
+              cols={4}
+              values={p.h[name]}
+              color={colors[i]}
+              size={[0.95, 2]}
+            />
+            <Stream
+              points={[
+                [0, 0.45, 0],
+                [(i - 1) * 0.7, 0.7, 0.2],
+                [(i - 1) * 1.25, 1.1, 0],
+              ]}
+              color={colors[i]}
+              count={4}
+            />
+            {detail && (
+              <Label
+                at={[(i - 1) * 1.25, 3.4, 0]}
+                className={i === 2 ? "amber" : ""}
+              >
+                {name}
+              </Label>
+            )}
+          </group>
+        ))}
+        {detail && (
+          <>
+            <Label at={[0, 0.1, 0.6]} className="muted">
+              {t("LN(X) · tiga proyeksi terlatih")}
+            </Label>
+            <Label at={[0, 4.15, 0]}>SPLIT → 96 HEAD</Label>
+          </>
+        )}
+      </group>
+    );
+  if (id === "attention")
+    return (
+      <group>
+        <Tensor
+          at={[0, 2.6, -0.3]}
+          rows={detail ? p.values.length : n}
+          cols={detail ? p.values[0].length : n}
+          values={detail ? p.values : p.attention.A}
+          masked={!detail || ["masked", "A"].includes(p.op.tensor)}
+          size={[2.8, 2.4]}
+          onPick={(token, column) =>
+            s.patch({ token, column, tab: "numbers", traced: true })
+          }
+        />
+        {Array.from({ length: n }, (_, i) => (
+          <mesh key={i} position={tokenPoint(i)}>
+            <sphereGeometry args={[i === row ? 0.15 : 0.09, 12, 8]} />
+            <meshBasicMaterial color={colors[i % 5]} />
+          </mesh>
+        ))}
+        {(detail && s.step >= 4 ? p.attention.A[row].slice(0, n) : []).map(
+          (weight: number, i: number) =>
+            weight > 0 && (
+              <Stream
+                key={i}
+                points={[
+                  tokenPoint(i),
+                  [
+                    (tokenPoint(i)[0] + tokenPoint(row)[0]) / 2,
+                    1.45 + weight * 1.1,
+                    1.5,
+                  ],
+                  tokenPoint(row),
+                ]}
+                radius={0.009 + weight * 0.035}
+                count={3}
+                color={colors[i % 5]}
+              />
+            ),
+        )}
+        {detail && (
+          <>
+            <Label at={[0, 4.35, -0.3]}>QKᵀ / √d → MASK → SOFTMAX</Label>
+            <Label at={[0, 0.25, 1]} className="muted">
+              {t("Causal dense head · pindai untuk memeriksa angka")}
+            </Label>
+          </>
+        )}
+      </group>
+    );
+  if (id === "transformer") return <Transformer detail={detail} />;
+  if (id === "sampling") return <Distribution p={p} detail={detail} />;
+  if (id === "cache")
+    return (
+      <group>
+        {[0, 1].map((i) => (
+          <group key={i}>
+            <Solid
+              at={[i === 0 ? -0.85 : 0.85, 2, -0.25]}
+              size={[1.4, 3.3, 0.45]}
+              color="#284855"
+              glass
+            />
+            <Tensor
+              at={[i === 0 ? -0.85 : 0.85, 2, 0]}
+              rows={Math.min(p.ids.length, 8)}
+              cols={4}
+              values={i === 0 ? p.b.K : p.b.V}
+              color={colors[i + 1]}
+              size={[1.15, 2.7]}
+            />
+            {detail && (
+              <Label
+                at={[i === 0 ? -0.85 : 0.85, 4, 0]}
+                className={i ? "amber" : ""}
+              >
+                {i ? "VALUE CACHE" : "KEY CACHE"}
+              </Label>
+            )}
+          </group>
+        ))}
+        <Stream
+          points={[
+            [-1.7, 0.3, 0],
+            [-1.5, 0.8, 1],
+            [1.5, 0.8, 1],
+            [1.7, 0.3, 0],
+          ]}
+          color={colors[3]}
+          count={6}
+        />
+        {detail && (
+          <Label at={[0, -0.1, 0]} className="muted">
+            {t("Prefix dipakai ulang · Q token baru")}
+          </Label>
+        )}
+      </group>
+    );
+  const example = analogyResult(s.analogyCase);
+  const points: Point[] = example.points.map((point: number[]) => [
+    point[0] * 2,
+    0.6 + point[1] * 2,
+    0,
+  ]);
+  const target: Point = [
+    example.vectors[example.target][0] * 2,
+    0.6 + example.vectors[example.target][1] * 2,
+    0,
+  ];
+  return (
+    <group>
+      <Connections
+        segments={[
+          [
+            [-1.5, 0.6, 0],
+            [1.8, 0.6, 0],
+          ],
+          [
+            [0, 0.6, 0],
+            [0, 3.7, 0],
+          ],
+          [
+            [0, 0.6, -1.4],
+            [0, 0.6, 1.4],
+          ],
+        ]}
+        opacity={0.25}
+      />
+      {[0, 1, 2].map((i) => (
+        <Stream
+          key={i}
+          points={[points[i], points[i + 1]]}
+          color={colors[i]}
+          count={4}
+        />
+      ))}
+      <mesh position={target}>
+        <sphereGeometry args={[0.07, 12, 8]} />
+        <meshBasicMaterial color="#88d9ab" />
+      </mesh>
+      {detail && (
+        <>
+          <Label at={[points[1][0], points[1][1] + 0.3, 0]}>
+            {example.words[0]}
+          </Label>
+          <Label
+            at={[
+              (points[1][0] + points[2][0]) / 2,
+              (points[1][1] + points[2][1]) / 2 - 0.2,
+              0.1,
+            ]}
+          >
+            − {example.words[1]}
+          </Label>
+          <Label at={[points[2][0] - 0.4, points[2][1] + 0.3, 0.1]}>
+            + {example.words[2]}
+          </Label>
+          <Label at={[target[0], target[1] + 0.4, 0]} className="amber">
+            ≈ {example.target}
+          </Label>
+          <Label at={[0, 0, 0]} className="muted">
+            {t("ANNEX · di luar jalur inferensi")}
+          </Label>
+        </>
+      )}
+    </group>
+  );
+}
+
+function CameraRig() {
+  const s = useExperience(),
+    { camera, gl, invalidate, size } = useThree();
+  const orbit = useRef<any>(null),
+    walk = useRef<PointerLockControls | null>(null);
+  const keys = useRef(new Set<string>()),
+    transitioning = useRef(true);
+  const focus = useMemo(
+    () =>
+      v(positions[s.station]).add(
+        new T.Vector3(0, s.station === "transformer" ? 2.8 : 2, 0),
+      ),
+    [s.station],
   );
   const destination = useMemo(
     () =>
       s.overview
-        ? new T.Vector3(26, 25, 32)
-        : new T.Vector3(
-            station.position[0] + 1.3,
-            station.id === "transformer" ? 5.2 : 4.6,
-            station.position[2] + (station.position[2] < 0 ? 8.1 : -8.1),
-          ),
-    [station, s.overview],
+        ? new T.Vector3(
+            1,
+            10,
+            Math.max(16, 31 / ((0.87 * size.width) / size.height)),
+          )
+        : focus
+            .clone()
+            .add(
+              new T.Vector3(
+                3.1,
+                2.8,
+                Math.max(8.8, 7 / (size.width / size.height)),
+              ),
+            ),
+    [focus, s.overview, size.width, size.height],
+  );
+  const target = useMemo(
+    () => (s.overview ? new T.Vector3(0, 1, -1.6) : focus),
+    [focus, s.overview],
   );
   useEffect(() => {
-    if (s.camera === "walk") return;
-    transitioning.current = s.camera === "guided";
-    if (s.reducedMotion || s.camera === "orbit") {
+    transitioning.current = true;
+    if (s.reducedMotion) {
       camera.position.copy(destination);
-      orbit.current?.target.copy(s.overview ? new T.Vector3(0, 1, 0) : target);
+      orbit.current?.target.copy(target);
       orbit.current?.update();
       transitioning.current = false;
     }
     invalidate();
-  }, [
-    s.camera,
-    s.station,
-    s.overview,
-    s.reducedMotion,
-    destination,
-    target,
-    camera,
-    invalidate,
-  ]);
+  }, [destination, target, s.reducedMotion, s.camera, camera, invalidate]);
   useEffect(() => {
     const controls = new PointerLockControls(camera, gl.domElement);
     walk.current = controls;
+    const click = () => {
+      if (useExperience.getState().camera === "walk") controls.lock();
+    };
     const unlock = () => {
       keys.current.clear();
       if (useExperience.getState().camera === "walk")
         useExperience.getState().patch({ camera: "guided" });
     };
-    controls.addEventListener("unlock", unlock);
-    const lock = () => {
-      if (useExperience.getState().camera !== "walk") return;
-      controls.lock();
-    };
-    gl.domElement.addEventListener("click", lock);
-    const keydown = (e: KeyboardEvent) => {
+    const down = (e: KeyboardEvent) => {
       if (
         (e.target as HTMLElement).closest(
-          'input,textarea,select,button,[contenteditable="true"]',
+          "input,select,textarea,button,[contenteditable]",
         )
       )
         return;
-      if (e.code === "Home") {
-        camera.position.set(0, 1.65, 3);
-        camera.lookAt(0, 1.65, -7);
-        invalidate();
-        e.preventDefault();
-      }
       if (
         useExperience.getState().camera === "walk" &&
         [
@@ -566,64 +985,63 @@ function CameraController() {
         e.preventDefault();
         invalidate();
       }
+      if (useExperience.getState().camera === "walk" && e.code === "Home") {
+        camera.position.set(0, 5, 10);
+        camera.lookAt(0, 2, 0);
+        invalidate();
+      }
     };
-    const keyup = (e: KeyboardEvent) => keys.current.delete(e.code);
-    const blur = () => keys.current.clear();
+    const up = (e: KeyboardEvent) => keys.current.delete(e.code),
+      blur = () => keys.current.clear();
     const rejected = () => useExperience.getState().patch({ camera: "orbit" });
-    window.addEventListener("keydown", keydown);
-    window.addEventListener("keyup", keyup);
+    controls.addEventListener("unlock", unlock);
+    gl.domElement.addEventListener("click", click);
+    window.addEventListener("keydown", down);
+    window.addEventListener("keyup", up);
     window.addEventListener("blur", blur);
     document.addEventListener("pointerlockerror", rejected);
     return () => {
       controls.removeEventListener("unlock", unlock);
       controls.dispose();
-      gl.domElement.removeEventListener("click", lock);
-      window.removeEventListener("keydown", keydown);
-      window.removeEventListener("keyup", keyup);
+      gl.domElement.removeEventListener("click", click);
+      window.removeEventListener("keydown", down);
+      window.removeEventListener("keyup", up);
       window.removeEventListener("blur", blur);
       document.removeEventListener("pointerlockerror", rejected);
     };
   }, [camera, gl, invalidate]);
   useEffect(() => {
-    if (s.camera === "walk") {
-      camera.position.set(0, 1.65, 3);
-      camera.lookAt(0, 1.65, -7);
-      invalidate();
-    } else if (walk.current?.isLocked) walk.current.unlock();
-  }, [s.camera, camera, invalidate]);
+    if (s.camera !== "walk" && walk.current?.isLocked) walk.current.unlock();
+  }, [s.camera]);
   useFrame((_, dt) => {
-    if (s.camera === "guided" && transitioning.current && orbit.current) {
-      const look = s.overview ? new T.Vector3(0, 1, 0) : target;
-      camera.position.lerp(destination, 1 - Math.exp(-Math.min(dt, 0.1) * 5));
-      orbit.current.target.lerp(look, 1 - Math.exp(-Math.min(dt, 0.1) * 5));
+    if (s.camera !== "walk" && transitioning.current && orbit.current) {
+      const ease = 1 - Math.exp(-Math.min(dt, 0.1) * 3.2);
+      camera.position.lerp(destination, ease);
+      orbit.current.target.lerp(target, ease);
       orbit.current.update();
-      if (
-        camera.position.distanceTo(destination) < 0.015 &&
-        orbit.current.target.distanceTo(look) < 0.015
-      )
+      if (camera.position.distanceToSquared(destination) < 0.0001)
         transitioning.current = false;
       else invalidate();
     }
     if (
       s.camera === "walk" &&
-      keys.current.size &&
       walk.current?.isLocked &&
+      keys.current.size &&
       !document.hidden
     ) {
-      const step = Math.min(dt, 0.05) * 2.5;
       const forward =
         Number(keys.current.has("KeyW") || keys.current.has("ArrowUp")) -
         Number(keys.current.has("KeyS") || keys.current.has("ArrowDown"));
-      const right =
+      const side =
         Number(keys.current.has("KeyD") || keys.current.has("ArrowRight")) -
         Number(keys.current.has("KeyA") || keys.current.has("ArrowLeft"));
-      const magnitude = Math.max(1, Math.hypot(forward, right));
-      walk.current.moveForward((forward * step) / magnitude);
-      walk.current.moveRight((right * step) / magnitude);
-      // Walk stays in the safe, unobstructed corridor; all props are outside it.
-      camera.position.x = T.MathUtils.clamp(camera.position.x, -16, 16);
-      camera.position.z = T.MathUtils.clamp(camera.position.z, -3.8, 3.8);
-      camera.position.y = 1.65;
+      const distance =
+        (Math.min(dt, 0.05) * 4) / Math.max(1, Math.hypot(forward, side));
+      walk.current.moveForward(forward * distance);
+      walk.current.moveRight(side * distance);
+      camera.position.x = T.MathUtils.clamp(camera.position.x, -20, 20);
+      camera.position.z = T.MathUtils.clamp(camera.position.z, -12, 16);
+      camera.position.y = T.MathUtils.clamp(camera.position.y, 1.6, 10);
       invalidate();
     }
   });
@@ -631,9 +1049,10 @@ function CameraController() {
     <OrbitControls
       ref={orbit}
       enabled={s.camera === "orbit"}
-      enableDamping={false}
-      minDistance={3}
-      maxDistance={55}
+      enableDamping
+      dampingFactor={0.07}
+      minDistance={4}
+      maxDistance={65}
       maxPolarAngle={Math.PI * 0.49}
       onStart={() => {
         transitioning.current = false;
@@ -641,105 +1060,177 @@ function CameraController() {
     />
   );
 }
-function World({ snapshot }: { snapshot: Snapshot }) {
+function World({ p }: { p: Snapshot }) {
   const s = useExperience(),
-    { gl } = useThree();
-  useFrame(() => {
-    gl.domElement.dataset.drawCalls = String(gl.info.render.calls);
-    gl.domElement.dataset.triangles = String(gl.info.render.triangles);
-  });
+    { gl, invalidate } = useThree();
   useEffect(() => {
     const lost = (e: Event) => {
       e.preventDefault();
       s.patch({ playing: false, mode: "2d" });
     };
+    const visible = () => invalidate();
     gl.domElement.addEventListener("webglcontextlost", lost);
-    return () => gl.domElement.removeEventListener("webglcontextlost", lost);
-  }, [gl, s.patch]);
+    document.addEventListener("visibilitychange", visible);
+    return () => {
+      gl.domElement.removeEventListener("webglcontextlost", lost);
+      document.removeEventListener("visibilitychange", visible);
+    };
+  }, [gl, s.patch, invalidate]);
+  useFrame(() => {
+    gl.domElement.dataset.drawCalls = String(gl.info.render.calls);
+    gl.domElement.dataset.triangles = String(gl.info.render.triangles);
+  });
   return (
     <>
-      <color attach="background" args={["#14282d"]} />
-      <fog attach="fog" args={["#14282d", 32, 85]} />
-      <hemisphereLight args={["#d7eef0", "#526457", 2.3]} />
-      <directionalLight
-        position={[-12, 20, 8]}
-        intensity={2.6}
-        color="#fff3de"
+      <color attach="background" args={["#091621"]} />
+      <fog attach="fog" args={["#091621", 38, 90]} />
+      <ambientLight intensity={1.2} />
+      <hemisphereLight args={["#bad9ff", "#10202d", 2]} />
+      <directionalLight position={[-5, 14, 8]} intensity={3} color="#b7e2ee" />
+      <directionalLight position={[10, 5, -8]} intensity={2} color="#b8a3ff" />
+      <gridHelper
+        args={[90, 90, "#25414e", "#152a38"]}
+        position={[0, -0.06, 0]}
       />
-      <directionalLight
-        position={[12, 9, -10]}
-        intensity={1.2}
-        color="#8dc8d4"
-      />
-      <Room />
-      <CameraController />
-      {stations.map((station, i) => (
-        <group
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.08, 0]}>
+        <planeGeometry args={[150, 150]} />
+        <meshStandardMaterial
+          color="#0b1924"
+          metalness={0.5}
+          roughness={0.55}
+        />
+      </mesh>
+      <CameraRig />
+      {stations.slice(0, 5).map((station, i) => (
+        <Stream
           key={station.id}
-          position={station.position as unknown as [number, number, number]}
-          rotation={[0, i >= 4 ? Math.PI : 0, 0]}
-        >
+          points={[
+            [positions[station.id][0] + 1.8, 0.18, 0],
+            [positions[station.id][0] + 2.5, 0.18, 0],
+            [positions[stations[i + 1].id][0] - 1.8, 0.18, 0],
+          ]}
+          count={5}
+          color={i < 2 ? colors[0] : colors[2]}
+        />
+      ))}
+      <Stream
+        points={[
+          [12, 0.2, 1.6],
+          [12, 0.2, 4],
+          [0, 0.2, 4],
+          [-8, 0.2, 4],
+          [-8, 0.2, 1.7],
+        ]}
+        color={colors[3]}
+        count={22}
+      />
+      <Stream
+        points={[
+          [-3, 0.2, -1.5],
+          [-3, 0.2, -3.2],
+          [7, 0.2, -3.2],
+          [7, 0.2, -4.5],
+        ]}
+        color={colors[1]}
+        count={12}
+      />
+      <Stream
+        points={[
+          [5.5, 0.2, -6],
+          [2, 0.2, -6],
+          [2, 0.2, -1.7],
+        ]}
+        color={colors[2]}
+        count={10}
+      />
+      {s.overview && (
+        <>
+          <Connections
+            segments={[
+              [
+                [-5.2, 0.3, -1.8],
+                [-5.2, 6, -1.8],
+              ],
+              [
+                [-5.2, 6, -1.8],
+                [9.2, 6, -1.8],
+              ],
+              [
+                [9.2, 6, -1.8],
+                [9.2, 0.3, -1.8],
+              ],
+            ]}
+            color={colors[1]}
+            opacity={0.5}
+          />
+          <Label at={[2, 6.4, -1.8]} scale={20}>
+            {t("SATU DECODER BLOCK · DIULANG 96×")}
+          </Label>
+          <Label at={[2.4, 0.5, -6]} className="muted" scale={14}>
+            K/V → ATTENTION
+          </Label>
+          <Label at={[-1, 0.3, 4.3]} className="overview-title" scale={18}>
+            ↻ +1 TOKEN → EMBEDDING → DECODE
+          </Label>
+        </>
+      )}
+      {stations.map((station, index) => (
+        <group key={station.id} position={positions[station.id]}>
           <mesh
-            position={[0, 0.08, 0]}
+            position={[0, 0, 0]}
             onClick={(e) => {
               e.stopPropagation();
               s.navigate(station.id);
             }}
           >
-            <boxGeometry args={[5.2, 0.16, 4]} />
+            <cylinderGeometry args={[2, 2.1, 0.12, 48]} />
             <meshStandardMaterial
-              color={s.station === station.id ? "#506462" : "#35494a"}
+              color={station.id === s.station ? "#254958" : "#152936"}
+              metalness={0.6}
+              roughness={0.35}
             />
           </mesh>
-          {s.overview || s.station === station.id ? (
-            <AssetBoundary id={station.model}>
-              <Instrument name={station.model} />
-            </AssetBoundary>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.075, 0]}>
+            <ringGeometry
+              args={[1.96, station.id === s.station ? 2.015 : 1.975, 64]}
+            />
+            <meshBasicMaterial
+              color={station.color}
+              transparent
+              opacity={station.id === s.station ? 0.9 : 0.3}
+            />
+          </mesh>
+          {s.overview || station.id === s.station ? (
+            <Instrument
+              id={station.id}
+              p={p}
+              detail={station.id === s.station && !s.overview}
+            />
           ) : (
-            <mesh
-              position={[0, 0.8, 0]}
-              onClick={(e) => {
-                e.stopPropagation();
-                s.navigate(station.id);
-              }}
-            >
-              <boxGeometry args={[3, 1.6, 1.6]} />
-              <meshStandardMaterial color="#6d8583" transparent opacity={0.6} />
+            <mesh position={[0, 1.2, 0]}>
+              <boxGeometry args={[2.2, 2.2, 0.6]} />
+              <meshBasicMaterial
+                color="#315263"
+                wireframe
+                transparent
+                opacity={0.18}
+              />
             </mesh>
           )}
           <Html
-            position={[0, 0.65, 2.1]}
+            position={[0, -0.55, 1.7]}
             center
-            distanceFactor={10}
-            occlude={false}
+            distanceFactor={s.overview ? 22 : 8}
+            zIndexRange={[25, 0]}
           >
             <button
-              className={`world-label ${s.station === station.id ? "active" : ""}`}
+              className={`world-label ${station.id === s.station ? "active" : ""}`}
               onClick={() => s.navigate(station.id)}
             >
-              <b>{String(i + 1).padStart(2, "0")}</b>
+              <b>{String(index + 1).padStart(2, "0")}</b>
               {station.title}
             </button>
           </Html>
-          {s.station === station.id && !s.overview && (
-            <>
-              <Html
-                position={[0, station.id === "transformer" ? 5.8 : 4.15, 0]}
-                center
-                distanceFactor={9}
-              >
-                <span className="world-tensor-label">
-                  {snapshot.tensorId} · [{snapshot.values.length},{" "}
-                  {snapshot.values[0].length}]
-                  {snapshot.values[0].length > 8 ? " · 8 kolom pertama" : ""}
-                </span>
-              </Html>
-              <StationData snapshot={snapshot} />
-              {s.station === "attention" && s.step >= 4 && (
-                <AttentionBeams snapshot={snapshot} />
-              )}
-            </>
-          )}
         </group>
       ))}
     </>
@@ -751,23 +1242,23 @@ export default function LabScene({ snapshot }: { snapshot: Snapshot }) {
     <Canvas
       className="lab-canvas"
       frameloop="demand"
-      dpr={s.quality === "low" ? 1 : s.quality === "high" ? 1.5 : 1.25}
-      camera={{ position: [-10, 4.1, 0], fov: 48, near: 0.05, far: 120 }}
+      dpr={s.quality === "low" ? 1 : s.quality === "high" ? 1.75 : 1.25}
+      camera={{ position: [-10, 9, 18], fov: 47, near: 0.1, far: 140 }}
       gl={{
         antialias: s.quality !== "low",
-        powerPreference: "low-power",
+        powerPreference: "high-performance",
         toneMapping: T.ACESFilmicToneMapping,
       }}
       fallback={
         <div className="scene-failure">
-          <p>3D tidak tersedia. Pelajaran tetap dapat dilanjutkan.</p>
+          <p>{t("3D tidak tersedia.")}</p>
           <button className="button" onClick={() => s.patch({ mode: "2d" })}>
-            Buka mode 2D
+            {t("Buka mode 2D")}
           </button>
         </div>
       }
     >
-      <World snapshot={snapshot} />
+      <World p={snapshot} />
     </Canvas>
   );
 }

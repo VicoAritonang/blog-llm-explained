@@ -1,10 +1,10 @@
+import { t } from "../i18n/core.mjs";
 import journey from "../scenarios/journey.json";
 import {
   forward,
   LOCAL_ATTENTION,
   LOCAL_LOGITS,
   distribution,
-  ANALOGY,
   analogyResult,
   validateFixture,
   effectiveIds,
@@ -18,7 +18,7 @@ export const baseFixture = validateFixture(journey);
 FixtureSchema.parse(journey);
 export const weights = journey.weights;
 export function getSnapshot(
-  state: LinkState & { ids: number[]; swapped: boolean },
+  state: LinkState & { ids: number[]; swapped: boolean; analogyCase?: string },
 ) {
   const ids = effectiveIds(state);
   const result = forward(ids, weights);
@@ -67,11 +67,12 @@ export function getSnapshot(
     ];
     sources =
       state.experiment === "F"
-        ? ["logits lokal terkurasi; pipeline terpisah"]
+        ? [t("logits lokal terkurasi; pipeline terpisah")]
         : ["H[last]", "E.T: [8,16]"];
   } else if (key === "analogy") {
-    values = [...Object.values(ANALOGY), analogyResult().vector];
-    sources = ["word vectors mainan statis"];
+    const example = analogyResult(state.analogyCase);
+    values = [...Object.values(example.vectors), example.vector] as Matrix;
+    sources = [t("word vectors mainan statis: {0}", example.title)];
   } else if (aKeys.includes(key)) {
     values =
       key === "headQ"
@@ -103,7 +104,7 @@ export function getSnapshot(
       state.station === "sampling" &&
       state.step >= 1) ||
     state.station === "analogy"
-      ? "concept-vignette · contoh lokal"
+      ? t("concept-vignette · contoh lokal")
       : "pipeline · seed 42 · v1.0.0";
   return {
     ids,

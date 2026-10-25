@@ -1,0 +1,734 @@
+# Belajar LLM secara interaktif, dari token hingga jawaban
+
+NeuroLab adalah laboratorium pembelajaran LLM berbasis browser dari Vicoworks. Jelajahi dunia 3D orang pertama, gunakan lima alat, dan uji pemahaman melalui enam misi. Panduan ini membantu praktisi IT dan data memahami cara kerja large language model, termasuk mekanisme decoder Transformer yang menjadi dasar keluarga GPT.
+
+Canonical: https://llm-explained.vicoworks.com/id/
+
+## Pelajari mekanismenya
+- [Tokenizer](https://llm-explained.vicoworks.com/id/belajar/tokenisasi/): Model melihat ID token. Satu token dapat berupa kata, potongan kata, tanda baca, atau karakter dengan spasi awal.
+- [Embedding & posisi](https://llm-explained.vicoworks.com/id/belajar/embedding-posisi/): ID memilih satu baris embedding. Vektor posisi terlatih ditambahkan agar model mengetahui urutan. ID itu sendiri bukan angka makna.
+- [Query, Key, Value](https://llm-explained.vicoworks.com/id/belajar/query-key-value/): Query mencocokkan pola, Key menawarkan pola untuk dicocokkan, dan Value membawa informasi yang akan dicampurkan. Ketiganya proyeksi terlatih dari representasi yang sama.
+- [Causal attention](https://llm-explained.vicoworks.com/id/belajar/causal-attention/): Skor Query–Key dibagi akar dimensi head. Posisi masa depan ditutup, lalu softmax membentuk bobot yang mencampurkan Value.
+- [Blok Transformer](https://llm-explained.vicoworks.com/id/belajar/blok-transformer/): Setiap blok memiliki attention dan MLP. Dua residual mempertahankan jalur input. LayerNorm bekerja sepanjang dimensi fitur setiap token.
+- [Token berikutnya](https://llm-explained.vicoworks.com/id/belajar/sampling-temperature/): Representasi posisi terakhir melewati final LayerNorm dan proyeksi vocabulary yang berbagi embedding. Greedy memilih logit terbesar; sampling mengambil satu pilihan dari distribusi.
+- [Decode & KV cache](https://llm-explained.vicoworks.com/id/belajar/kv-cache/): K/V lama pada setiap layer dapat dipakai kembali. Hanya token baru yang menghasilkan Query, Key, dan Value baru. Cache adalah aktivasi urutan ini, bukan bobot atau memori lintas pengguna.
+- [Analogi vektor](https://llm-explained.vicoworks.com/id/belajar/analogi-vektor/): Aritmetika vektor dapat memperlihatkan relasi pada word embeddings statis. Contoh lokal ini bukan mekanisme literal GPT menjawab dan bukan hubungan universal.
+
+## Cara menggunakan lab interaktif
+Klik dunia untuk melihat sekitar, gunakan WASD untuk berjalan, pilih alat 1–5, lalu tekan E. H membuka Hint dan F membuka misi. Pada ponsel, gunakan joystick, seret untuk melihat, lalu ketuk Gunakan. Catatan menyediakan tab Makna, Angka, dan Kode. Mode 2D tersedia jika WebGL tidak didukung.
+
+Pemindai membuka catatan. Pelacak token memilih posisi token. Lensa head membandingkan dua head demo. Pengendali waktu menjeda sinyal. Kalibrator mengubah kondisi eksperimen sebelum kamu memprediksi dan menguji hasilnya.
+
+## Skala referensi dan batas simulasi
+Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+
+## Pertanyaan yang sering diajukan
+### Apa itu LLM?
+Large language model adalah model yang mempelajari pola bahasa dari data. Decoder autoregresif memprediksi distribusi token berikutnya berdasarkan konteks, memilih satu token, lalu mengulang proses.
+
+### Apakah lab ini gratis dan membutuhkan API key?
+Lab ini gratis dan berjalan di sisi client. Tidak diperlukan API key, akun, atau server inference. Preset lokal dan model mainan dipakai untuk pembelajaran.
+
+### Apakah nilai attention menunjukkan alasan pasti sebuah jawaban?
+Bobot attention menunjukkan campuran Value pada satu head dan satu langkah. Itu bukan penjelasan lengkap atas keputusan model atau jaminan kebenaran jawaban.
+
+### Apa bedanya training dan inference?
+Training memperbarui bobot melalui loss, backpropagation, dan optimizer. Inference memakai bobot yang tetap untuk menghasilkan aktivasi dan memprediksi token berikutnya.
+
+
+---
+
+# Apa Itu Tokenisasi LLM? Belajar dengan Visualisasi Interaktif
+
+Canonical: https://llm-explained.vicoworks.com/id/belajar/tokenisasi/
+Language: id
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Model melihat ID token. Satu token dapat berupa kata, potongan kata, tanda baca, atau karakter dengan spasi awal.
+
+Kalimat masuk sebagai potongan teks. Tokenizer mengubah setiap potongan menjadi ID vocabulary; satu token tidak selalu satu kata.
+
+## Cara kerjanya
+### Teks masukan
+Teks adalah titik awal. Profil ini memakai vocabulary mainan, bukan tokenizer GPT-2.
+
+### Pisahkan token
+Spasi awal termasuk isi token. Preset menyimpan potongan dan offsets yang dapat direkonstruksi.
+
+### Lookup ID
+Posisi 0, 1, 2, … berbeda dari ID vocabulary. ID tidak menunjukkan besar atau kecilnya makna.
+
+## Apa yang dapat kamu amati di lab?
+Kapsul terpisah menunjukkan batas token. Warnanya mengikuti posisi token sepanjang perjalanan.
+
+## Skala referensi dan batas simulasi
+Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+
+## Sumber primer
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · implementasi referensi](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Embedding dan Posisi Token dalam LLM
+
+Canonical: https://llm-explained.vicoworks.com/id/belajar/embedding-posisi/
+Language: id
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+ID memilih satu baris embedding. Vektor posisi terlatih ditambahkan agar model mengetahui urutan. ID itu sendiri bukan angka makna.
+
+Setiap ID mengambil satu vektor dari tabel embedding. Tambahkan embedding posisi, sehingga token yang sama di posisi berbeda memiliki representasi masukan berbeda.
+
+## Cara kerjanya
+### Lookup embedding
+Satu ID memilih satu baris dari matriks embedding terlatih; fixture ini memiliki 16 baris.
+
+### Lookup posisi
+GPT-2 memakai learned position embeddings. Angka posisi di sini juga lookup, bukan sinusoidal.
+
+### Tambahkan posisi
+Penjumlahan dilakukan elemen demi elemen. Menukar urutan mempertahankan embedding token, tetapi mengganti kontribusi posisinya.
+
+## Apa yang dapat kamu amati di lab?
+Kolom cahaya adalah fitur vektor. Warna merupakan ilustrasi nilai, bukan sumbu makna yang dapat diberi nama.
+
+## Skala referensi dan batas simulasi
+Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+
+## Sumber primer
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · implementasi referensi](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Query, Key, Value: Cara Kerja Attention LLM
+
+Canonical: https://llm-explained.vicoworks.com/id/belajar/query-key-value/
+Language: id
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Query mencocokkan pola, Key menawarkan pola untuk dicocokkan, dan Value membawa informasi yang akan dicampurkan. Ketiganya proyeksi terlatih dari representasi yang sama.
+
+Di dalam setiap blok, LayerNorm menormalkan fitur per token. Tiga proyeksi terlatih menghasilkan Query, Key, dan Value, lalu fitur dibagi menjadi beberapa head. Stasiun Q/K/V, attention, dan residual/MLP membedah bagian dari blok yang sama.
+
+## Cara kerjanya
+### Pre-normalization
+Hitung mean dan variance delapan fitur setiap token. Demo memakai gamma=1 dan beta=0.
+
+### Proyeksi Query
+Klik angka hasil untuk menelusuri delapan pasangan perkalian antara baris input dan kolom bobot.
+
+### Proyeksi Key
+Key membentuk pola yang dicocokkan oleh Query. Bobot model tetap; aktivasi bergantung pada input.
+
+### Proyeksi Value
+Value adalah informasi yang dicampurkan setelah bobot attention tersedia.
+
+### Pisahkan dua head
+Lebar 8 dibagi menjadi 2 head × 4 fitur. Mengganti head juga mengganti K, V, skor, dan hasilnya.
+
+## Apa yang dapat kamu amati di lab?
+Satu aliran bercabang tiga: Query mencari kecocokan, Key dicocokkan, Value membawa informasi.
+
+## Skala referensi dan batas simulasi
+Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+
+## Sumber primer
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · implementasi referensi](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Causal Attention dan Mask pada Transformer
+
+Canonical: https://llm-explained.vicoworks.com/id/belajar/causal-attention/
+Language: id
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Skor Query–Key dibagi akar dimensi head. Posisi masa depan ditutup, lalu softmax membentuk bobot yang mencampurkan Value.
+
+QKᵀ menghasilkan skor pasangan token. Skor dibagi √128, posisi masa depan ditutup, lalu softmax menghasilkan bobot untuk mencampurkan Value.
+
+## Cara kerjanya
+### Kalikan Q × K
+Setiap sel membandingkan satu baris Query dan satu baris Key. Klik sel untuk melihat semua perkalian.
+
+### Jumlahkan dot product
+Empat hasil perkalian dijumlahkan menjadi satu skor. Skor belum merupakan probabilitas.
+
+### Scale
+Pembagian oleh √d_head menjaga skala skor. Dalam demonstrasi ini √4 = 2.
+
+### Causal mask
+Posisi masa depan belum tersedia. −∞ menjadi bobot nol tepat sesudah softmax.
+
+### Softmax per baris
+Normalisasi dilakukan sepanjang kolom Key, bukan seluruh matriks. Jumlah setiap baris adalah 1.
+
+### Campurkan Value
+Bobot attention dan kontribusi Value adalah dua hal berbeda. Klik output untuk melihat weighted sum.
+
+### Gabungkan head
+Dua output dengan lebar 4 digabung kembali menjadi lebar 8.
+
+### Proyeksi output
+Proyeksi output terlatih mencampurkan fitur antarhead sebelum residual add.
+
+## Apa yang dapat kamu amati di lab?
+Garis hanya menuju posisi saat ini dan sebelumnya. Ketebalan menunjukkan bobot contoh; head lain dapat memiliki pola berbeda.
+
+## Skala referensi dan batas simulasi
+Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+
+## Sumber primer
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · implementasi referensi](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Blok Transformer: Residual, LayerNorm, MLP, dan GELU
+
+Canonical: https://llm-explained.vicoworks.com/id/belajar/blok-transformer/
+Language: id
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Setiap blok memiliki attention dan MLP. Dua residual mempertahankan jalur input. LayerNorm bekerja sepanjang dimensi fitur setiap token.
+
+Hasil attention ditambahkan ke residual stream. LayerNorm kedua dan MLP dengan GELU mengolah fitur per token, lalu residual kedua ditambahkan. Blok ini diulang 96 kali dengan bobot berbeda.
+
+## Cara kerjanya
+### Residual attention
+Residual menambahkan representasi awal ke keluaran attention. Input tidak dibuang.
+
+### Pre-norm MLP
+LayerNorm kedua bekerja pada keluaran residual, per token sepanjang fitur.
+
+### Perluas 8 → 32
+MLP memperluas dimensi fitur empat kali. Operasinya tetap dilakukan terpisah di setiap token.
+
+### Aktivasi GELU
+GELU adalah kurva halus; nilai negatif tidak seluruhnya diubah menjadi nol.
+
+### Kembali 32 → 8
+Proyeksi kedua mengembalikan dimensi agar penjumlahan residual memiliki shape yang sama.
+
+### Residual MLP
+Setiap blok memiliki dua residual dan kedua sublayer. Skala referensi GPT-3: 96 blok; hitungan fixture: 2 blok.
+
+## Apa yang dapat kamu amati di lab?
+Jalur luar melewati cabang attention dan MLP: inilah residual. 96 pelat di belakang mewakili kedalaman model, bukan 96 langkah decoding.
+
+## Skala referensi dan batas simulasi
+Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+
+## Sumber primer
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · implementasi referensi](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Sampling LLM: Temperature, Top-k, dan Top-p
+
+Canonical: https://llm-explained.vicoworks.com/id/belajar/sampling-temperature/
+Language: id
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Representasi posisi terakhir melewati final LayerNorm dan proyeksi vocabulary yang berbagi embedding. Greedy memilih logit terbesar; sampling mengambil satu pilihan dari distribusi.
+
+Setelah blok terakhir, final LayerNorm dan LM head memetakan representasi posisi terakhir ke logits vocabulary. Temperature dan filter mengubah distribusi sebelum satu token dipilih.
+
+## Cara kerjanya
+### Final LayerNorm
+Normalisasi final mengikuti dua blok demo. Hanya posisi terakhir yang dipakai untuk token berikutnya.
+
+### Proyeksi vocabulary
+Bobot output berbagi matriks embedding. Logits adalah skor mentah 16 token, bukan persentase.
+
+### Distribusi probabilitas
+Temperature positif mengubah bentuk distribusi. Temperature 0 memakai argmax tanpa membagi nol.
+
+### Pilih satu token
+Greedy deterministik; sampling dapat memilih hasil berbeda. Probabilitas tinggi tidak menjamin fakta benar.
+
+## Apa yang dapat kamu amati di lab?
+Batang adalah kandidat token. Pilihan menambah satu token ke konteks; model tidak menghasilkan satu kalimat sekaligus.
+
+## Skala referensi dan batas simulasi
+Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+
+## Sumber primer
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · implementasi referensi](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Apa Itu KV Cache? Memahami Prefill dan Decode LLM
+
+Canonical: https://llm-explained.vicoworks.com/id/belajar/kv-cache/
+Language: id
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+K/V lama pada setiap layer dapat dipakai kembali. Hanya token baru yang menghasilkan Query, Key, dan Value baru. Cache adalah aktivasi urutan ini, bukan bobot atau memori lintas pengguna.
+
+Prefill memproses prompt. Ketika decode, K dan V token lama disimpan per layer; Query token baru membaca cache itu. Token terpilih ditambahkan ke input dan proses berulang hingga batas atau token akhir.
+
+## Cara kerjanya
+### Simpan prefix K/V
+Prefill menghitung prompt dengan causal mask, lalu menyimpan aktivasi K/V pada setiap layer.
+
+### Decode token baru
+Query baru melihat seluruh Key yang tersedia. K/V prefix tidak diproyeksikan ulang.
+
+### Ulangi autoregresi
+Token baru menjadi bagian input berikutnya. Edit prefix membatalkan cache yang bergantung padanya.
+
+## Apa yang dapat kamu amati di lab?
+Rak menyimpan dua aliran: K dan V. Jalur balik membawa token baru ke model. Cache tidak menyimpan seluruh jawaban yang sudah disiapkan.
+
+## Skala referensi dan batas simulasi
+Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+
+## Sumber primer
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · implementasi referensi](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Analogi Vektor dan Embedding Statis
+
+Canonical: https://llm-explained.vicoworks.com/id/belajar/analogi-vektor/
+Language: id
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Aritmetika vektor dapat memperlihatkan relasi pada word embeddings statis. Contoh lokal ini bukan mekanisme literal GPT menjawab dan bukan hubungan universal.
+
+Vektor membantu membayangkan relasi antarrepresentasi. Aritmetika Tokyo − Jepang + Prancis merupakan contoh embedding statis, terpisah dari jalur inferensi Transformer.
+
+## Cara kerjanya
+### Vektor sumber
+Ini word vectors mainan statis empat dimensi, terpisah dari pipeline Transformer.
+
+### Aritmetika vektor
+Penjumlahan dan pengurangan berlangsung pada vektor sumber. Lab menampilkan proyeksi dua dimensi; ranking memakai empat dimensi sumber.
+
+### Ranking cosine
+Hasil mendekati target contoh terpilih pada fixture ini. Tidak identik tepat dan tidak berlaku universal.
+
+## Apa yang dapat kamu amati di lab?
+Tiga sumbu hanya proyeksi ilustratif. Model sebenarnya memiliki ribuan fitur, dan representasi berubah mengikuti konteks.
+
+## Skala referensi dan batas simulasi
+Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+
+## Sumber primer
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · implementasi referensi](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Learn LLMs interactively, from tokens to generated text
+
+NeuroLab is a browser-based LLM learning laboratory by Vicoworks. Explore a first-person 3D world, use five tools, and test your understanding through six missions. This guide helps IT and data practitioners understand how large language models work, including decoder Transformer mechanisms underlying the GPT family.
+
+Canonical: https://llm-explained.vicoworks.com/en/
+
+## Explore the mechanisms
+- [Tokenizer](https://llm-explained.vicoworks.com/en/learn/tokenization/): A model sees token IDs. Tokens can be words, word pieces, punctuation, or characters including a leading space.
+- [Embedding & position](https://llm-explained.vicoworks.com/en/learn/embeddings-position/): An ID selects an embedding row. Adding a learned position vector encodes order. The ID itself is not a numerical measure of meaning.
+- [Query, Key, Value](https://llm-explained.vicoworks.com/en/learn/query-key-value/): Queries match patterns, Keys offer patterns to match, and Values carry information to mix. All three are learned projections of the same representation.
+- [Causal attention](https://llm-explained.vicoworks.com/en/learn/causal-attention/): Query–Key scores are divided by the square root of head dimension. Future positions are masked, then softmax produces weights to mix Values.
+- [Transformer block](https://llm-explained.vicoworks.com/en/learn/transformer-block/): Each block contains attention and an MLP. Two residual connections retain input paths. LayerNorm operates across each token's feature dimension.
+- [Next token](https://llm-explained.vicoworks.com/en/learn/sampling-temperature/): The final-position representation passes through final LayerNorm and a vocabulary projection tied to the embedding. Greedy selects the largest logit; sampling draws from the distribution.
+- [Decode & KV cache](https://llm-explained.vicoworks.com/en/learn/kv-cache/): Previous Keys and Values can be reused at each layer. Only the new token produces new Query, Key, and Value vectors. The cache contains this sequence's activations rather than weights or shared user memory.
+- [Vector analogies](https://llm-explained.vicoworks.com/en/learn/vector-analogies/): Vector arithmetic illustrates relationships in static word embeddings. This example is not the literal mechanism by which GPT answers, and the relationship is not universal.
+
+## How to use the interactive lab
+Click the world to look around, walk with WASD, choose tools 1–5, and press E to use them. H opens Hint and F opens missions. On phones, use the joystick, drag to look, and tap Use. The journal offers Meaning, Numbers, and Code tabs. A 2D mode is available without WebGL.
+
+The Scanner opens notes. The Token tracer selects token positions. The Head lens compares two demo heads. The Time controller pauses signals. The Calibrator changes experiment conditions before you predict and test the outcome.
+
+## Reference scale and simulation limits
+Visuals use illustrative flows and fixtures. GPT-3 175B has 96 blocks, 96 heads per block, width 12,288, and a 2,048-token context. Its paper alternates dense and locally banded sparse attention; this lab examines causal dense attention. The numerical workbench uses a toy model with two blocks, two heads, width 8, and a vocabulary of 16. GPT-3 weights are not loaded, and presets do not generate answers from a trained language model.
+
+## Frequently asked questions
+### What is an LLM?
+A large language model learns language patterns from data. An autoregressive decoder predicts a next-token distribution from context, selects a token, and repeats.
+
+### Is this lab free, and do I need an API key?
+The lab is free and runs client-side. No API key, account, or inference server is required. Local presets and a toy model support learning.
+
+### Do attention weights explain exactly why a model answered?
+Attention weights describe a mixture of Values within one head and step. They are not a complete explanation of a model's decision or a guarantee of factual correctness.
+
+### How do training and inference differ?
+Training updates weights through loss, backpropagation, and an optimizer. Inference keeps weights fixed while producing activations and predicting the next token.
+
+
+---
+
+# What Is LLM Tokenization? Learn with Interactive Visualizations
+
+Canonical: https://llm-explained.vicoworks.com/en/learn/tokenization/
+Language: en
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+A model sees token IDs. Tokens can be words, word pieces, punctuation, or characters including a leading space.
+
+The tokenizer maps text pieces to vocabulary IDs. A token is not always a whole word.
+
+## How it works
+### Input text
+Text is the starting point. This profile uses a toy vocabulary rather than the GPT-2 tokenizer.
+
+### Split tokens
+Leading spaces belong to tokens. Presets retain pieces and offsets that reconstruct the input.
+
+### Lookup ID
+Positions 0, 1, 2, … differ from vocabulary IDs. An ID does not measure the strength of meaning.
+
+## What can you observe in the lab?
+Separate capsules show token boundaries. Colors follow token positions through the journey.
+
+## Reference scale and simulation limits
+Visuals use illustrative flows and fixtures. GPT-3 175B has 96 blocks, 96 heads per block, width 12,288, and a 2,048-token context. Its paper alternates dense and locally banded sparse attention; this lab examines causal dense attention. The numerical workbench uses a toy model with two blocks, two heads, width 8, and a vocabulary of 16. GPT-3 weights are not loaded, and presets do not generate answers from a trained language model.
+
+## Primary sources
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · reference implementation](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Token Embeddings and Positions in LLMs
+
+Canonical: https://llm-explained.vicoworks.com/en/learn/embeddings-position/
+Language: en
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+An ID selects an embedding row. Adding a learned position vector encodes order. The ID itself is not a numerical measure of meaning.
+
+Each ID retrieves an embedding vector. Adding a position embedding gives the same token different input representations at different positions.
+
+## How it works
+### Lookup embedding
+An ID selects a learned embedding row; this fixture has 16 rows.
+
+### Position lookup
+GPT-2 uses learned position embeddings. Positions here also use lookups rather than sinusoidal encoding.
+
+### Add position
+Addition is elementwise. Swapping order preserves token embeddings but changes position contributions.
+
+## What can you observe in the lab?
+Light columns represent vector features. Colors illustrate values rather than named semantic axes.
+
+## Reference scale and simulation limits
+Visuals use illustrative flows and fixtures. GPT-3 175B has 96 blocks, 96 heads per block, width 12,288, and a 2,048-token context. Its paper alternates dense and locally banded sparse attention; this lab examines causal dense attention. The numerical workbench uses a toy model with two blocks, two heads, width 8, and a vocabulary of 16. GPT-3 weights are not loaded, and presets do not generate answers from a trained language model.
+
+## Primary sources
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · reference implementation](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Query, Key, Value: How LLM Attention Works
+
+Canonical: https://llm-explained.vicoworks.com/en/learn/query-key-value/
+Language: en
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Queries match patterns, Keys offer patterns to match, and Values carry information to mix. All three are learned projections of the same representation.
+
+Within each block, LayerNorm normalizes features per token. Three learned projections produce Query, Key, and Value, then split features into heads. These stations examine parts of the same block.
+
+## How it works
+### Pre-normalization
+Compute the mean and variance across each token's eight features. The demo uses gamma=1 and beta=0.
+
+### Query projection
+Click an output to inspect eight multiplication pairs between an input row and a weight column.
+
+### Key projection
+Keys form patterns matched by Queries. Weights stay fixed; activations depend on input.
+
+### Value projection
+Values carry the information mixed once attention weights are available.
+
+### Split two heads
+Width 8 is split into 2 heads × 4 features. Changing heads changes Keys, Values, scores, and outputs.
+
+## What can you observe in the lab?
+One stream branches three ways: Queries look for matches, Keys are matched, and Values carry information.
+
+## Reference scale and simulation limits
+Visuals use illustrative flows and fixtures. GPT-3 175B has 96 blocks, 96 heads per block, width 12,288, and a 2,048-token context. Its paper alternates dense and locally banded sparse attention; this lab examines causal dense attention. The numerical workbench uses a toy model with two blocks, two heads, width 8, and a vocabulary of 16. GPT-3 weights are not loaded, and presets do not generate answers from a trained language model.
+
+## Primary sources
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · reference implementation](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Causal Attention and Masking in Transformers
+
+Canonical: https://llm-explained.vicoworks.com/en/learn/causal-attention/
+Language: en
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Query–Key scores are divided by the square root of head dimension. Future positions are masked, then softmax produces weights to mix Values.
+
+QKᵀ produces token-pair scores. Scores are divided by √128, future positions are masked, and softmax produces weights to mix Values.
+
+## How it works
+### Multiply Q × K
+Each cell compares one Query row with one Key row. Click to inspect all multiplications.
+
+### Sum the dot product
+Four products are summed into one score. Scores are not yet probabilities.
+
+### Scale
+Dividing by √d_head controls score scale. Here, √4 = 2.
+
+### Causal mask
+Future positions are unavailable. A score of −∞ becomes exactly zero weight after softmax.
+
+### Row-wise softmax
+Normalize across Key columns rather than the entire matrix. Every row sums to 1.
+
+### Mix Values
+Attention weights and Value contributions are different. Click an output to inspect its weighted sum.
+
+### Concatenate heads
+Two width-4 outputs are concatenated back to width 8.
+
+### Output projection
+A learned output projection mixes features across heads before residual addition.
+
+## What can you observe in the lab?
+Lines point only to current and preceding positions. Thickness illustrates weights; other heads may have different patterns.
+
+## Reference scale and simulation limits
+Visuals use illustrative flows and fixtures. GPT-3 175B has 96 blocks, 96 heads per block, width 12,288, and a 2,048-token context. Its paper alternates dense and locally banded sparse attention; this lab examines causal dense attention. The numerical workbench uses a toy model with two blocks, two heads, width 8, and a vocabulary of 16. GPT-3 weights are not loaded, and presets do not generate answers from a trained language model.
+
+## Primary sources
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · reference implementation](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Transformer Blocks: Residuals, LayerNorm, MLP, and GELU
+
+Canonical: https://llm-explained.vicoworks.com/en/learn/transformer-block/
+Language: en
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Each block contains attention and an MLP. Two residual connections retain input paths. LayerNorm operates across each token's feature dimension.
+
+Attention output is added to the residual stream. A second LayerNorm and an MLP with GELU process features per token, followed by a second residual addition. The block repeats 96 times with different weights.
+
+## How it works
+### Residual attention
+The residual adds the initial representation to the attention output, retaining the input.
+
+### Pre-norm MLP
+The second LayerNorm operates on residual output across features per token.
+
+### Expand 8 → 32
+The MLP expands the feature dimension fourfold, independently per token.
+
+### GELU activation
+GELU is a smooth curve; negative values are not all set to zero.
+
+### Project 32 → 8
+The second projection restores the dimension for matching residual shapes.
+
+### Residual MLP
+Every block has two residuals and both sublayers. GPT-3 reference: 96 blocks; fixture: 2 blocks.
+
+## What can you observe in the lab?
+The outer paths bypass attention and MLP: these are residual connections. The 96 plates represent model depth rather than decoding steps.
+
+## Reference scale and simulation limits
+Visuals use illustrative flows and fixtures. GPT-3 175B has 96 blocks, 96 heads per block, width 12,288, and a 2,048-token context. Its paper alternates dense and locally banded sparse attention; this lab examines causal dense attention. The numerical workbench uses a toy model with two blocks, two heads, width 8, and a vocabulary of 16. GPT-3 weights are not loaded, and presets do not generate answers from a trained language model.
+
+## Primary sources
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · reference implementation](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# LLM Sampling: Temperature, Top-k, and Top-p
+
+Canonical: https://llm-explained.vicoworks.com/en/learn/sampling-temperature/
+Language: en
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+The final-position representation passes through final LayerNorm and a vocabulary projection tied to the embedding. Greedy selects the largest logit; sampling draws from the distribution.
+
+After the last block, final LayerNorm and the LM head map the final-position representation to vocabulary logits. Temperature and filters change the distribution before a token is selected.
+
+## How it works
+### Final LayerNorm
+Final normalization follows the two demo blocks. Only the final position is used for the next token.
+
+### Vocabulary projection
+Output weights share the embedding matrix. Logits are raw scores for 16 tokens rather than percentages.
+
+### Probability distribution
+Positive temperature changes distribution shape. Temperature 0 uses argmax without dividing by zero.
+
+### Select one token
+Greedy decoding is deterministic; sampling may choose different outputs. High probability does not guarantee factual correctness.
+
+## What can you observe in the lab?
+Bars represent candidate tokens. Selecting one adds a token to context; the model does not generate a sentence all at once.
+
+## Reference scale and simulation limits
+Visuals use illustrative flows and fixtures. GPT-3 175B has 96 blocks, 96 heads per block, width 12,288, and a 2,048-token context. Its paper alternates dense and locally banded sparse attention; this lab examines causal dense attention. The numerical workbench uses a toy model with two blocks, two heads, width 8, and a vocabulary of 16. GPT-3 weights are not loaded, and presets do not generate answers from a trained language model.
+
+## Primary sources
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · reference implementation](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# What Is a KV Cache? Understanding LLM Prefill and Decoding
+
+Canonical: https://llm-explained.vicoworks.com/en/learn/kv-cache/
+Language: en
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Previous Keys and Values can be reused at each layer. Only the new token produces new Query, Key, and Value vectors. The cache contains this sequence's activations rather than weights or shared user memory.
+
+Prefill processes the prompt. During decoding, previous Keys and Values are retained per layer. The new Query reads the cache. The selected token is appended and the process repeats until a limit or end token.
+
+## How it works
+### Store prefix K/V
+Prefill processes the prompt with a causal mask and stores K/V activations per layer.
+
+### Decode a new token
+The new Query sees all available Keys. Prefix K/V are not projected again.
+
+### Repeat autoregression
+The new token joins the next input. Prefix edits invalidate the dependent cache.
+
+## What can you observe in the lab?
+Racks retain K and V streams. The return path carries the new token into the model. The cache does not store prepared answers.
+
+## Reference scale and simulation limits
+Visuals use illustrative flows and fixtures. GPT-3 175B has 96 blocks, 96 heads per block, width 12,288, and a 2,048-token context. Its paper alternates dense and locally banded sparse attention; this lab examines causal dense attention. The numerical workbench uses a toy model with two blocks, two heads, width 8, and a vocabulary of 16. GPT-3 weights are not loaded, and presets do not generate answers from a trained language model.
+
+## Primary sources
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · reference implementation](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)
+
+
+---
+
+# Vector Analogies and Static Embeddings
+
+Canonical: https://llm-explained.vicoworks.com/en/learn/vector-analogies/
+Language: en
+Publisher: Vicoworks (https://vicoworks.com)
+Updated: 2026-10-25
+
+Vector arithmetic illustrates relationships in static word embeddings. This example is not the literal mechanism by which GPT answers, and the relationship is not universal.
+
+Vectors illustrate relationships between representations. Tokyo − Japan + France is a static-embedding example, separate from Transformer inference.
+
+## How it works
+### Source vectors
+These are four-dimensional static toy word vectors, separate from Transformer inference.
+
+### Vector arithmetic
+Arithmetic operates on source vectors. The lab displays a two-dimensional projection.
+
+### Ranking cosine
+The result approaches the selected target in this fixture. It is not identical or universal.
+
+## What can you observe in the lab?
+The axes are illustrative projections. Real models have thousands of features; contextual representations change with context.
+
+## Reference scale and simulation limits
+Visuals use illustrative flows and fixtures. GPT-3 175B has 96 blocks, 96 heads per block, width 12,288, and a 2,048-token context. Its paper alternates dense and locally banded sparse attention; this lab examines causal dense attention. The numerical workbench uses a toy model with two blocks, two heads, width 8, and a vocabulary of 16. GPT-3 weights are not loaded, and presets do not generate answers from a trained language model.
+
+## Primary sources
+- [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [GPT-2 · reference implementation](https://github.com/openai/gpt-2/blob/master/src/model.py)
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Word representations · Mikolov et al.](https://arxiv.org/abs/1301.3781)
+- [KV cache · Hugging Face](https://huggingface.co/docs/transformers/main/cache_explanation)

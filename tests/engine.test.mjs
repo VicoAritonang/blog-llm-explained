@@ -17,7 +17,7 @@ import {
   bpeTrace,
   analogyResult,
   cosine,
-  ANALOGY,
+  ANALOGY_CASES,
   matmul,
   transpose,
   gelu,
@@ -227,10 +227,21 @@ test("all tokenizer presets reconstruct exact text, whitespace, offsets", () => 
   assert.deepEqual(bpeTrace(), [["c", "a", "t"], ["ca", "t"], ["cat"]]);
 });
 test("analogy ranks by source cosine, not projected coordinates", () => {
-  const a = analogyResult();
-  assert.equal(a.ranking[0].word, "queen");
-  a.ranking.forEach((r) => near(r.cosine, cosine(a.vector, ANALOGY[r.word])));
-  assert.notDeepEqual(a.vector, ANALOGY.queen);
+  for (const [id, target] of [
+    ["capitals", "Paris"],
+    ["verbs", "swimming"],
+    ["workplaces", "guru"],
+  ]) {
+    const a = analogyResult(id),
+      source = ANALOGY_CASES.find((item) => item.id === id).vectors;
+    assert.equal(a.ranking[0].word, target);
+    a.ranking.forEach((r) => near(r.cosine, cosine(a.vector, source[r.word])));
+    assert.notDeepEqual(a.vector, source[target]);
+    const [first, subtract, add] = a.words;
+    a.vector.forEach((x, i) =>
+      near(x, source[first][i] - source[subtract][i] + source[add][i]),
+    );
+  }
 });
 test("decoder length and vocabulary bounds reject invalid inputs", () => {
   for (const ids of [[], [16], [-1], [1.5], Array(13).fill(0)])

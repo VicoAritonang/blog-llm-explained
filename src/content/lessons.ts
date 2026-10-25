@@ -1,13 +1,16 @@
+import { t } from "../i18n/core.mjs";
 export const stations = [
   {
     id: "tokenizer",
     title: "Tokenizer",
-    short: "Teks → token",
-    question: "Bagaimana teks menjadi sesuatu yang bisa dihitung?",
-    description:
+    short: t("Teks → token"),
+    question: t("Bagaimana teks menjadi sesuatu yang bisa dihitung?"),
+    description: t(
       "Model melihat ID token. Satu token dapat berupa kata, potongan kata, tanda baca, atau karakter dengan spasi awal.",
-    formula:
+    ),
+    formula: t(
       "\\text{teks} \\longrightarrow [\\text{ID}_0,\\ldots,\\text{ID}_{N-1}]",
+    ),
     color: "#40d5de",
     icon: "scan",
     model: "tokenizer-bench",
@@ -15,11 +18,12 @@ export const stations = [
   },
   {
     id: "embedding",
-    title: "Embedding & posisi",
-    short: "Token → vektor",
-    question: "Bagaimana ID token mendapatkan representasi?",
-    description:
+    title: t("Embedding & posisi"),
+    short: t("Token → vektor"),
+    question: t("Bagaimana ID token mendapatkan representasi?"),
+    description: t(
       "ID memilih satu baris embedding. Vektor posisi terlatih ditambahkan agar model mengetahui urutan. ID itu sendiri bukan angka makna.",
+    ),
     formula: "X_i=E[\\mathrm{ID}_i]+P[i]",
     color: "#40d5de",
     icon: "grid",
@@ -29,10 +33,11 @@ export const stations = [
   {
     id: "qkv",
     title: "Query, Key, Value",
-    short: "Tiga proyeksi",
-    question: "Mengapa satu vektor menjadi tiga?",
-    description:
+    short: t("Tiga proyeksi"),
+    question: t("Mengapa satu vektor menjadi tiga?"),
+    description: t(
       "Query mencocokkan pola, Key menawarkan pola untuk dicocokkan, dan Value membawa informasi yang akan dicampurkan. Ketiganya proyeksi terlatih dari representasi yang sama.",
+    ),
     formula: "U=\\mathrm{LN}(X),\\quad Q=UW_Q,\\ K=UW_K,\\ V=UW_V",
     color: "#a88ee8",
     icon: "split",
@@ -42,10 +47,11 @@ export const stations = [
   {
     id: "attention",
     title: "Causal attention",
-    short: "Pilih konteks",
-    question: "Token mana yang boleh memengaruhi token ini?",
-    description:
+    short: t("Pilih konteks"),
+    question: t("Token mana yang boleh memengaruhi token ini?"),
+    description: t(
       "Skor Query–Key dibagi akar dimensi head. Posisi masa depan ditutup, lalu softmax membentuk bobot yang mencampurkan Value.",
+    ),
     formula:
       "A=\\mathrm{softmax}\\!\\left(\\frac{QK^\\top}{\\sqrt{d_h}}+M\\right),\\quad Z=AV",
     color: "#40d5de",
@@ -55,11 +61,12 @@ export const stations = [
   },
   {
     id: "transformer",
-    title: "Blok Transformer",
-    short: "Perbarui representasi",
-    question: "Apa yang terjadi setelah attention?",
-    description:
+    title: t("Blok Transformer"),
+    short: t("Perbarui representasi"),
+    question: t("Apa yang terjadi setelah attention?"),
+    description: t(
       "Setiap blok memiliki attention dan MLP. Dua residual mempertahankan jalur input. LayerNorm bekerja sepanjang dimensi fitur setiap token.",
+    ),
     formula:
       "R=X+\\mathrm{Attention}(\\mathrm{LN}(X)),\\quad X^{\\prime}=R+\\mathrm{MLP}(\\mathrm{LN}(R))",
     color: "#eab96c",
@@ -69,11 +76,12 @@ export const stations = [
   },
   {
     id: "sampling",
-    title: "Token berikutnya",
-    short: "Vektor → probabilitas",
-    question: "Bagaimana satu token akhirnya dipilih?",
-    description:
+    title: t("Token berikutnya"),
+    short: t("Vektor → probabilitas"),
+    question: t("Bagaimana satu token akhirnya dipilih?"),
+    description: t(
       "Representasi posisi terakhir melewati final LayerNorm dan proyeksi vocabulary yang berbagi embedding. Greedy memilih logit terbesar; sampling mengambil satu pilihan dari distribusi.",
+    ),
     formula: "p=\\mathrm{softmax}\\!\\left(\\frac{H_{N-1}E^\\top}{T}\\right)",
     color: "#88d9ab",
     icon: "chart",
@@ -83,10 +91,11 @@ export const stations = [
   {
     id: "cache",
     title: "Decode & KV cache",
-    short: "Gunakan kembali prefix",
-    question: "Haruskah masa lalu dihitung lagi?",
-    description:
+    short: t("Gunakan kembali prefix"),
+    question: t("Haruskah masa lalu dihitung lagi?"),
+    description: t(
       "K/V lama pada setiap layer dapat dipakai kembali. Hanya token baru yang menghasilkan Query, Key, dan Value baru. Cache adalah aktivasi urutan ini, bukan bobot atau memori lintas pengguna.",
+    ),
     formula: "\\mathrm{cache/layer}=2N\\,n_h\\,d_h\\,\\mathrm{bytes}",
     color: "#88d9ab",
     icon: "database",
@@ -95,13 +104,14 @@ export const stations = [
   },
   {
     id: "analogy",
-    title: "Analogi vektor",
-    short: "Annex eksplorasi",
-    question: "Bisakah hubungan kata menjadi hubungan geometris?",
-    description:
-      "Aritmetika vektor dapat memperlihatkan relasi pada word embeddings statis. Contoh lokal ini bukan mekanisme literal GPT menjawab dan tidak mendefinisikan identitas manusia.",
+    title: t("Analogi vektor"),
+    short: t("Annex eksplorasi"),
+    question: t("Bisakah hubungan kata menjadi hubungan geometris?"),
+    description: t(
+      "Aritmetika vektor dapat memperlihatkan relasi pada word embeddings statis. Contoh lokal ini bukan mekanisme literal GPT menjawab dan bukan hubungan universal.",
+    ),
     formula:
-      "v_{\\mathrm{king}}-v_{\\mathrm{man}}+v_{\\mathrm{woman}}\\approx v_{\\mathrm{queen}}",
+      "v_{\\mathrm{Tokyo}}-v_{\\mathrm{Jepang}}+v_{\\mathrm{Prancis}}\\approx v_{\\mathrm{Paris}}",
     color: "#a88ee8",
     icon: "move",
     model: "embedding-projector",
@@ -112,59 +122,59 @@ export type StationId = (typeof stations)[number]["id"];
 export const experiments = [
   {
     id: "A",
-    name: "Perjalanan satu token",
-    subtitle: "Dari teks hingga token berikutnya",
+    name: t("Perjalanan satu token"),
+    subtitle: t("Dari teks hingga token berikutnya"),
     station: "tokenizer",
-    tag: "TUR UTAMA",
-    duration: "8–12 menit",
+    tag: t("TUR UTAMA"),
+    duration: t("8–12 menit"),
   },
   {
     id: "B",
-    name: "Mikroskop subword",
-    subtitle: "Kata, spasi, dan bahasa",
+    name: t("Mikroskop subword"),
+    subtitle: t("Kata, spasi, dan bahasa"),
     station: "tokenizer",
     tag: "TOKENISASI",
-    duration: "3 menit",
+    duration: t("3 menit"),
   },
   {
     id: "C",
-    name: "Telusuri attention",
-    subtitle: "Bongkar satu dot product",
+    name: t("Telusuri attention"),
+    subtitle: t("Bongkar satu dot product"),
     station: "attention",
     tag: "ATTENTION",
-    duration: "4 menit",
+    duration: t("4 menit"),
   },
   {
     id: "D",
-    name: "Bisakah it melihat masa depan?",
-    subtitle: "Ubah suffix, periksa prefix",
+    name: t("Bisakah it melihat masa depan?"),
+    subtitle: t("Ubah suffix, periksa prefix"),
     station: "attention",
     tag: "KAUSALITAS",
-    duration: "3 menit",
+    duration: t("3 menit"),
   },
   {
     id: "E",
-    name: "Aritmetika vektor",
-    subtitle: "king − man + woman",
+    name: t("Aritmetika vektor"),
+    subtitle: t("Tokyo − Jepang + Prancis"),
     station: "analogy",
     tag: "VEKTOR",
-    duration: "3 menit",
+    duration: t("3 menit"),
   },
   {
     id: "F",
-    name: "Logits sama, pilihan berbeda",
+    name: t("Logits sama, pilihan berbeda"),
     subtitle: "Temperature, top-k, top-p, seed",
     station: "sampling",
     tag: "SAMPLING",
-    duration: "4 menit",
+    duration: t("4 menit"),
   },
   {
     id: "G",
-    name: "Gunakan kembali masa lalu",
-    subtitle: "Prefill, decode, dan KV cache",
+    name: t("Gunakan kembali masa lalu"),
+    subtitle: t("Prefill, decode, dan KV cache"),
     station: "cache",
     tag: "EFISIENSI",
-    duration: "3 menit",
+    duration: t("3 menit"),
   },
 ] as const;
 export type ExperimentId = (typeof experiments)[number]["id"];
@@ -174,22 +184,28 @@ export const operations: Record<
 > = {
   tokenizer: [
     {
-      name: "Teks masukan",
+      name: t("Teks masukan"),
       tensor: "ids",
       code: 'text = "The cat sat on the"',
-      note: "Teks adalah titik awal. Profil ini memakai vocabulary mainan, bukan tokenizer GPT-2.",
+      note: t(
+        "Teks adalah titik awal. Profil ini memakai vocabulary mainan, bukan tokenizer GPT-2.",
+      ),
     },
     {
-      name: "Pisahkan token",
+      name: t("Pisahkan token"),
       tensor: "ids",
       code: "tokens = toy_tokenizer.preset(text)",
-      note: "Spasi awal termasuk isi token. Preset menyimpan potongan dan offsets yang dapat direkonstruksi.",
+      note: t(
+        "Spasi awal termasuk isi token. Preset menyimpan potongan dan offsets yang dapat direkonstruksi.",
+      ),
     },
     {
       name: "Lookup ID",
       tensor: "ids",
       code: "ids = [vocab[token] for token in tokens]",
-      note: "Posisi 0, 1, 2, … berbeda dari ID vocabulary. ID tidak menunjukkan besar atau kecilnya makna.",
+      note: t(
+        "Posisi 0, 1, 2, … berbeda dari ID vocabulary. ID tidak menunjukkan besar atau kecilnya makna.",
+      ),
     },
   ],
   embedding: [
@@ -197,19 +213,25 @@ export const operations: Record<
       name: "Lookup embedding",
       tensor: "embedding",
       code: "E_token = E[ids]  # [N, 8]",
-      note: "Satu ID memilih satu baris dari matriks embedding terlatih; fixture ini memiliki 16 baris.",
+      note: t(
+        "Satu ID memilih satu baris dari matriks embedding terlatih; fixture ini memiliki 16 baris.",
+      ),
     },
     {
-      name: "Lookup posisi",
+      name: t("Lookup posisi"),
       tensor: "position",
       code: "P_token = P[positions]  # learned positions",
-      note: "GPT-2 memakai learned position embeddings. Angka posisi di sini juga lookup, bukan sinusoidal.",
+      note: t(
+        "GPT-2 memakai learned position embeddings. Angka posisi di sini juga lookup, bukan sinusoidal.",
+      ),
     },
     {
-      name: "Tambahkan posisi",
+      name: t("Tambahkan posisi"),
       tensor: "X0",
       code: "X = E_token + P_token",
-      note: "Penjumlahan dilakukan elemen demi elemen. Menukar urutan mempertahankan embedding token, tetapi mengganti kontribusi posisinya.",
+      note: t(
+        "Penjumlahan dilakukan elemen demi elemen. Menukar urutan mempertahankan embedding token, tetapi mengganti kontribusi posisinya.",
+      ),
     },
   ],
   qkv: [
@@ -217,81 +239,105 @@ export const operations: Record<
       name: "Pre-normalization",
       tensor: "U",
       code: "U = layer_norm(X, eps=1e-5)",
-      note: "Hitung mean dan variance delapan fitur setiap token. Demo memakai gamma=1 dan beta=0.",
+      note: t(
+        "Hitung mean dan variance delapan fitur setiap token. Demo memakai gamma=1 dan beta=0.",
+      ),
     },
     {
-      name: "Proyeksi Query",
+      name: t("Proyeksi Query"),
       tensor: "Q",
       code: "Q = U @ Wq + bq",
-      note: "Klik angka hasil untuk menelusuri delapan pasangan perkalian antara baris input dan kolom bobot.",
+      note: t(
+        "Klik angka hasil untuk menelusuri delapan pasangan perkalian antara baris input dan kolom bobot.",
+      ),
     },
     {
-      name: "Proyeksi Key",
+      name: t("Proyeksi Key"),
       tensor: "K",
       code: "K = U @ Wk + bk",
-      note: "Key membentuk pola yang dicocokkan oleh Query. Bobot model tetap; aktivasi bergantung pada input.",
+      note: t(
+        "Key membentuk pola yang dicocokkan oleh Query. Bobot model tetap; aktivasi bergantung pada input.",
+      ),
     },
     {
-      name: "Proyeksi Value",
+      name: t("Proyeksi Value"),
       tensor: "V",
       code: "V = U @ Wv + bv",
-      note: "Value adalah informasi yang dicampurkan setelah bobot attention tersedia.",
+      note: t(
+        "Value adalah informasi yang dicampurkan setelah bobot attention tersedia.",
+      ),
     },
     {
-      name: "Pisahkan dua head",
+      name: t("Pisahkan dua head"),
       tensor: "headQ",
       code: "Qh = Q.reshape(N, 2, 4).transpose(1, 0, 2)",
-      note: "Lebar 8 dibagi menjadi 2 head × 4 fitur. Mengganti head juga mengganti K, V, skor, dan hasilnya.",
+      note: t(
+        "Lebar 8 dibagi menjadi 2 head × 4 fitur. Mengganti head juga mengganti K, V, skor, dan hasilnya.",
+      ),
     },
   ],
   attention: [
     {
-      name: "Kalikan Q × K",
+      name: t("Kalikan Q × K"),
       tensor: "raw",
       code: "scores = Qh @ Kh.T",
-      note: "Setiap sel membandingkan satu baris Query dan satu baris Key. Klik sel untuk melihat semua perkalian.",
+      note: t(
+        "Setiap sel membandingkan satu baris Query dan satu baris Key. Klik sel untuk melihat semua perkalian.",
+      ),
     },
     {
-      name: "Jumlahkan dot product",
+      name: t("Jumlahkan dot product"),
       tensor: "raw",
       code: "score[i,j] = sum(Qh[i,d] * Kh[j,d] for d in range(4))",
-      note: "Empat hasil perkalian dijumlahkan menjadi satu skor. Skor belum merupakan probabilitas.",
+      note: t(
+        "Empat hasil perkalian dijumlahkan menjadi satu skor. Skor belum merupakan probabilitas.",
+      ),
     },
     {
       name: "Scale",
       tensor: "scaled",
       code: "scaled = scores / sqrt(4)",
-      note: "Pembagian oleh √d_head menjaga skala skor. Dalam demonstrasi ini √4 = 2.",
+      note: t(
+        "Pembagian oleh √d_head menjaga skala skor. Dalam demonstrasi ini √4 = 2.",
+      ),
     },
     {
       name: "Causal mask",
       tensor: "masked",
       code: "scaled[j > i] = -inf",
-      note: "Posisi masa depan belum tersedia. −∞ menjadi bobot nol tepat sesudah softmax.",
+      note: t(
+        "Posisi masa depan belum tersedia. −∞ menjadi bobot nol tepat sesudah softmax.",
+      ),
     },
     {
-      name: "Softmax per baris",
+      name: t("Softmax per baris"),
       tensor: "A",
       code: "A = softmax(scaled, axis=-1)",
-      note: "Normalisasi dilakukan sepanjang kolom Key, bukan seluruh matriks. Jumlah setiap baris adalah 1.",
+      note: t(
+        "Normalisasi dilakukan sepanjang kolom Key, bukan seluruh matriks. Jumlah setiap baris adalah 1.",
+      ),
     },
     {
-      name: "Campurkan Value",
+      name: t("Campurkan Value"),
       tensor: "Z",
       code: "Z = A @ Vh",
-      note: "Bobot attention dan kontribusi Value adalah dua hal berbeda. Klik output untuk melihat weighted sum.",
+      note: t(
+        "Bobot attention dan kontribusi Value adalah dua hal berbeda. Klik output untuk melihat weighted sum.",
+      ),
     },
     {
-      name: "Gabungkan head",
+      name: t("Gabungkan head"),
       tensor: "concat",
       code: "concat = concatenate([Z_head1, Z_head2], axis=-1)",
-      note: "Dua output dengan lebar 4 digabung kembali menjadi lebar 8.",
+      note: t("Dua output dengan lebar 4 digabung kembali menjadi lebar 8."),
     },
     {
-      name: "Proyeksi output",
+      name: t("Proyeksi output"),
       tensor: "out",
       code: "attention_out = concat @ Wo + bo",
-      note: "Proyeksi output terlatih mencampurkan fitur antarhead sebelum residual add.",
+      note: t(
+        "Proyeksi output terlatih mencampurkan fitur antarhead sebelum residual add.",
+      ),
     },
   ],
   transformer: [
@@ -299,37 +345,49 @@ export const operations: Record<
       name: "Residual attention",
       tensor: "R",
       code: "R = X + attention_out",
-      note: "Residual menambahkan representasi awal ke keluaran attention. Input tidak dibuang.",
+      note: t(
+        "Residual menambahkan representasi awal ke keluaran attention. Input tidak dibuang.",
+      ),
     },
     {
       name: "Pre-norm MLP",
       tensor: "N",
       code: "N = layer_norm(R)",
-      note: "LayerNorm kedua bekerja pada keluaran residual, per token sepanjang fitur.",
+      note: t(
+        "LayerNorm kedua bekerja pada keluaran residual, per token sepanjang fitur.",
+      ),
     },
     {
-      name: "Perluas 8 → 32",
+      name: t("Perluas 8 → 32"),
       tensor: "expanded",
       code: "expanded = N @ W1 + b1",
-      note: "MLP memperluas dimensi fitur empat kali. Operasinya tetap dilakukan terpisah di setiap token.",
+      note: t(
+        "MLP memperluas dimensi fitur empat kali. Operasinya tetap dilakukan terpisah di setiap token.",
+      ),
     },
     {
-      name: "Aktivasi GELU",
+      name: t("Aktivasi GELU"),
       tensor: "activation",
       code: "activated = gelu(expanded)",
-      note: "GELU adalah kurva halus; nilai negatif tidak seluruhnya diubah menjadi nol.",
+      note: t(
+        "GELU adalah kurva halus; nilai negatif tidak seluruhnya diubah menjadi nol.",
+      ),
     },
     {
-      name: "Kembali 32 → 8",
+      name: t("Kembali 32 → 8"),
       tensor: "M",
       code: "M = activated @ W2 + b2",
-      note: "Proyeksi kedua mengembalikan dimensi agar penjumlahan residual memiliki shape yang sama.",
+      note: t(
+        "Proyeksi kedua mengembalikan dimensi agar penjumlahan residual memiliki shape yang sama.",
+      ),
     },
     {
       name: "Residual MLP",
       tensor: "X",
       code: "X_next = R + M",
-      note: "Setiap blok memiliki dua residual dan kedua sublayer. Rak referensi 12 blok; hitungan fixture 2 blok.",
+      note: t(
+        "Setiap blok memiliki dua residual dan kedua sublayer. Skala referensi GPT-3: 96 blok; hitungan fixture: 2 blok.",
+      ),
     },
   ],
   sampling: [
@@ -337,139 +395,178 @@ export const operations: Record<
       name: "Final LayerNorm",
       tensor: "H",
       code: "H = layer_norm(X_after_block2)",
-      note: "Normalisasi final mengikuti dua blok demo. Hanya posisi terakhir yang dipakai untuk token berikutnya.",
+      note: t(
+        "Normalisasi final mengikuti dua blok demo. Hanya posisi terakhir yang dipakai untuk token berikutnya.",
+      ),
     },
     {
-      name: "Proyeksi vocabulary",
+      name: t("Proyeksi vocabulary"),
       tensor: "logits",
       code: "logits = H[-1] @ E.T  # tied weights",
-      note: "Bobot output berbagi matriks embedding. Logits adalah skor mentah 16 token, bukan persentase.",
+      note: t(
+        "Bobot output berbagi matriks embedding. Logits adalah skor mentah 16 token, bukan persentase.",
+      ),
     },
     {
-      name: "Distribusi probabilitas",
+      name: t("Distribusi probabilitas"),
       tensor: "probabilities",
       code: "p = softmax(logits / temperature)",
-      note: "Temperature positif mengubah bentuk distribusi. Temperature 0 memakai argmax tanpa membagi nol.",
+      note: t(
+        "Temperature positif mengubah bentuk distribusi. Temperature 0 memakai argmax tanpa membagi nol.",
+      ),
     },
     {
-      name: "Pilih satu token",
+      name: t("Pilih satu token"),
       tensor: "probabilities",
       code: "next_id = argmax(logits) if greedy else sample(p, seed)",
-      note: "Greedy deterministik; sampling dapat memilih hasil berbeda. Probabilitas tinggi tidak menjamin fakta benar.",
+      note: t(
+        "Greedy deterministik; sampling dapat memilih hasil berbeda. Probabilitas tinggi tidak menjamin fakta benar.",
+      ),
     },
   ],
   cache: [
     {
-      name: "Simpan prefix K/V",
+      name: t("Simpan prefix K/V"),
       tensor: "K",
       code: "cache[layer] = (K_prefix, V_prefix)",
-      note: "Prefill menghitung prompt dengan causal mask, lalu menyimpan aktivasi K/V pada setiap layer.",
+      note: t(
+        "Prefill menghitung prompt dengan causal mask, lalu menyimpan aktivasi K/V pada setiap layer.",
+      ),
     },
     {
-      name: "Decode token baru",
+      name: t("Decode token baru"),
       tensor: "V",
       code: "K = concat(K_cached, K_new); V = concat(V_cached, V_new)",
-      note: "Query baru melihat seluruh Key yang tersedia. K/V prefix tidak diproyeksikan ulang.",
+      note: t(
+        "Query baru melihat seluruh Key yang tersedia. K/V prefix tidak diproyeksikan ulang.",
+      ),
     },
     {
-      name: "Ulangi autoregresi",
+      name: t("Ulangi autoregresi"),
       tensor: "X",
       code: "ids.append(next_id)  # then repeat the same decoder",
-      note: "Token baru menjadi bagian input berikutnya. Edit prefix membatalkan cache yang bergantung padanya.",
+      note: t(
+        "Token baru menjadi bagian input berikutnya. Edit prefix membatalkan cache yang bergantung padanya.",
+      ),
     },
   ],
   analogy: [
     {
-      name: "Vektor sumber",
+      name: t("Vektor sumber"),
       tensor: "analogy",
-      code: "king, man, woman = static_vectors[...]",
-      note: "Ini word vectors mainan statis empat dimensi, terpisah dari pipeline Transformer.",
+      code: "a, b, c = selected_example.vectors",
+      note: t(
+        "Ini word vectors mainan statis empat dimensi, terpisah dari pipeline Transformer.",
+      ),
     },
     {
-      name: "Aritmetika vektor",
+      name: t("Aritmetika vektor"),
       tensor: "analogy",
-      code: "target = king - man + woman",
-      note: "Penjumlahan dan pengurangan berlangsung pada vektor sumber. Tampilan 3D hanya tiga komponen pertama.",
+      code: "target = a - b + c",
+      note: t(
+        "Penjumlahan dan pengurangan berlangsung pada vektor sumber. Lab menampilkan proyeksi dua dimensi; ranking memakai empat dimensi sumber.",
+      ),
     },
     {
       name: "Ranking cosine",
       tensor: "analogy",
       code: "rank = sorted(cosine(target, vector) for vector in candidates)",
-      note: "Hasil mendekati queen pada fixture ini. Tidak identik tepat dan tidak berlaku universal.",
+      note: t(
+        "Hasil mendekati target contoh terpilih pada fixture ini. Tidak identik tepat dan tidak berlaku universal.",
+      ),
     },
   ],
 };
 export const checkpoints = [
   {
-    question: "Dalam Z = A V, vektor apa yang dicampurkan?",
+    question: t("Dalam Z = A V, vektor apa yang dicampurkan?"),
     choices: [
-      "Key: karena cocok dengan Query",
-      "Value: dengan bobot attention",
-      "ID token: dijumlahkan langsung",
+      t("Key: karena cocok dengan Query"),
+      t("Value: dengan bobot attention"),
+      t("ID token: dijumlahkan langsung"),
     ],
     correct: 1,
-    explanation:
+    explanation: t(
       "Query dan Key menentukan bobot. Value membawa informasi yang dijumlahkan dengan bobot tersebut.",
+    ),
     station: "attention",
   },
   {
-    question:
+    question: t(
       "Suffix setelah it berubah. Apa yang terjadi pada representasi it?",
+    ),
     choices: [
-      "Tetap sama karena prefix identik",
-      "Berubah karena semua token saling melihat",
-      "Cache mengubahnya secara acak",
+      t("Tetap sama karena prefix identik"),
+      t("Berubah karena semua token saling melihat"),
+      t("Cache mengubahnya secara acak"),
     ],
     correct: 0,
-    explanation:
+    explanation: t(
       "Causal mask menutup masa depan. Dalam decoder, posisi it hanya dipengaruhi prefix sampai posisi itu.",
+    ),
     station: "attention",
   },
   {
-    question: "Apa yang disimpan KV cache?",
+    question: t("Apa yang disimpan KV cache?"),
     choices: [
-      "Bobot model dari training",
-      "Ingatan semua pengguna",
-      "Aktivasi Key dan Value prefix per layer",
+      t("Bobot model dari training"),
+      t("Ingatan semua pengguna"),
+      t("Aktivasi Key dan Value prefix per layer"),
     ],
     correct: 2,
-    explanation:
+    explanation: t(
       "Cache menyimpan aktivasi urutan yang sedang diproses. Bobot tetap, dan edit prefix membatalkan cache.",
+    ),
     station: "cache",
   },
 ] as const;
 export const glossary = [
-  ["Token", "Unit vocabulary; tidak selalu satu kata."],
-  ["Tensor", "Array angka multidimensi. Shape menyatakan panjang tiap sumbu."],
+  ["Token", t("Unit vocabulary; tidak selalu satu kata.")],
+  [
+    "Tensor",
+    t("Array angka multidimensi. Shape menyatakan panjang tiap sumbu."),
+  ],
   [
     "Weights",
-    "Parameter terlatih yang tetap selama inference. Demo memakai bobot mainan.",
+    t(
+      "Parameter terlatih yang tetap selama inference. Demo memakai bobot mainan.",
+    ),
   ],
-  ["Aktivasi", "Angka hasil perhitungan yang bergantung pada input."],
-  ["Logits", "Skor vocabulary sebelum softmax."],
-  ["Autoregresi", "Token keluaran ditambahkan ke input, lalu proses diulang."],
-  ["Head", "Satu proyeksi attention; bukan peran semantik universal."],
-  ["Residual", "Penjumlahan input dengan output sublayer."],
+  [t("Aktivasi"), t("Angka hasil perhitungan yang bergantung pada input.")],
+  ["Logits", t("Skor vocabulary sebelum softmax.")],
+  [
+    t("Autoregresi"),
+    t("Token keluaran ditambahkan ke input, lalu proses diulang."),
+  ],
+  ["Head", t("Satu proyeksi attention; bukan peran semantik universal.")],
+  ["Residual", t("Penjumlahan input dengan output sublayer.")],
 ];
 export const references = [
   {
-    title: "GPT-2 · implementasi referensi",
+    title: "GPT-3 · Language Models are Few-Shot Learners",
+    url: "https://arxiv.org/abs/2005.14165",
+    note: t(
+      "Skala 175B: 96 blok, lebar 12.288, 96 head, konteks 2.048; attention dense dan locally banded sparse bergantian.",
+    ),
+  },
+  {
+    title: t("GPT-2 · implementasi referensi"),
     url: "https://github.com/openai/gpt-2/blob/master/src/model.py",
-    note: "Pre-norm, learned position, GELU, residual, dan tied embedding.",
+    note: t("Pre-norm, learned position, GELU, residual, dan tied embedding."),
   },
   {
     title: "Attention Is All You Need",
     url: "https://arxiv.org/abs/1706.03762",
-    note: "Dasar scaled dot-product dan multi-head attention.",
+    note: t("Dasar scaled dot-product dan multi-head attention."),
   },
   {
     title: "Word representations · Mikolov et al.",
     url: "https://arxiv.org/abs/1301.3781",
-    note: "Latar word embeddings statis dan hubungan geometris.",
+    note: t("Latar word embeddings statis dan hubungan geometris."),
   },
   {
     title: "KV cache · Hugging Face",
     url: "https://huggingface.co/docs/transformers/main/cache_explanation",
-    note: "Perbedaan prefill, decode, dan pemakaian ulang K/V.",
+    note: t("Perbedaan prefill, decode, dan pemakaian ulang K/V."),
   },
 ];
