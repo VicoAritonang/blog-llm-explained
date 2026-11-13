@@ -1,7 +1,8 @@
 import { t } from "../i18n/core.mjs";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as T from "three";
+import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { Instrument, Stream } from "./LabScene";
 import Player from "./Player";
 import Hands from "./Hands";
@@ -43,6 +44,7 @@ function Sign({
   height = 0.7,
   color = "#d9ebe6",
   rotation = [0, 0, 0],
+  fontSize = 66,
 }: {
   text: string;
   at: Point3;
@@ -50,6 +52,7 @@ function Sign({
   height?: number;
   color?: string;
   rotation?: Point3;
+  fontSize?: number;
 }) {
   const texture = useMemo(() => {
     const canvas = document.createElement("canvas");
@@ -59,7 +62,7 @@ function Sign({
     ctx.fillStyle = color;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    let font = 66;
+    let font = fontSize;
     ctx.font = `600 ${font}px "Source Sans 3 Variable", sans-serif`;
     while (ctx.measureText(text).width > 960) {
       font -= 2;
@@ -69,7 +72,7 @@ function Sign({
     const result = new T.CanvasTexture(canvas);
     result.colorSpace = T.SRGBColorSpace;
     return result;
-  }, [text, color]);
+  }, [text, color, fontSize]);
   useEffect(() => () => texture.dispose(), [texture]);
   return (
     <mesh position={at} rotation={rotation}>
@@ -81,6 +84,104 @@ function Sign({
         toneMapped={false}
       />
     </mesh>
+  );
+}
+
+function VicoworksMark() {
+  const [svg, setSvg] = useState<ReturnType<SVGLoader["parse"]> | null>(null);
+  useEffect(() => {
+    let active = true;
+    new SVGLoader().load("/vicoworks_logo.svg", (data) => {
+      if (active) setSvg(data);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+  const shapes = useMemo(() => {
+    if (!svg) return [];
+    const parts = svg.paths.flatMap((path, layer) =>
+      SVGLoader.createShapes(path).map((shape) => ({
+        geometry: new T.ShapeGeometry(shape, 24),
+        color: path.color,
+        layer,
+      })),
+    );
+    const bounds = new T.Box3();
+    parts.forEach(({ geometry }) => {
+      geometry.computeBoundingBox();
+      bounds.union(geometry.boundingBox!);
+    });
+    const center = bounds.getCenter(new T.Vector3());
+    const dimensions = bounds.getSize(new T.Vector3());
+    const scale = 3.8 / Math.max(dimensions.x, dimensions.y);
+    parts.forEach(({ geometry }) => {
+      geometry.translate(-center.x, -center.y, 0);
+      // SVG uses a downward Y axis. Keep the original proportions and colors.
+      geometry.scale(scale, -scale, 1);
+    });
+    return parts;
+  }, [svg]);
+  useEffect(
+    () => () => shapes.forEach(({ geometry }) => geometry.dispose()),
+    [shapes],
+  );
+  return (
+    <group name="vicoworks-vector-logo" dispose={null}>
+      {shapes.map(({ geometry, color, layer }, index) => (
+        <mesh
+          key={index}
+          geometry={geometry}
+          position={[0, 0, layer * 0.002]}
+          renderOrder={layer}
+        >
+          <meshBasicMaterial
+            color={color}
+            toneMapped={false}
+            side={T.DoubleSide}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+function WallBrand() {
+  return (
+    <group
+      name="vicoworks-wall-brand"
+      position={[-19.77, 4.5, 1]}
+      rotation={[0, Math.PI / 2, 0]}
+    >
+      <Block at={[0, 0, 0]} size={[14, 5.3, 0.1]} color="#12232d" />
+      <Block
+        at={[0, 2.65, 0.06]}
+        size={[14, 0.035, 0.03]}
+        color="#8bcbb9"
+        glow
+      />
+      <Block at={[0, -2.65, 0.06]} size={[14, 0.035, 0.03]} color="#547986" />
+      <Block at={[-4.5, 0, 0.07]} size={[4.12, 4.12, 0.04]} color="#bfd7d2" />
+      <group position={[-4.5, 0, 0.11]}>
+        <VicoworksMark />
+      </group>
+      <Sign
+        text="NeuroLab"
+        at={[2.15, 0.72, 0.11]}
+        width={7.8}
+        height={1.9}
+        fontSize={220}
+        color="#e0f0e9"
+      />
+      <Sign
+        text="by vicoworks.com"
+        at={[2.15, -0.95, 0.11]}
+        width={7.8}
+        height={1.95}
+        fontSize={105}
+        color="#a7d6c3"
+      />
+    </group>
   );
 }
 
@@ -124,6 +225,7 @@ function Facility() {
       <Block at={[0, 4.4, -13]} size={[40, 9, 0.3]} color="#182c36" />
       <Block at={[0, 4.4, 14]} size={[40, 9, 0.3]} color="#182c36" />
       <Block at={[-20, 4.4, 0.5]} size={[0.3, 9, 27]} color="#20323c" />
+      <WallBrand />
       <Block at={[20, 4.4, 0.5]} size={[0.3, 9, 27]} color="#20323c" />
       <Block at={[0, 9, 0.5]} size={[40, 0.2, 27]} color="#122630" />
       <instancedMesh ref={struts} args={[undefined, undefined, 8]}>

@@ -108,7 +108,7 @@ try {
       `accessibility: ${name}`,
     );
   };
-  await page.goto(url);
+  await page.goto(url + "?explore=1");
   await ready(page);
   assert.equal(await page.locator(".tool-hotbar button").count(), 5);
   assert.equal(await page.locator(".field-guide").count(), 1);
@@ -414,7 +414,7 @@ try {
     reducedMotion: "reduce",
   });
   mobile.on("pageerror", (e) => errors.push(e.message));
-  await mobile.goto(url);
+  await mobile.goto(url + "?explore=1");
   await ready(mobile);
   await shot(mobile, "game-mobile-hint");
   await mobile.getByRole("button", { name: "Tutup hint" }).click();
@@ -490,7 +490,7 @@ try {
     };
   });
   const fallback = await noGL.newPage();
-  await fallback.goto(url);
+  await fallback.goto(url + "?explore=1");
   await fallback.locator(".accessible-world .station-view").waitFor();
   assert.equal(await fallback.locator(".diagram-stations button").count(), 8);
   await fallback
@@ -578,7 +578,7 @@ try {
   const readable = await browser.newContext({ javaScriptEnabled: false });
   const reader = await readable.newPage();
   for (const [route, heading] of [
-    ["id/", "Belajar LLM secara interaktif, dari token hingga jawaban"],
+    ["id/", "Masuk ke dalam model bahasa: belajar LLM dengan menyentuh mesinnya"],
     ["en/", "Learn LLMs interactively, from tokens to generated text"],
   ]) {
     await reader.goto(url + route);

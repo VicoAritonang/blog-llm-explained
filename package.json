@@ -6,21 +6,26 @@
   "engines": {
     "node": "24.x"
   },
-  "description": "NeuroLab: interactive Indonesian LLM learning observatory with deterministic toy Transformer and original 3D assets",
+  "description": "NeuroLab: dunia 3D berbahasa Indonesia untuk memahami LLM dengan menyentuh mesinnya, dengan decoder mini sungguhan yang berjalan di browser",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build && node scripts/build-site.mjs",
-    "check": "tsc --noEmit && node --test tests/*.test.mjs && vite build --logLevel error && node scripts/build-site.mjs && node scripts/seo-check.mjs && node scripts/browser-check.mjs",
+    "check": "tsc --noEmit && node --test tests/*.test.mjs && vite build --logLevel error && node scripts/build-site.mjs && node scripts/seo-check.mjs && node scripts/story-browser-check.mjs && node scripts/path-browser-check.mjs && node scripts/world-browser-check.mjs && node scripts/world3d-browser-check.mjs && node scripts/browser-check.mjs",
     "test:seo": "node scripts/seo-check.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --test tests/*.test.mjs",
     "test:browser": "node scripts/browser-check.mjs",
+    "test:story-browser": "node scripts/story-browser-check.mjs",
+    "test:path-browser": "node scripts/path-browser-check.mjs",
+    "test:world-browser": "node scripts/world-browser-check.mjs",
+    "model:train": "python scripts/train-story-model.py",
     "fixtures:generate": "node scripts/build-fixtures.mjs",
     "assets:generate": "node scripts/generate-lab-assets.mjs",
     "assets:validate": "node scripts/validate-assets.mjs",
     "assets:preview": "node scripts/preview-server.mjs",
     "poster:generate": "node scripts/export-overview.mjs",
-    "format": "prettier --write src scripts tests vite.config.ts"
+    "format": "prettier --write src scripts tests vite.config.ts",
+    "test:world3d-browser": "node scripts/world3d-browser-check.mjs"
   },
   "devDependencies": {
     "@types/katex": "0.16.8",

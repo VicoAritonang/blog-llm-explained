@@ -3,24 +3,24 @@ export const publisher = { name: "Vicoworks", url: "https://vicoworks.com" };
 export const languages = ["id", "en"];
 export const siteCopy = {
   id: {
-    title: "Belajar LLM Interaktif dengan Visualisasi 3D | NeuroLab",
+    title: "Masuk ke Dalam Model Bahasa: Belajar LLM di Dunia 3D | NeuroLab",
     description:
-      "Belajar cara kerja LLM secara interaktif: tokenisasi, embedding, attention, Transformer, sampling, dan KV cache dalam lab 3D gratis berbahasa Indonesia.",
-    heading: "Belajar LLM secara interaktif, dari token hingga jawaban",
+      "Jelajahi pulau 3D yang berisi model bahasa sungguhan. Potong token, sorot attention, putar suhu, latih bobot, dan tangkap halusinasi langsung di browser.",
+    heading: "Masuk ke dalam model bahasa: belajar LLM dengan menyentuh mesinnya",
     intro:
-      "NeuroLab adalah laboratorium pembelajaran LLM berbasis browser dari Vicoworks. Jelajahi dunia 3D orang pertama, gunakan lima alat, dan uji pemahaman melalui enam misi. Panduan ini membantu praktisi IT dan data memahami cara kerja large language model, termasuk mekanisme decoder Transformer yang menjadi dasar keluarga GPT.",
+      "Mengganti satu kata dalam catatan dapat mengubah jawaban tanpa melatih ulang model. NeuroLab mengajakmu menyelidiki kasus kunci cadangan melalui 14 pos: simpan dugaan, periksa perhitungan, lalu jelaskan buktinya. Model decoder mini terlatih menghitung angka yang sama untuk inspector dan visual 3D, langsung di browser. Bahasa utama investigasi ini adalah Indonesia; eksplorasi bebas lama tetap tersedia dalam Indonesia dan Inggris.",
     learn: "Panduan belajar LLM",
     back: "Kembali ke lab",
     try: "Coba di lab 3D",
-    topics: "Pelajari mekanismenya",
+    topics: "Annex: bacaan operasi pada workbench matematika",
     steps: "Cara menggunakan lab interaktif",
     controls:
-      "Klik dunia untuk melihat sekitar, gunakan WASD untuk berjalan, pilih alat 1–5, lalu tekan E. H membuka Hint dan F membuka misi. Pada ponsel, gunakan joystick, seret untuk melihat, lalu ketuk Gunakan. Catatan menyediakan tab Makna, Angka, dan Kode. Mode 2D tersedia jika WebGL tidak didukung.",
+      "Halaman utama adalah dunia 3D: sebuah pulau berisi delapan mesin yang mengikuti perjalanan teks di dalam model bahasa. Mesin Tanya menjalankan model mini sungguhan; Pemotong Token memotong catatan dan melatih tokenizer BPE; Galaksi Makna menampilkan embedding sebagai bintang; Panggung Sorot memperlihatkan attention dan membiarkanmu mencabut kepala attention; Arena Peluang mengundi token berikutnya dengan suhu yang bisa diputar; Bengkel Latihan menuruni lembah loss; Ruang Bukti memperlihatkan halusinasi dan retrieval; Menara Skala membandingkan model mini dengan GPT-3. Berjalan dengan WASD, panah, atau klik/ketuk tanah; masuk ke mesin dengan E, klik, atau tombol 1–8. Setiap mesin punya tantangan pendek yang tercentang dari tindakan nyata, dan penjelasan baru muncul sebagai kartu temuan setelah kamu menghasilkan efeknya. Semua kontrol juga tersedia sebagai tombol biasa. Mode teks per level, investigasi lengkap 14 pos, dan dunia 2D lama tetap tersedia.",
     tools:
-      "Pemindai membuka catatan. Pelacak token memilih posisi token. Lensa head membandingkan dua head demo. Pengendali waktu menjeda sinyal. Kalibrator mengubah kondisi eksperimen sebelum kamu memprediksi dan menguji hasilnya.",
-    limitsTitle: "Skala referensi dan batas simulasi",
+      "Pilih posisi pada rel token; pilih blok dan head untuk memeriksa Q/K/V, mask, dan campuran Value. Ubah decoding, jalankan generation selangkah demi selangkah, bandingkan cache, lalu periksa training dan sumber. Buku bukti menyimpan prediksi, kondisi, observasi, dan penjelasan di perangkatmu serta dapat diunduh.",
+    limitsTitle: "Sumber angka dan batas simulasi",
     limits:
-      "Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.",
+      "Jalur investigasi memakai keys-decoder-v1: 2 blok, 2 head, lebar 32, MLP 64, vocabulary 32, konteks 64, dan 20.256 parameter terlatih pada tugas sintetis terbatas. Semua logits, probabilitas, dan aktivasi dihitung dari checkpoint itu. Hasil uji 112/112 hanya untuk split sintetis yang dijelaskan; sebuah kasus dua benda di luar pola latihan gagal dan tetap ditampilkan. Contoh operator diberi label terpisah. Annex lama memakai bobot acak deterministik (lebar 8) dan fixture ilustratif, bukan trace kasus kunci. Tidak ada bobot model besar atau API inference. Kelancaran jawaban dan probabilitas token tidak menjamin kebenaran.",
     faq: "Pertanyaan yang sering diajukan",
     sources: "Sumber primer",
     by: "Dibuat oleh",
@@ -31,7 +31,7 @@ export const siteCopy = {
     mechanism: "Cara kerjanya",
     takeaway: "Hal yang perlu diingat",
     home: "Lab interaktif",
-    loading: "Menyiapkan dunia 3D…",
+    loading: "Menyiapkan investigasi kasus kunci…",
     loadingLink: "Baca panduan sambil menunggu",
     faqItems: [
       [

@@ -1,2 +1,8 @@
-@import "@fontsource-variable/source-sans-3/wght.css";
+@font-face {
+  font-family: "Source Sans 3 Variable";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("/fonts/source-sans-3-latin.woff2") format("woff2");
+}
 /* Bundled locally with the application; no runtime font CDN. */

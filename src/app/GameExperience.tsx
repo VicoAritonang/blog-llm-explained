@@ -636,7 +636,7 @@ export default function GameExperience() {
         <header className="game-topbar">
           <div className="game-brand">
             <span>
-              <Box size={22} />
+              <img src="/favicon.ico" width={32} height={32} alt="NeuroLab" />
             </span>
             <div>
               <h1>

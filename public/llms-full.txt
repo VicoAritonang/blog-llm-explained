@@ -1,10 +1,109 @@
-# Belajar LLM secara interaktif, dari token hingga jawaban
+# Masuk ke dalam model bahasa: belajar LLM dengan menyentuh mesinnya
 
-NeuroLab adalah laboratorium pembelajaran LLM berbasis browser dari Vicoworks. Jelajahi dunia 3D orang pertama, gunakan lima alat, dan uji pemahaman melalui enam misi. Panduan ini membantu praktisi IT dan data memahami cara kerja large language model, termasuk mekanisme decoder Transformer yang menjadi dasar keluarga GPT.
+Mengganti satu kata dalam catatan dapat mengubah jawaban tanpa melatih ulang model. NeuroLab mengajakmu menyelidiki kasus kunci cadangan melalui 14 pos: simpan dugaan, periksa perhitungan, lalu jelaskan buktinya. Model decoder mini terlatih menghitung angka yang sama untuk inspector dan visual 3D, langsung di browser. Bahasa utama investigasi ini adalah Indonesia; eksplorasi bebas lama tetap tersedia dalam Indonesia dan Inggris.
 
 Canonical: https://llm-explained.vicoworks.com/id/
 
-## Pelajari mekanismenya
+### Pos 0: Satu kata berubah, jawaban ikut berubah
+Bagaimana mesin menjawab tentang sesuatu yang baru saja kita ceritakan?
+
+Catatan menyebut laci biru. Model menghasilkan “di” dan “laci” dalam dua langkah. Kita berhenti tepat sebelum pilihan warna. Salinan B hanya mengganti biru menjadi hijau.
+
+Input dapat mengubah perhitungan dan jawaban tanpa mengganti bobot. Ini contoh terpilih dari model tugas sintetis, bukan chatbot umum.
+
+### Pos 1: Mesin tidak menerima kalimat utuh
+Apa unit yang benar-benar masuk ke model?
+
+Tokenizer profil ini mencocokkan potongan vocabulary terpanjang. Spasi awal dan newline ikut tersimpan. Ia bukan BPE dan tidak memotong berdasarkan pemahaman kalimat.
+
+Token adalah unit vocabulary. ID memilih identitas; posisi menunjukkan tempat. Contoh terpisah “bel” + “ajar” tetap membentuk satu kata.
+
+### Pos 2: Nomor menjadi daftar angka
+Bagaimana ID berubah menjadi bahan perhitungan?
+
+ID memilih satu baris tabel embedding yang dipelajari saat training. Bandingkan dua kemunculan token yang sama: tabelnya tetap, salinan barisnya identik.
+
+Mengubah input memilih baris lain. Itu bukan proses belajar ulang. Komponen vektor tidak diberi nama makna manusia tanpa bukti.
+
+### Pos 3: Token yang sama, tempat yang berbeda
+Apa yang berubah ketika token dipindahkan?
+
+Profil ini menjumlahkan embedding token dan learned positional embedding. Pindahkan lookup token yang sama ke posisi lain dan periksa hasil penjumlahan per komponen.
+
+X = E[id] + P[pos]. Mask kausal juga memberi struktur urutan. Arsitektur lain dapat memakai posisi berbeda, misalnya rotasi Q/K pada RoPE.
+
+### Pos 4: Bagaimana informasi bisa bertemu?
+Apa bedanya angka pencocokan dan angka yang dibawa?
+
+Di dalam setiap blok, LayerNorm dilanjutkan tiga proyeksi. Query dan Key menentukan skor pasangan. Value menyediakan fitur yang dicampur. Pilih query, head, dan komponen untuk menelusuri asal satu angka.
+
+Q/K mengatur pembobotan; V menyediakan isi campuran. Head tidak otomatis memiliki jabatan semantik yang tetap.
+
+### Pos 5: Jangan membaca jawaban dari masa depan
+Bisakah perubahan di kanan memengaruhi prefix di kiri?
+
+A dan B hanya berbeda pada posisi warna. Semua posisi sebelumnya memiliki prefix yang sama. Mask menutup skor di kanan sebelum softmax; posisi diagonal tetap boleh dibaca.
+
+Posisi sekarang memprediksi token berikutnya. Saat training, mask mencegah posisi itu membaca target masa depan yang sudah tersedia dalam contoh.
+
+### Pos 6: Cocok belum berarti selesai
+Apa yang sebenarnya dihasilkan attention?
+
+Softmax membuat bobot satu baris berjumlah satu. Setiap bobot mengalikan Value, lalu hasilnya dijumlahkan. Inspector dan koneksi 3D menggunakan baris yang sama.
+
+Attention menghasilkan vektor. Hasil tiap head di-concat lalu diproyeksikan. Heatmap saja bukan penjelasan lengkap penyebab suatu jawaban.
+
+### Pos 7: Satu blok memperbarui, blok berikutnya melanjutkan
+Mengapa melewati dua layer belum berarti menghasilkan dua token?
+
+Attention mencampur informasi antarposisi. MLP mengolah fitur per posisi dengan bobot yang sama dalam satu layer. Dua jalur residual menambahkan hasil cabang ke aliran utama.
+
+Profil pre-norm: R = X + Attention(LN(X)); X berikut = R + MLP(LN(R)). Normalization bekerja pada fitur satu posisi. GELU tidak mematikan semua nilai negatif.
+
+### Pos 8: Dari representasi ke satu pilihan
+Mengapa skor yang sama bisa menghasilkan pilihan berbeda?
+
+Final LayerNorm dan proyeksi vocabulary menghasilkan logits. Bekukan logits, lalu ubah temperature atau aturan pemilihan. Top-k diterapkan sebelum top-p dan distribusi dinormalisasi ulang.
+
+Greedy memilih argmax. Sampling mengundi distribusi. Probabilitas token bukan peluang bahwa seluruh jawaban benar. Kandidat tersembunyi tetap dihitung sebagai “token lain”.
+
+### Pos 9: Satu pilihan menjadi konteks baru
+Apa yang diulang, dan apa yang bisa dipakai lagi?
+
+Prefill menghitung prompt. Setiap decode memilih satu token, menambahkannya ke konteks, lalu menghitung lagi. Cache menyimpan K/V per layer; token baru tetap melewati semua blok.
+
+K/V token terpilih baru dihitung pada putaran berikutnya. Edit pada posisi r membatalkan cache mulai r. EOS atau batas panjang menghentikan loop; konteks tidak dipotong diam-diam.
+
+### Pos 10: Siapa yang mengatur angka di mesin?
+Apa bedanya belajar dari contoh dan membaca prompt baru?
+
+Training membandingkan prediksi token berikutnya dengan target. Loss memberi sinyal gradien untuk optimizer. Model lab dilatih pada jawaban sintetis; gradien memperbarui seluruh parameter, termasuk embedding dan proyeksi.
+
+Demo tiga bias terpisah dari checkpoint. Model penuh memakai backprop melalui semua operasi. Hasil uji kombinasi yang ditahan lebih berguna daripada hanya melihat training loss.
+
+### Pos 11: Mengapa mesin bisa menjadi asisten?
+Apakah semua perubahan perilaku berarti bobot dilatih ulang?
+
+Contoh instruksi–respons dan sinyal preferensi dapat membentuk perilaku lewat post-training. Aplikasi menyusun pesan dan penanda peran menjadi input. Tidak semua asisten memakai pipeline training yang sama.
+
+Panel ini skema konseptual. Tidak ada pasangan checkpoint base/instruction yang diklaim sedang dibandingkan. Format percakapan dan post-training tidak menjamin kebenaran.
+
+### Pos 12: Jawaban lancar, bukti belum tentu ada
+Apa yang boleh disimpulkan jika lokasi tidak pernah diberikan?
+
+Buka kasus tanpa lokasi atau dua catatan yang bertentangan. Tampilkan hasil asli model, lalu cari dokumen lokal. Aplikasi memasukkan cuplikan yang ditemukan ke konteks sebelum inference baru.
+
+Sesuai catatan berbeda dari benar di dunia nyata. Retrieval dapat gagal; sumber yang masuk pun belum tentu digunakan dengan benar. Periksa klaim, sumber, dan waktunya.
+
+### Pos 13: Buktikan pemahamanmu
+Bisakah kamu menjelaskan kasus baru dengan bukti?
+
+Kartu akses ada di tas merah. Sebelum melihat keluaran, prediksikan akibat perubahan input, temperature, cache, dan hilangnya sumber. Gunakan angka dari eksperimen, lalu jelaskan hubungan yang kamu temukan.
+
+Bobot dipelajari saat training. Konteks mengubah aktivasi saat inference. Cache memakai ulang hasil antara. Kepercayaan pada jawaban tetap membutuhkan bukti.
+
+
+## Annex: bacaan operasi pada workbench matematika
 - [Tokenizer](https://llm-explained.vicoworks.com/id/belajar/tokenisasi/): Model melihat ID token. Satu token dapat berupa kata, potongan kata, tanda baca, atau karakter dengan spasi awal.
 - [Embedding & posisi](https://llm-explained.vicoworks.com/id/belajar/embedding-posisi/): ID memilih satu baris embedding. Vektor posisi terlatih ditambahkan agar model mengetahui urutan. ID itu sendiri bukan angka makna.
 - [Query, Key, Value](https://llm-explained.vicoworks.com/id/belajar/query-key-value/): Query mencocokkan pola, Key menawarkan pola untuk dicocokkan, dan Value membawa informasi yang akan dicampurkan. Ketiganya proyeksi terlatih dari representasi yang sama.
@@ -15,12 +114,12 @@ Canonical: https://llm-explained.vicoworks.com/id/
 - [Analogi vektor](https://llm-explained.vicoworks.com/id/belajar/analogi-vektor/): Aritmetika vektor dapat memperlihatkan relasi pada word embeddings statis. Contoh lokal ini bukan mekanisme literal GPT menjawab dan bukan hubungan universal.
 
 ## Cara menggunakan lab interaktif
-Klik dunia untuk melihat sekitar, gunakan WASD untuk berjalan, pilih alat 1–5, lalu tekan E. H membuka Hint dan F membuka misi. Pada ponsel, gunakan joystick, seret untuk melihat, lalu ketuk Gunakan. Catatan menyediakan tab Makna, Angka, dan Kode. Mode 2D tersedia jika WebGL tidak didukung.
+Halaman utama adalah dunia 3D: sebuah pulau berisi delapan mesin yang mengikuti perjalanan teks di dalam model bahasa. Mesin Tanya menjalankan model mini sungguhan; Pemotong Token memotong catatan dan melatih tokenizer BPE; Galaksi Makna menampilkan embedding sebagai bintang; Panggung Sorot memperlihatkan attention dan membiarkanmu mencabut kepala attention; Arena Peluang mengundi token berikutnya dengan suhu yang bisa diputar; Bengkel Latihan menuruni lembah loss; Ruang Bukti memperlihatkan halusinasi dan retrieval; Menara Skala membandingkan model mini dengan GPT-3. Berjalan dengan WASD, panah, atau klik/ketuk tanah; masuk ke mesin dengan E, klik, atau tombol 1–8. Setiap mesin punya tantangan pendek yang tercentang dari tindakan nyata, dan penjelasan baru muncul sebagai kartu temuan setelah kamu menghasilkan efeknya. Semua kontrol juga tersedia sebagai tombol biasa. Mode teks per level, investigasi lengkap 14 pos, dan dunia 2D lama tetap tersedia.
 
-Pemindai membuka catatan. Pelacak token memilih posisi token. Lensa head membandingkan dua head demo. Pengendali waktu menjeda sinyal. Kalibrator mengubah kondisi eksperimen sebelum kamu memprediksi dan menguji hasilnya.
+Pilih posisi pada rel token; pilih blok dan head untuk memeriksa Q/K/V, mask, dan campuran Value. Ubah decoding, jalankan generation selangkah demi selangkah, bandingkan cache, lalu periksa training dan sumber. Buku bukti menyimpan prediksi, kondisi, observasi, dan penjelasan di perangkatmu serta dapat diunduh.
 
-## Skala referensi dan batas simulasi
-Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+## Sumber angka dan batas simulasi
+Jalur investigasi memakai keys-decoder-v1: 2 blok, 2 head, lebar 32, MLP 64, vocabulary 32, konteks 64, dan 20.256 parameter terlatih pada tugas sintetis terbatas. Semua logits, probabilitas, dan aktivasi dihitung dari checkpoint itu. Hasil uji 112/112 hanya untuk split sintetis yang dijelaskan; sebuah kasus dua benda di luar pola latihan gagal dan tetap ditampilkan. Contoh operator diberi label terpisah. Annex lama memakai bobot acak deterministik (lebar 8) dan fixture ilustratif, bukan trace kasus kunci. Tidak ada bobot model besar atau API inference. Kelancaran jawaban dan probabilitas token tidak menjamin kebenaran.
 
 ## Pertanyaan yang sering diajukan
 ### Apa itu LLM?
@@ -62,8 +161,8 @@ Posisi 0, 1, 2, … berbeda dari ID vocabulary. ID tidak menunjukkan besar atau 
 ## Apa yang dapat kamu amati di lab?
 Kapsul terpisah menunjukkan batas token. Warnanya mengikuti posisi token sepanjang perjalanan.
 
-## Skala referensi dan batas simulasi
-Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+## Sumber angka dan batas simulasi
+Jalur investigasi memakai keys-decoder-v1: 2 blok, 2 head, lebar 32, MLP 64, vocabulary 32, konteks 64, dan 20.256 parameter terlatih pada tugas sintetis terbatas. Semua logits, probabilitas, dan aktivasi dihitung dari checkpoint itu. Hasil uji 112/112 hanya untuk split sintetis yang dijelaskan; sebuah kasus dua benda di luar pola latihan gagal dan tetap ditampilkan. Contoh operator diberi label terpisah. Annex lama memakai bobot acak deterministik (lebar 8) dan fixture ilustratif, bukan trace kasus kunci. Tidak ada bobot model besar atau API inference. Kelancaran jawaban dan probabilitas token tidak menjamin kebenaran.
 
 ## Sumber primer
 - [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
@@ -99,8 +198,8 @@ Penjumlahan dilakukan elemen demi elemen. Menukar urutan mempertahankan embeddin
 ## Apa yang dapat kamu amati di lab?
 Kolom cahaya adalah fitur vektor. Warna merupakan ilustrasi nilai, bukan sumbu makna yang dapat diberi nama.
 
-## Skala referensi dan batas simulasi
-Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+## Sumber angka dan batas simulasi
+Jalur investigasi memakai keys-decoder-v1: 2 blok, 2 head, lebar 32, MLP 64, vocabulary 32, konteks 64, dan 20.256 parameter terlatih pada tugas sintetis terbatas. Semua logits, probabilitas, dan aktivasi dihitung dari checkpoint itu. Hasil uji 112/112 hanya untuk split sintetis yang dijelaskan; sebuah kasus dua benda di luar pola latihan gagal dan tetap ditampilkan. Contoh operator diberi label terpisah. Annex lama memakai bobot acak deterministik (lebar 8) dan fixture ilustratif, bukan trace kasus kunci. Tidak ada bobot model besar atau API inference. Kelancaran jawaban dan probabilitas token tidak menjamin kebenaran.
 
 ## Sumber primer
 - [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
@@ -142,8 +241,8 @@ Lebar 8 dibagi menjadi 2 head × 4 fitur. Mengganti head juga mengganti K, V, sk
 ## Apa yang dapat kamu amati di lab?
 Satu aliran bercabang tiga: Query mencari kecocokan, Key dicocokkan, Value membawa informasi.
 
-## Skala referensi dan batas simulasi
-Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+## Sumber angka dan batas simulasi
+Jalur investigasi memakai keys-decoder-v1: 2 blok, 2 head, lebar 32, MLP 64, vocabulary 32, konteks 64, dan 20.256 parameter terlatih pada tugas sintetis terbatas. Semua logits, probabilitas, dan aktivasi dihitung dari checkpoint itu. Hasil uji 112/112 hanya untuk split sintetis yang dijelaskan; sebuah kasus dua benda di luar pola latihan gagal dan tetap ditampilkan. Contoh operator diberi label terpisah. Annex lama memakai bobot acak deterministik (lebar 8) dan fixture ilustratif, bukan trace kasus kunci. Tidak ada bobot model besar atau API inference. Kelancaran jawaban dan probabilitas token tidak menjamin kebenaran.
 
 ## Sumber primer
 - [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
@@ -194,8 +293,8 @@ Proyeksi output terlatih mencampurkan fitur antarhead sebelum residual add.
 ## Apa yang dapat kamu amati di lab?
 Garis hanya menuju posisi saat ini dan sebelumnya. Ketebalan menunjukkan bobot contoh; head lain dapat memiliki pola berbeda.
 
-## Skala referensi dan batas simulasi
-Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+## Sumber angka dan batas simulasi
+Jalur investigasi memakai keys-decoder-v1: 2 blok, 2 head, lebar 32, MLP 64, vocabulary 32, konteks 64, dan 20.256 parameter terlatih pada tugas sintetis terbatas. Semua logits, probabilitas, dan aktivasi dihitung dari checkpoint itu. Hasil uji 112/112 hanya untuk split sintetis yang dijelaskan; sebuah kasus dua benda di luar pola latihan gagal dan tetap ditampilkan. Contoh operator diberi label terpisah. Annex lama memakai bobot acak deterministik (lebar 8) dan fixture ilustratif, bukan trace kasus kunci. Tidak ada bobot model besar atau API inference. Kelancaran jawaban dan probabilitas token tidak menjamin kebenaran.
 
 ## Sumber primer
 - [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
@@ -240,8 +339,8 @@ Setiap blok memiliki dua residual dan kedua sublayer. Skala referensi GPT-3: 96 
 ## Apa yang dapat kamu amati di lab?
 Jalur luar melewati cabang attention dan MLP: inilah residual. 96 pelat di belakang mewakili kedalaman model, bukan 96 langkah decoding.
 
-## Skala referensi dan batas simulasi
-Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+## Sumber angka dan batas simulasi
+Jalur investigasi memakai keys-decoder-v1: 2 blok, 2 head, lebar 32, MLP 64, vocabulary 32, konteks 64, dan 20.256 parameter terlatih pada tugas sintetis terbatas. Semua logits, probabilitas, dan aktivasi dihitung dari checkpoint itu. Hasil uji 112/112 hanya untuk split sintetis yang dijelaskan; sebuah kasus dua benda di luar pola latihan gagal dan tetap ditampilkan. Contoh operator diberi label terpisah. Annex lama memakai bobot acak deterministik (lebar 8) dan fixture ilustratif, bukan trace kasus kunci. Tidak ada bobot model besar atau API inference. Kelancaran jawaban dan probabilitas token tidak menjamin kebenaran.
 
 ## Sumber primer
 - [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
@@ -280,8 +379,8 @@ Greedy deterministik; sampling dapat memilih hasil berbeda. Probabilitas tinggi 
 ## Apa yang dapat kamu amati di lab?
 Batang adalah kandidat token. Pilihan menambah satu token ke konteks; model tidak menghasilkan satu kalimat sekaligus.
 
-## Skala referensi dan batas simulasi
-Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+## Sumber angka dan batas simulasi
+Jalur investigasi memakai keys-decoder-v1: 2 blok, 2 head, lebar 32, MLP 64, vocabulary 32, konteks 64, dan 20.256 parameter terlatih pada tugas sintetis terbatas. Semua logits, probabilitas, dan aktivasi dihitung dari checkpoint itu. Hasil uji 112/112 hanya untuk split sintetis yang dijelaskan; sebuah kasus dua benda di luar pola latihan gagal dan tetap ditampilkan. Contoh operator diberi label terpisah. Annex lama memakai bobot acak deterministik (lebar 8) dan fixture ilustratif, bukan trace kasus kunci. Tidak ada bobot model besar atau API inference. Kelancaran jawaban dan probabilitas token tidak menjamin kebenaran.
 
 ## Sumber primer
 - [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
@@ -317,8 +416,8 @@ Token baru menjadi bagian input berikutnya. Edit prefix membatalkan cache yang b
 ## Apa yang dapat kamu amati di lab?
 Rak menyimpan dua aliran: K dan V. Jalur balik membawa token baru ke model. Cache tidak menyimpan seluruh jawaban yang sudah disiapkan.
 
-## Skala referensi dan batas simulasi
-Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+## Sumber angka dan batas simulasi
+Jalur investigasi memakai keys-decoder-v1: 2 blok, 2 head, lebar 32, MLP 64, vocabulary 32, konteks 64, dan 20.256 parameter terlatih pada tugas sintetis terbatas. Semua logits, probabilitas, dan aktivasi dihitung dari checkpoint itu. Hasil uji 112/112 hanya untuk split sintetis yang dijelaskan; sebuah kasus dua benda di luar pola latihan gagal dan tetap ditampilkan. Contoh operator diberi label terpisah. Annex lama memakai bobot acak deterministik (lebar 8) dan fixture ilustratif, bukan trace kasus kunci. Tidak ada bobot model besar atau API inference. Kelancaran jawaban dan probabilitas token tidak menjamin kebenaran.
 
 ## Sumber primer
 - [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
@@ -354,8 +453,8 @@ Hasil mendekati target contoh terpilih pada fixture ini. Tidak identik tepat dan
 ## Apa yang dapat kamu amati di lab?
 Tiga sumbu hanya proyeksi ilustratif. Model sebenarnya memiliki ribuan fitur, dan representasi berubah mengikuti konteks.
 
-## Skala referensi dan batas simulasi
-Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki 96 blok, 96 head per blok, lebar 12.288, dan konteks 2.048 token. Paper GPT-3 memakai attention dense dan locally banded sparse bergantian; lab ini membedah causal dense attention. Workbench angka memakai model mainan dua blok, dua head, lebar 8, dan vocabulary 16. Bobot GPT-3 tidak dimuat, dan preset tidak menghasilkan jawaban dari model bahasa terlatih.
+## Sumber angka dan batas simulasi
+Jalur investigasi memakai keys-decoder-v1: 2 blok, 2 head, lebar 32, MLP 64, vocabulary 32, konteks 64, dan 20.256 parameter terlatih pada tugas sintetis terbatas. Semua logits, probabilitas, dan aktivasi dihitung dari checkpoint itu. Hasil uji 112/112 hanya untuk split sintetis yang dijelaskan; sebuah kasus dua benda di luar pola latihan gagal dan tetap ditampilkan. Contoh operator diberi label terpisah. Annex lama memakai bobot acak deterministik (lebar 8) dan fixture ilustratif, bukan trace kasus kunci. Tidak ada bobot model besar atau API inference. Kelancaran jawaban dan probabilitas token tidak menjamin kebenaran.
 
 ## Sumber primer
 - [GPT-3 · Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
@@ -372,6 +471,8 @@ Visualisasi memakai aliran dan fixture ilustratif. Referensi GPT-3 175B memiliki
 NeuroLab is a browser-based LLM learning laboratory by Vicoworks. Explore a first-person 3D world, use five tools, and test your understanding through six missions. This guide helps IT and data practitioners understand how large language models work, including decoder Transformer mechanisms underlying the GPT family.
 
 Canonical: https://llm-explained.vicoworks.com/en/
+
+The new trained-model investigation is available in Bahasa Indonesia at /id/. This English annex uses the original mathematical workbench.
 
 ## Explore the mechanisms
 - [Tokenizer](https://llm-explained.vicoworks.com/en/learn/tokenization/): A model sees token IDs. Tokens can be words, word pieces, punctuation, or characters including a leading space.
