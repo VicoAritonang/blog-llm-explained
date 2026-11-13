@@ -1,15 +1,18 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./app/App";
-import "./app/styles.css";
-import "./app/theme.css";
-import { locale } from "./i18n/core.mjs";
-document.documentElement.lang = locale;
+import "./assets/fonts.css";
+import "./world3d/base.css";
+
+// The whole site is the 3D world: every lesson is something to walk to, touch or read there.
+const World3D = lazy(() => import("./world3d/World3D"));
+
 const render = () =>
   createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-      <App />
+      <Suspense fallback={<p className="w3-loading">Menyiapkan kepulauan NeuroLab…</p>}>
+        <World3D />
+      </Suspense>
     </React.StrictMode>,
   );
-// Canvas signs are drawn once, after the bundled UI font is available.
+// Canvas labels are drawn once, after the bundled UI font is available.
 document.fonts.load('600 16px "Source Sans 3 Variable"').then(render, render);

@@ -169,3 +169,39 @@ export const paint: Record<string, string> = {
   merah: "#ff5a5a",
   kuning: "#ffd23f",
 };
+
+/** Average tokens in one training note (prompt, answer and stop token). */
+let avgTokens: number | null = null;
+export function averageNoteTokens() {
+  if (avgTokens !== null) return avgTokens;
+  let total = 0,
+    n = 0;
+  for (let o = 0; o < 4; o++)
+    for (let p = 0; p < 4; p++)
+      for (let c = 0; c < 4; c++) {
+        total += promptTokens(notePrompt(o, p, c) + expectedAnswer(p, c)).length + 1;
+        n++;
+      }
+  return (avgTokens = total / n);
+}
+export const TRAINING = model.training as { steps: number; batchSize: number; trainExamples: number; learningRate: number; optimizer: string };
+/** Tokens the mini model processed in training: steps × batch × tokens per note. */
+export const miniTrainingTokens = () => TRAINING.steps * TRAINING.batchSize * averageNoteTokens();
+
+/** "3,15 × 10²³" */
+export function sci(n: number, digits = 2) {
+  if (n === 0) return "0";
+  const e = Math.floor(Math.log10(Math.abs(n)));
+  const m = n / 10 ** e;
+  const sup = String(e).replace(/[-0-9]/g, (d) => "⁻⁰¹²³⁴⁵⁶⁷⁸⁹"["-0123456789".indexOf(d)]);
+  return `${m.toFixed(digits).replace(".", ",")} × 10${sup}`;
+}
+/** "175 miliar", "1,3 miliar", "20.256" */
+export function words(n: number) {
+  const f = (x: number) => x.toLocaleString("id-ID", { maximumFractionDigits: 1 });
+  if (n >= 1e12) return `${f(n / 1e12)} triliun`;
+  if (n >= 1e9) return `${f(n / 1e9)} miliar`;
+  if (n >= 1e6) return `${f(n / 1e6)} juta`;
+  if (n >= 1e4) return `${f(n / 1e3)} ribu`;
+  return Math.round(n).toLocaleString("id-ID");
+}

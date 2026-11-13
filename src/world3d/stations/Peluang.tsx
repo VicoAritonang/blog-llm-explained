@@ -21,7 +21,9 @@ interface Local {
 const useLocal = create<Local>(() => ({ temperature: 1, generated: [], spin: null, ball: 0 }));
 
 let promptIds: number[] = [];
-const context = () => [...promptIds, ...useLocal.getState().generated];
+// read the note straight from the store: the 3D scene may not be mounted yet
+const currentPrompt = () => promptTokens(noteAnswer(...useWorld.getState().note).prompt).map((t) => t.id);
+const context = () => [...currentPrompt(), ...useLocal.getState().generated];
 const finished = () => useLocal.getState().generated.at(-1) === EOS;
 
 export function setTemperature(t: number) {

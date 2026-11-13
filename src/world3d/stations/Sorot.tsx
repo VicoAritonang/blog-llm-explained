@@ -239,7 +239,8 @@ export function Controls() {
   const { lamp, muted, query } = useLocal();
   const note = useWorld((s) => s.note);
   const setNote = useWorld((s) => s.setNote);
-  const stage = stageCache;
+  const stage = useStage();
+  stageCache = stage;
   return (
     <div className="w3-controls">
       <div className="w3-seg" role="group" aria-label="Pilih lampu attention">

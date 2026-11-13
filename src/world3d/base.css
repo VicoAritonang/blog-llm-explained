@@ -1,0 +1,28 @@
+:root {
+  color-scheme: dark;
+  font-family: "Source Sans 3 Variable", "Segoe UI", sans-serif;
+  color: #eaf6f3;
+  background: #10191e;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  background: #10191e;
+}
+.w3-loading {
+  margin: 0;
+  padding: 32px;
+  color: #a9bec3;
+}
+noscript p {
+  max-width: 560px;
+  margin: 12vh auto;
+  padding: 0 16px;
+  line-height: 1.6;
+  color: #eaf6f3;
+}

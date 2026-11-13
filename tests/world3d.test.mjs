@@ -7,6 +7,7 @@ import { forward, tokenize, softmax, maxDifference } from "../src/simulation/sto
 import { cases } from "../src/simulation/story/cases.mjs";
 import { colors, places, notePrompt, expectedAnswer, isHeldOut } from "../src/simulation/story/notes.mjs";
 import { encode, mixes, probes, trainBPE } from "../src/simulation/bpe.mjs";
+import { datasetMix, trainingFlops, pfDays, kvCacheBytes } from "../src/simulation/gpt3.mjs";
 
 const ids = (text) => tokenize(text, model).map((t) => t.id);
 function greedy(prompt, mutedHeads = []) {
@@ -73,4 +74,57 @@ test("Pemotong Token: an English-trained tokenizer splits Indonesian far more", 
   const id = encode(probes.id, trainBPE(mixes.id.corpus, 200)).length;
   assert.ok(id < 30, `id ${id}`);
   assert.ok(en >= 30 && en >= id * 2, `en ${en} vs id ${id}`);
+});
+
+// ---- Archipelago: claims made by the new missions ---------------------------
+const EOS = model.vocab.indexOf("<eos>");
+const lossAt = (text) => {
+  const seq = [...ids(text), EOS];
+  const logits = forward(seq, model).logits;
+  return seq.map((id, i) => (i ? -Math.log(softmax(logits[i - 1])[id]) : null));
+};
+
+test("Gudang Data: Wikipedia is the source read most often, Common Crawl less than once", () => {
+  const most = datasetMix.reduce((a, b) => (b.epochs > a.epochs ? b : a));
+  assert.equal(most.name, "Wikipedia");
+  assert.ok(datasetMix.find((d) => d.name.startsWith("Common Crawl")).epochs < 1);
+  assert.equal(model.training.trainExamples, 336);
+});
+
+test("Sabuk Tebakan: the mini model was trained on answer positions only, and it shows", () => {
+  assert.match(model.training.objective, /answer positions/);
+  const prompt = ids(cases.blue.prompt).length;
+  const loss = lossAt(cases.blue.prompt + cases.blue.support);
+  const answer = loss.slice(prompt);
+  const before = loss.slice(1, prompt);
+  assert.ok(Math.max(...answer) < 0.05, `answer loss ${Math.max(...answer)}`);
+  assert.ok(Math.max(...before) > 5, `prompt loss ${Math.max(...before)}`);
+});
+
+test("Tungku Komputasi: 6·N·D reproduces GPT-3's compute and dwarfs the mini model", () => {
+  const gpt3 = trainingFlops(175e9, 300e9);
+  assert.ok(Math.abs(gpt3 / 3.14e23 - 1) < 0.01);
+  assert.ok(Math.abs(pfDays(gpt3) - 3640) < 20);
+  let tokens = 0;
+  for (let o = 0; o < 4; o++) for (let p = 0; p < 4; p++) for (let c = 0; c < 4; c++) tokens += ids(notePrompt(o, p, c) + expectedAnswer(p, c)).length + 1;
+  const mini = trainingFlops(model.training.parameterCount, model.training.steps * model.training.batchSize * (tokens / 64));
+  assert.ok(mini > 1e11 && mini < 1e12, String(mini));
+  assert.ok(gpt3 / mini > 1e12, "more than a trillion times");
+});
+
+test("Aula Penyelarasan: the model starts out preferring the hallucination", () => {
+  const logProb = (answer) => {
+    const prompt = ids(cases.missing.prompt);
+    const tail = [...ids(answer), EOS];
+    const logits = forward([...prompt, ...tail], model).logits;
+    return tail.reduce((s, id, k) => s + Math.log(softmax(logits[prompt.length + k - 1])[id]), 0);
+  };
+  const [halu, honest, other] = [" di laci kuning.", " tidak diketahui.", " di tas merah."].map(logProb);
+  assert.ok(halu > other && other > honest, `${halu} ${other} ${honest}`);
+});
+
+test("Gudang Cache: GPT-3 keeps about 4.7 MB per token, 9.7 GB for a full context", () => {
+  const perToken = kvCacheBytes({ layers: 96, headWidth: 128, kvHeads: 96, context: 1 });
+  assert.ok(Math.abs(perToken / 1e6 - 4.72) < 0.01);
+  assert.ok(Math.abs(kvCacheBytes({ layers: 96, headWidth: 128, kvHeads: 96, context: 2048 }) / 1e9 - 9.66) < 0.01);
 });

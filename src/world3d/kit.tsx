@@ -3,6 +3,8 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useFrame, type ThreeEvent } from "@react-three/fiber";
 import { Billboard } from "@react-three/drei";
 import * as THREE from "three";
+import { getTextures } from "./textures";
+import { useHand } from "./store";
 
 const FONT = '"Source Sans 3 Variable", "Segoe UI", sans-serif';
 const textures = new Map<string, { texture: THREE.CanvasTexture; aspect: number }>();
@@ -151,6 +153,9 @@ export function Clickable({
 }) {
   const group = useRef<THREE.Group>(null);
   const [hover, setHover] = useState(false);
+  // other tools (scanner, blocks) pass through to the world handler
+  const hand = useHand();
+  enabled = enabled && hand;
   useEffect(() => {
     if (!hover) return;
     setCursor(1);
@@ -368,17 +373,22 @@ export function Slide({
   );
 }
 
-/** Hexagonal platform each machine stands on. */
+/** Hexagonal platform each machine stands on: stone base, metal deck, glowing rim. */
 export function Plinth({ radius = 5.2, color }: { radius?: number; color: string }) {
+  const tex = getTextures();
   return (
     <group>
-      <mesh position={[0, 0.2, 0]} receiveShadow>
-        <cylinderGeometry args={[radius, radius + 0.3, 0.4, 6]} />
-        <meshStandardMaterial color="#1a2f37" roughness={0.85} />
+      <mesh position={[0, 0.12, 0]} receiveShadow>
+        <cylinderGeometry args={[radius + 0.35, radius + 0.6, 0.3, 6]} />
+        <meshStandardMaterial map={tex.rock} normalMap={tex.rockNormal} color="#b9ae9e" roughness={1} />
       </mesh>
-      <mesh position={[0, 0.41, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 6]}>
+      <mesh position={[0, 0.33, 0]} receiveShadow>
+        <cylinderGeometry args={[radius, radius + 0.1, 0.16, 6]} />
+        <meshStandardMaterial map={tex.metal} normalMap={tex.metalNormal} color="#5f6f78" metalness={0.65} roughness={0.38} />
+      </mesh>
+      <mesh position={[0, 0.42, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 6]}>
         <ringGeometry args={[radius - 0.22, radius - 0.08, 6]} />
-        <meshBasicMaterial color={color} toneMapped={false} transparent opacity={0.85} />
+        <meshBasicMaterial color={color} toneMapped={false} transparent opacity={0.9} />
       </mesh>
     </group>
   );
